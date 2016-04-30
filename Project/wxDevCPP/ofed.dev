@@ -106,7 +106,7 @@ ProductName=
 ProductVersion=
 AutoIncBuildNrOnRebuild=0
 AutoIncBuildNrOnCompile=0
-UnitCount=10
+UnitCount=13
 
 [Profile1]
 ProfileName=MingW gcc
@@ -175,6 +175,35 @@ BuildCmd=
 
 [Unit10]
 FileName=..\..\Source\PanelTileView.wxform
+Folder=ofed
+Compile=0
+Link=0
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit11]
+FileName=..\..\Source\DialogCreateMap.h
+CompileCpp=1
+Folder=ofed
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit12]
+FileName=..\..\Source\DialogCreateMap.cpp
+CompileCpp=1
+Folder=ofed
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit13]
+FileName=..\..\Source\DialogCreateMap.wxform
 Folder=ofed
 Compile=0
 Link=0

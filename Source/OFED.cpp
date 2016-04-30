@@ -1,6 +1,16 @@
 
 #include "stdafx.hpp"
 
+const std::string mTileType_Names[] = {
+	"jun",
+	"des",
+	"ice",
+	"mor",
+	"int",
+	"hid",
+	"afx"		// Amiga Format Christmas Special
+};
+
 cOFED::cOFED() {
 
 	new cResource_PC_CD();
@@ -14,6 +24,7 @@ cOFED::cOFED() {
 
 	mSurface = 0;
 
+	SetupBlkPtrs();
 	ResetCamera();
 }
 
@@ -38,6 +49,44 @@ void cOFED::ResetCamera() {
 	mSurface->paletteLoadNewSDL();
 }
 
+void cOFED::CreateMap( eTileTypes pTileType, size_t pWidth, size_t pHeight ) {
+	
+	if (pTileType < 0)
+		pTileType = eTileTypes_Jungle;
+
+	delete[] mMap;
+
+	mMapWidth = pWidth;
+	mMapHeight = pHeight;
+
+	mMapSize = 0x60 + ((mMapWidth * mMapHeight) * 2);
+	mMap = new uint8[mMapSize];
+	memset( mMap, 0, mMapSize );
+
+	mMap[0x50] = 'O';mMap[0x51] = 'F';mMap[0x52] = 'E';mMap[0x53] = 'D';
+
+	mBaseName = mTileType_Names[pTileType];
+	mSubName = mTileType_Names[pTileType];
+	mBaseName.append( "base.blk" );
+	mSubName.append( "sub0.blk" );
+
+	mBaseName.copy( (char*) mMap, 11 );
+	mSubName.copy( (char*)mMap + 0x10, 0x10 + 11 );
+
+	writeBEWord( &mMap[0x54], mMapWidth );
+	writeBEWord( &mMap[0x56], mMapHeight );
+
+	LoadBlk();
+	ResetCamera();
+	DrawTiles();
+}
+
+void cOFED::LoadBlk() {
+
+	mBlkBaseSize = g_Resource.fileLoadTo( mBaseName, mBlkBase );
+	mBlkSubSize = g_Resource.fileLoadTo( mSubName, mBlkSub );
+}
+
 void cOFED::LoadMap( std::string pFilename ) {
 
 	delete[] mMap;
@@ -45,20 +94,30 @@ void cOFED::LoadMap( std::string pFilename ) {
 	mMap = local_FileRead( pFilename, "", mMapSize, true );
 	tool_EndianSwap( mMap + 0x60, mMapSize - 0x60 );
 
-	std::string BaseName, SubName, BaseBase, BaseSub, BaseBaseSet, BaseSubSet;
-	BaseName.append( mMap, mMap + 11 );
-	SubName.append( mMap + 0x10, mMap + 0x10 + 11 );
+	mBaseName.clear();
+	mSubName.clear();
 
-	mBlkBaseSize = g_Resource.fileLoadTo( BaseName, mBlkBase );
-	mBlkSubSize = g_Resource.fileLoadTo( SubName, mBlkSub );
+	mBaseName.append( mMap, mMap + 11 );
+	mSubName.append( mMap + 0x10, mMap + 0x10 + 11 );
 
 	mMapWidth = readBEWord( &mMap[0x54] );
 	mMapHeight = readBEWord( &mMap[0x56] );
 
-	SetupBlkPtrs();
-
+	LoadBlk();
 	ResetCamera();
 	DrawTiles();
+}
+
+void cOFED::SaveMap( std::string pFilename ) {
+	
+	std::ofstream outfile( pFilename, std::ofstream::binary );
+
+	tool_EndianSwap( mMap + 0x60, mMapSize - 0x60 );
+	outfile.write( (const char*)mMap, mMapSize );
+	outfile.close();
+
+	tool_EndianSwap( mMap + 0x60, mMapSize - 0x60 );
+
 }
 
 void cOFED::SetupBlkPtrs() {

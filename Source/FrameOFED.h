@@ -50,7 +50,6 @@ class cFrameOFED : public wxFrame
 		void Mnuquit1005Click( wxCommandEvent& event );
 		void cFrameOFEDSize(wxSizeEvent& event);
 		void Mnunewmap1006Click(wxCommandEvent& event);
-		void Mnunewmap1006Click0(wxCommandEvent& event);
 		void cFrameOFEDScrollWin( wxScrollWinEvent& event);
 		void cFrameOFEDScrollStepUp( wxScrollWinEvent& event );
 		void cFrameOFEDScrollStepDown( wxScrollWinEvent& event );

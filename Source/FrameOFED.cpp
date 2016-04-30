@@ -17,6 +17,7 @@
 ////Header Include End
 
 #include "stdafx.hpp"
+#include "DialogCreateMap.h"
 
 //----------------------------------------------------------------------------
 // cFrameOFED
@@ -30,14 +31,12 @@ BEGIN_EVENT_TABLE(cFrameOFED,wxFrame)
 	
 	EVT_CLOSE(cFrameOFED::OnClose)
 	EVT_SIZE(cFrameOFED::cFrameOFEDSize)
-	
-	EVT_SCROLLWIN_PAGEUP(cFrameOFED::cFrameOFEDScrollStepUp)
-	EVT_SCROLLWIN_PAGEDOWN(cFrameOFED::cFrameOFEDScrollStepDown)
+	EVT_SCROLLWIN_TOP(cFrameOFED::cFrameOFEDScrollStepUp)
+	EVT_SCROLLWIN_BOTTOM(cFrameOFED::cFrameOFEDScrollStepDown)
 	EVT_SCROLLWIN_LINEUP(cFrameOFED::cFrameOFEDScrollStepUp)
 	EVT_SCROLLWIN_LINEDOWN(cFrameOFED::cFrameOFEDScrollStepDown)
 	EVT_SCROLLWIN_THUMBTRACK(cFrameOFED::cFrameOFEDScrollWin)
-	//EVT_SCROLLWIN( cFrameOFED::cFrameOFEDScrollWin )
-	EVT_MENU(ID_MNU_NEWMAP_1006, cFrameOFED::Mnunewmap1006Click0)
+	EVT_MENU(ID_MNU_NEWMAP_1006, cFrameOFED::Mnunewmap1006Click)
 	EVT_MENU(ID_MNU_LOADMAP_1002, cFrameOFED::Mnuloadmap1002Click)
 	EVT_MENU(ID_MNU_SAVEMAP_1003, cFrameOFED::Mnusavemap1003Click)
 	EVT_MENU(ID_MNU_QUIT_1005, cFrameOFED::Mnuquit1005Click)
@@ -148,15 +147,8 @@ void cFrameOFED::cFrameOFEDSize(wxSizeEvent& event)
  */
 void cFrameOFED::Mnunewmap1006Click(wxCommandEvent& event)
 {
-	// insert your code here
-}
-
-/*
- * Mnunewmap1006Click0
- */
-void cFrameOFED::Mnunewmap1006Click0(wxCommandEvent& event)
-{
-	// insert your code here
+	cDialogCreateMap* CreateMap = new cDialogCreateMap( this );
+	CreateMap->Show();
 }
 
 /*

@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\DialogCreateMap.cpp" />
     <ClCompile Include="..\..\Source\FrameOFED.cpp" />
     <ClCompile Include="..\..\Source\OFED.cpp" />
     <ClCompile Include="..\..\Source\ofedApp.cpp" />
@@ -29,6 +30,7 @@
     <ClCompile Include="..\..\Source\Surface.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\DialogCreateMap.h" />
     <ClInclude Include="..\..\Source\FrameOFED.h" />
     <ClInclude Include="..\..\Source\OFED.hpp" />
     <ClInclude Include="..\..\Source\ofedApp.h" />
