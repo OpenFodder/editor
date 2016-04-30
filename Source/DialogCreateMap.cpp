@@ -91,6 +91,10 @@ void cDialogCreateMap::ButtonCreateMap(wxCommandEvent& event) {
 
 	g_OFED.CreateMap( Tile, Width, Height );
 
+	GetParent()->SetScrollbar( wxHORIZONTAL, 0, 2, (g_OFED.mMapWidth - g_OFED.mCameraTilesX) + 2 );
+	GetParent()->SetScrollbar( wxVERTICAL, 0, 2, (g_OFED.mMapHeight - g_OFED.mCameraTilesY) + 2 );
+	GetParent()->Refresh();
+
 	Close();
 }
 
