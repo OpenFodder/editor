@@ -32,6 +32,8 @@ class cPanelTileView;
 #include <wx/menu.h>
 ////Header Include End
 
+#include "DialogToolboxTiles.h"
+
 ////Dialog Style Start
 #undef cFrameOFED_STYLE
 #define cFrameOFED_STYLE wxVSCROLL | wxHSCROLL | wxALWAYS_SHOW_SB | wxCAPTION | wxRESIZE_BORDER | wxSYSTEM_MENU | wxMINIMIZE_BOX | wxMAXIMIZE_BOX | wxCLOSE_BOX
@@ -53,6 +55,8 @@ class cFrameOFED : public wxFrame
 		void cFrameOFEDScrollWin( wxScrollWinEvent& event);
 		void cFrameOFEDScrollStepUp( wxScrollWinEvent& event );
 		void cFrameOFEDScrollStepDown( wxScrollWinEvent& event );
+		void OnMove( wxMoveEvent& event );
+		void OnPaint(wxPaintEvent& event);
 
 	private:
 		//Do not add custom control declarations between
@@ -60,10 +64,12 @@ class cFrameOFED : public wxFrame
 		//wxDev-C++ will remove them. Add custom code after the block.
 		////GUI Control Declaration Start
 		wxFileDialog *WxOpenFileDialog1;
+		wxFileDialog *WxSaveFileDialog1;
 		wxMenuBar *WxMenuBar1;
 		////GUI Control Declaration End
 		
-		cPanelTileView*	mPanelTileView;
+		cPanelTileView*			mPanelTileView;
+		cDialogToolboxTiles*	mDialogToolboxTiles;
 
 	private:
 		//Note: if you receive any error with these enum IDs, then you need to

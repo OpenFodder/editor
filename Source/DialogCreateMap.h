@@ -26,6 +26,7 @@
 //Header Include Start and Header Include End.
 //wxDev-C++ designer will remove them. Add custom headers after the block.
 ////Header Include Start
+#include <wx/stattext.h>
 #include <wx/textctrl.h>
 #include <wx/combobox.h>
 #include <wx/button.h>
@@ -51,6 +52,9 @@ class cDialogCreateMap : public wxDialog
 		//GUI Control Declaration Start and GUI Control Declaration End.
 		//wxDev-C++ will remove them. Add custom code after the block.
 		////GUI Control Declaration Start
+		wxStaticText *WxStaticText3;
+		wxStaticText *WxStaticText2;
+		wxStaticText *WxStaticText1;
 		wxTextCtrl *WxEdit2;
 		wxTextCtrl *WxEdit1;
 		wxComboBox *WxComboBox1;
@@ -65,6 +69,9 @@ class cDialogCreateMap : public wxDialog
 		enum
 		{
 			////GUI Enum Control ID Start
+			ID_WXSTATICTEXT3 = 1009,
+			ID_WXSTATICTEXT2 = 1008,
+			ID_WXSTATICTEXT1 = 1007,
 			ID_WXEDIT2 = 1006,
 			ID_WXEDIT1 = 1005,
 			ID_WXCOMBOBOX1 = 1004,

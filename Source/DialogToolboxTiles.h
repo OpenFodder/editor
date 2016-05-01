@@ -1,15 +1,15 @@
 ///-----------------------------------------------------------------
 ///
-/// @file      TileView.h
+/// @file      DialogToolboxTiles.h
 /// @author    Robbie
-/// Created:   30/04/2016 17:39:36
+/// Created:   1/05/2016 14:10:43
 /// @section   DESCRIPTION
-///            cPanelTileView class declaration
+///            cDialogToolboxTiles class declaration
 ///
 ///------------------------------------------------------------------
 
-#ifndef __cPanelTileView_H__
-#define __cPanelTileView_H__
+#ifndef __CDIALOGTOOLBOXTILES_H__
+#define __CDIALOGTOOLBOXTILES_H__
 
 #ifdef __BORLANDC__
 	#pragma hdrstop
@@ -28,25 +28,22 @@
 ////Header Include Start
 ////Header Include End
 
-#include <wx/dcbuffer.h>
+#include "PanelToolboxTile.h"
 
 ////Dialog Style Start
-#undef cPanelTileView_STYLE
-#define cPanelTileView_STYLE wxCAPTION | wxSYSTEM_MENU | wxMINIMIZE_BOX | wxCLOSE_BOX
+#undef cDialogToolboxTiles_STYLE
+#define cDialogToolboxTiles_STYLE wxCAPTION | wxRESIZE_BORDER | wxSYSTEM_MENU | wxDIALOG_NO_PARENT | wxCLOSE_BOX
 ////Dialog Style End
 
-class cPanelTileView : public wxPanel
+class cDialogToolboxTiles : public wxDialog
 {
 	private:
 		DECLARE_EVENT_TABLE();
 		
-		double mScaleWidth, mScaleHeight;
-
 	public:
-		cPanelTileView(wxWindow *parent, wxWindowID id = 1, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = cPanelTileView_STYLE);
-		virtual ~cPanelTileView();
-		void cTileViewPaint(wxPaintEvent& event);
-		void OnMouse( wxMouseEvent& event );
+		cDialogToolboxTiles(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Tile Toolbox"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = cDialogToolboxTiles_STYLE);
+		virtual ~cDialogToolboxTiles();
+		void OnPaint(wxPaintEvent& event);
 
 	private:
 		//Do not add custom control declarations between 
@@ -55,6 +52,8 @@ class cPanelTileView : public wxPanel
 		////GUI Control Declaration Start
 		////GUI Control Declaration End
 		
+	cPanelToolboxTile*		mToolboxTile;
+
 	private:
 		//Note: if you receive any error with these enum IDs, then you need to
 		//change your old form code that are based on the #define control IDs.

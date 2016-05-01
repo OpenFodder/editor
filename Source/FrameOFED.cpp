@@ -18,6 +18,7 @@
 
 #include "stdafx.hpp"
 #include "DialogCreateMap.h"
+#include "DialogToolboxTiles.h"
 
 //----------------------------------------------------------------------------
 // cFrameOFED
@@ -27,10 +28,12 @@
 ////Event Table Start
 BEGIN_EVENT_TABLE(cFrameOFED,wxFrame)
 	////Manual Code Start
+	EVT_MOVE( cFrameOFED::OnMove )
 	////Manual Code End
 	
 	EVT_CLOSE(cFrameOFED::OnClose)
 	EVT_SIZE(cFrameOFED::cFrameOFEDSize)
+	EVT_PAINT(cFrameOFED::OnPaint)
 	EVT_SCROLLWIN_TOP(cFrameOFED::cFrameOFEDScrollStepUp)
 	EVT_SCROLLWIN_BOTTOM(cFrameOFED::cFrameOFEDScrollStepDown)
 	EVT_SCROLLWIN_LINEUP(cFrameOFED::cFrameOFEDScrollStepUp)
@@ -46,7 +49,7 @@ END_EVENT_TABLE()
 cFrameOFED::cFrameOFED(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
 : wxFrame(parent, id, title, position, size, style)
 {
-
+	mDialogToolboxTiles = 0;
 	mPanelTileView = 0;
 
 	CreateGUIControls();
@@ -66,6 +69,8 @@ void cFrameOFED::CreateGUIControls()
 
 	WxOpenFileDialog1 =  new wxFileDialog(this, _("Choose a file"), _(""), _(""), _("*.map"), wxFD_OPEN);
 
+	WxSaveFileDialog1 =  new wxFileDialog(this, _("Choose a file"), _(""), _(""), _("*.map"), wxFD_SAVE);
+
 	WxMenuBar1 = new wxMenuBar();
 	wxMenu *ID_MNU_FILE_1001_Mnu_Obj = new wxMenu();
 	ID_MNU_FILE_1001_Mnu_Obj->Append(ID_MNU_NEWMAP_1006, _("&New Map"), _(""), wxITEM_NORMAL);
@@ -84,6 +89,8 @@ void cFrameOFED::CreateGUIControls()
 	
 	////GUI Items Creation End
 
+	mDialogToolboxTiles = new cDialogToolboxTiles( this );
+
 	mPanelTileView = new cPanelTileView( this );
 	mPanelTileView->SetPosition( wxPoint( 12, 10 ) );
 	mPanelTileView->SetSize( GetSize().GetWidth() - 40, GetSize().GetHeight() - 126 );
@@ -91,6 +98,8 @@ void cFrameOFED::CreateGUIControls()
 	SetMinSize( wxSize( 800, 600 ) );
 	SetScrollbar( wxHORIZONTAL, 0, 2, 0 );
 	SetScrollbar( wxVERTICAL, 0, 2, 0 );
+
+	mDialogToolboxTiles->Show();
 }
 
 void cFrameOFED::OnClose(wxCloseEvent& event)
@@ -98,6 +107,13 @@ void cFrameOFED::OnClose(wxCloseEvent& event)
 	Destroy();
 }
 
+void cFrameOFED::OnMove( wxMoveEvent& event ) {
+
+	if (mDialogToolboxTiles) {
+		wxPoint a( GetPosition().x + GetSize().GetWidth(), GetPosition().y );
+		mDialogToolboxTiles->SetPosition( a );
+	}
+}
 /*
  * Mnuloadmap1002Click
  */
@@ -121,11 +137,20 @@ void cFrameOFED::Mnuloadmap1002Click(wxCommandEvent& event) {
  * Mnusavemap1003Click
  */
 void cFrameOFED::Mnusavemap1003Click(wxCommandEvent& event) {
-	// insert your code here
+	WxSaveFileDialog1->SetTitle( wxT( "Save Map" ) );
+	WxSaveFileDialog1->ShowModal();
+
+	std::string filename = std::string( WxSaveFileDialog1->GetPath().mb_str() );
+
+	if (!filename.size())
+		return;
+
+	g_OFED.SaveMap( filename );
 }
 
 void cFrameOFED::Mnuquit1005Click( wxCommandEvent& event ) {
 
+	exit( 0 );
 }
 
 /*
@@ -138,6 +163,11 @@ void cFrameOFED::cFrameOFEDSize(wxSizeEvent& event)
 
 	if(mPanelTileView)
 		mPanelTileView->SetSize( width - 50, height - 90 );
+
+	if (mDialogToolboxTiles) {
+		wxPoint a( GetPosition().x + GetSize().GetWidth(), GetPosition().y );
+		mDialogToolboxTiles->SetPosition( a );
+	}
 
 	Refresh();
 }
@@ -189,4 +219,13 @@ void cFrameOFED::cFrameOFEDScrollStepDown( wxScrollWinEvent& event ) {
 	}
 	
 	Refresh();
+}
+
+/*
+ * cFrameOFEDPaint
+ */
+void cFrameOFED::OnPaint(wxPaintEvent& event)
+{
+	if(mDialogToolboxTiles)
+		mDialogToolboxTiles->Refresh();
 }

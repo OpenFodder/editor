@@ -1,48 +1,51 @@
 ///-----------------------------------------------------------------
 ///
-/// @file      TileView.cpp
+/// @file      PanelToolboxTile.cpp
 /// @author    Robbie
-/// Created:   30/04/2016 17:39:36
+/// Created:   1/05/2016 14:13:14
 /// @section   DESCRIPTION
-///            cPanelTileView class implementation
+///            cPanelToolboxTile class implementation
 ///
 ///------------------------------------------------------------------
 
-#include "stdafx.hpp"
-#include "PanelTileView.h"
+#include "PanelToolboxTile.h"
 
 //Do not add custom headers
 //wxDev-C++ designer will remove them
 ////Header Include Start
 ////Header Include End
 
+#include "stdafx.hpp"
+
 //----------------------------------------------------------------------------
-// cPanelTileView
+// cPanelToolboxTile
 //----------------------------------------------------------------------------
 //Add Custom Events only in the appropriate block.
 //Code added in other places will be removed by wxDev-C++
 ////Event Table Start
-BEGIN_EVENT_TABLE(cPanelTileView,wxPanel)
+BEGIN_EVENT_TABLE(cPanelToolboxTile,wxPanel)
 	////Manual Code Start
 	////Manual Code End
 	
-	EVT_CLOSE(cPanelTileView::OnClose)
-	EVT_PAINT(cPanelTileView::cTileViewPaint)
-	EVT_MOUSE_EVENTS(cPanelTileView::OnMouse)
+	EVT_CLOSE(cPanelToolboxTile::OnClose)
+	EVT_PAINT(cPanelToolboxTile::cPanelToolboxTilePaint)
+	EVT_MOUSE_EVENTS(cPanelToolboxTile::OnMouse)
 END_EVENT_TABLE()
 ////Event Table End
 
-cPanelTileView::cPanelTileView(wxWindow *parent, wxWindowID id, const wxPoint &position, const wxSize& size, long style)
-: wxPanel(parent, id, position, size, wxFRAME_NO_TASKBAR | wxDEFAULT_FRAME_STYLE & ~(wxRESIZE_BORDER | wxMAXIMIZE_BOX) )
+cPanelToolboxTile::cPanelToolboxTile( wxWindow *parent, wxWindowID id, const wxPoint &position, const wxSize& size, long style )
+: wxPanel( parent, id, position, size, wxFRAME_NO_TASKBAR | wxDEFAULT_FRAME_STYLE & ~(wxRESIZE_BORDER | wxMAXIMIZE_BOX) )
 {
+	mCursorSurface = new cSurface( 16, 16 );
+
 	CreateGUIControls();
 }
 
-cPanelTileView::~cPanelTileView()
+cPanelToolboxTile::~cPanelToolboxTile()
 {
 } 
 
-void cPanelTileView::CreateGUIControls()
+void cPanelToolboxTile::CreateGUIControls()
 {
 	//Do not add custom code between
 	//GUI Items Creation Start and GUI Items Creation End.
@@ -50,18 +53,18 @@ void cPanelTileView::CreateGUIControls()
 	//Add the custom code before or after the blocks
 	////GUI Items Creation Start
 
-	SetSize(8,8,320,334);
+	SetSize(8,8,800,640);
 	Center();
 	
 	////GUI Items Creation End
 }
 
-void cPanelTileView::OnClose(wxCloseEvent& /*event*/)
+void cPanelToolboxTile::OnClose(wxCloseEvent& /*event*/)
 {
 	Destroy();
 }
 
-void cPanelTileView::OnMouse( wxMouseEvent& event ) {
+void cPanelToolboxTile::OnMouse( wxMouseEvent& event ) {
 
 	wxCoord MouseX = event.GetX() / mScaleWidth;
 	wxCoord MouseY = event.GetY() / mScaleHeight;
@@ -69,27 +72,46 @@ void cPanelTileView::OnMouse( wxMouseEvent& event ) {
 	uint32 TileX = MouseX / 16;
 	uint32 TileY = MouseY / 16;
 
-	uint32 Tile = g_OFED.mMapTilePtr + (((TileY * g_OFED.mMapWidth) + TileX) );
+	uint32 Tile = (25 * TileY) + TileX;
 
 	if (event.LeftDown()) {
 
-		g_OFED.SetTile( TileX, TileY, g_OFED.mCursorTile );
+		g_OFED.SetCursorTile( Tile );
 
-		g_OFED.SetSelectedTile( Tile );
-		g_OFED.DrawTiles();
-		Refresh();
+		g_OFED.DrawTile( mCursorSurface, Tile, 0, 0 );
+		g_OFED.LoadPalette( mCursorSurface );
+		mCursorSurface->draw();
+
+		wxBitmap Cursor = SDL_To_Bitmap( mCursorSurface->GetSurface() );
+		mCursor = wxCursor( Cursor.ConvertToImage() );
+		this->GetParent()->SetCursor( mCursor );
+		this->GetParent()->GetParent()->SetCursor( mCursor );
 	}
 }
 
 /*
- * cTileViewPaint
+ * cPanelToolboxTilePaint
  */
-void cPanelTileView::cTileViewPaint(wxPaintEvent& event) {
-	cSurface* Surface = g_OFED.GetSurface();
-
+void cPanelToolboxTile::cPanelToolboxTilePaint(wxPaintEvent& event)
+{
+	cSurface* Surface = new cSurface( 400, 320 );
 	size_t width = this->GetSize().GetWidth();
 	size_t height = this->GetSize().GetHeight();
 
+	int32 X = 0, Y = 0;
+
+	for (int16 TileNumber = 0; TileNumber < 480; ++TileNumber) {
+
+		g_OFED.DrawTile( Surface, TileNumber, X, Y );
+
+		++X;
+		if (X >= 25) {
+			X = 0;
+			++Y;
+		}
+	}
+
+	g_OFED.LoadPalette( Surface );
 
 	wxBufferedPaintDC tileView( this );
 	if (Surface) {
@@ -107,7 +129,6 @@ void cPanelTileView::cTileViewPaint(wxPaintEvent& event) {
 
 		Surface->draw();
 		SDL_BlitScaled( Surface->GetSurface(), &SrcRect, Dest, &DestRect );
-
 		mScaleWidth = (static_cast<double>(width) / static_cast<double>(Surface->GetWidth()));
 		mScaleHeight = (static_cast<double>(height) / static_cast<double>(Surface->GetHeight()));
 
@@ -115,4 +136,6 @@ void cPanelTileView::cTileViewPaint(wxPaintEvent& event) {
 
 		SDL_FreeSurface( Dest );
 	}
+
+	delete Surface;
 }

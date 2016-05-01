@@ -1,15 +1,15 @@
 ///-----------------------------------------------------------------
 ///
-/// @file      TileView.h
+/// @file      PanelToolboxTile.h
 /// @author    Robbie
-/// Created:   30/04/2016 17:39:36
+/// Created:   1/05/2016 14:13:14
 /// @section   DESCRIPTION
-///            cPanelTileView class declaration
+///            cPanelToolboxTile class declaration
 ///
 ///------------------------------------------------------------------
 
-#ifndef __cPanelTileView_H__
-#define __cPanelTileView_H__
+#ifndef __CPANELTOOLBOXTILE_H__
+#define __CPANELTOOLBOXTILE_H__
 
 #ifdef __BORLANDC__
 	#pragma hdrstop
@@ -31,23 +31,27 @@
 #include <wx/dcbuffer.h>
 
 ////Dialog Style Start
-#undef cPanelTileView_STYLE
-#define cPanelTileView_STYLE wxCAPTION | wxSYSTEM_MENU | wxMINIMIZE_BOX | wxCLOSE_BOX
+#undef cPanelToolboxTile_STYLE
+#define cPanelToolboxTile_STYLE wxCAPTION | wxSYSTEM_MENU | wxMINIMIZE_BOX | wxCLOSE_BOX
 ////Dialog Style End
 
-class cPanelTileView : public wxPanel
+class cSurface;
+
+class cPanelToolboxTile : public wxPanel
 {
 	private:
 		DECLARE_EVENT_TABLE();
 		
 		double mScaleWidth, mScaleHeight;
+		cSurface* mCursorSurface;
+		wxCursor  mCursor;
 
 	public:
-		cPanelTileView(wxWindow *parent, wxWindowID id = 1, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = cPanelTileView_STYLE);
-		virtual ~cPanelTileView();
-		void cTileViewPaint(wxPaintEvent& event);
+		cPanelToolboxTile(wxWindow *parent, wxWindowID id = 1, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = cPanelToolboxTile_STYLE );
+		virtual ~cPanelToolboxTile();
+		void cPanelToolboxTilePaint(wxPaintEvent& event);
 		void OnMouse( wxMouseEvent& event );
-
+	
 	private:
 		//Do not add custom control declarations between 
 		//GUI Control Declaration Start and GUI Control Declaration End.
