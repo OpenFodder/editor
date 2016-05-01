@@ -225,15 +225,15 @@ void cOFED::DrawTiles() {
 
 }
 
-void cOFED::DrawTile( cSurface* pTarget, uint16 pTile, uint16 pDestX, uint16 pDestY ) {
+void cOFED::DrawTile( cSurface* pTarget, uint16 pTile, uint16 pDestX, uint16 pDestY, uint16 pOffset ) {
 	uint8* Target = pTarget->GetSurfaceBuffer();
 
 	if (!mBlocksLoaded)
 		return;
 
-	pDestX *= 16;
+	pDestX *= (16 + pOffset);
 
-	Target += (pDestY * 16) * pTarget->GetWidth();
+	Target += (pDestY * (16 + pOffset)) * pTarget->GetWidth();
 	Target += pDestX;
 
 	uint8* TilePtr = mBlkPtrs[pTile];

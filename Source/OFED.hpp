@@ -39,7 +39,7 @@ class cOFED : public cSingleton < cOFED > {
 
 					cOFED();
 
-	void			DrawTile( cSurface* pTarget, uint16 pTile, uint16 pDestX, uint16 pDestY );
+	void			DrawTile( cSurface* pTarget, uint16 pTile, uint16 pDestX, uint16 pDestY, uint16 pOffset = 0 );
 	void			DrawTiles();
 
 	void			SetMapX( int64 pMapX );

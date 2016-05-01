@@ -28,6 +28,6 @@ class cFrameOFEDApp : public wxApp
 };
 
 class cSurface;
-wxBitmap SDL_To_Bitmap( SDL_Surface *pSurface );
+wxBitmap SDL_To_Bitmap( cSurface* pSurface, int pDestWidth, int pDestHeight );
 
 #endif

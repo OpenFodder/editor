@@ -40,13 +40,15 @@ class cPanelTileView : public wxPanel
 	private:
 		DECLARE_EVENT_TABLE();
 		
-		double mScaleWidth, mScaleHeight;
+		double				mScaleWidth, mScaleHeight;
+		wxTimer				*mMouseTimer;
 
 	public:
 		cPanelTileView(wxWindow *parent, wxWindowID id = 1, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = cPanelTileView_STYLE);
 		virtual ~cPanelTileView();
 		void cTileViewPaint(wxPaintEvent& event);
 		void OnMouse( wxMouseEvent& event );
+		void OnMouseInputTimer( wxTimerEvent& event );
 
 	private:
 		//Do not add custom control declarations between 
@@ -64,6 +66,7 @@ class cPanelTileView : public wxPanel
 		{
 			////GUI Enum Control ID Start
 			////GUI Enum Control ID End
+			ID_EVENT_MOUSE_TIMER,
 			ID_DUMMY_VALUE_ //don't remove this value unless you have other enum values
 		};
 	

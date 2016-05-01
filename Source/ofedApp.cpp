@@ -28,10 +28,27 @@ int cFrameOFEDApp::OnExit()
 	return 0;
 }
 
-wxBitmap SDL_To_Bitmap( SDL_Surface* pSurface ) {
+wxBitmap SDL_To_Bitmap( cSurface* pSurface, int pDestWidth, int pDestHeight ) {
+	pSurface->draw(); 
+	
+	SDL_Rect SrcRect, DestRect;
+	SrcRect.x = 0;
+	SrcRect.y = 0;
+	SrcRect.w = pSurface->GetWidth();
+	SrcRect.h = pSurface->GetHeight();
+	DestRect.x = 0;
+	DestRect.y = 0;
+	DestRect.w = pDestWidth;
+	DestRect.h = pDestHeight;
+
+	SDL_Surface *Dest = SDL_CreateRGBSurface( 0, pDestWidth, pDestHeight, 32, 0xFF << 16, 0xFF << 8, 0xFF, 0 );
+	SDL_BlitScaled( pSurface->GetSurface(), &SrcRect, Dest, &DestRect );
 
 #ifdef WIN32
-	return wxBitmap( (const char*)pSurface->pixels, pSurface->w, pSurface->h, pSurface->format->BitsPerPixel );
+	wxBitmap Bitmap( (const char*)Dest->pixels, Dest->w, Dest->h, Dest->format->BitsPerPixel );
+	SDL_FreeSurface( Dest );
+
+	return Bitmap;
 #else
 	wxImage image( surface->w, surface->h, true );
 

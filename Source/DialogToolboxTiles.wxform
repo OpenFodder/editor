@@ -4,8 +4,8 @@ object frmNewForm: TfrmNewForm
   AutoScroll = False
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Tile Toolbox'
-  ClientHeight = 602
-  ClientWidth = 784
+  ClientHeight = 826
+  ClientWidth = 704
   Color = clBtnFace
   OldCreateOrder = True
   PopupMenu = DesignerPopup.Owner

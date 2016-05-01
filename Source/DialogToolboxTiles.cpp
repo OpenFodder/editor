@@ -53,7 +53,7 @@ void cDialogToolboxTiles::CreateGUIControls()
 
 	SetTitle(_("Tile Toolbox"));
 	SetIcon(wxNullIcon);
-	SetSize(8,8,800,640);
+	SetSize(8,8,720,864);
 	Center();
 	
 	////GUI Items Creation End
