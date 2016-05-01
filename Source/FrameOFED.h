@@ -33,6 +33,7 @@ class cPanelTileView;
 ////Header Include End
 
 #include "DialogToolboxTiles.h"
+#include "DialogToolboxSprites.h"
 
 ////Dialog Style Start
 #undef cFrameOFED_STYLE
@@ -70,6 +71,7 @@ class cFrameOFED : public wxFrame
 		
 		cPanelTileView*			mPanelTileView;
 		cDialogToolboxTiles*	mDialogToolboxTiles;
+		cDialogToolboxSprites*	mDialogToolboxSprites;
 
 	private:
 		//Note: if you receive any error with these enum IDs, then you need to

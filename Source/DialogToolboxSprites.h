@@ -1,15 +1,15 @@
 ///-----------------------------------------------------------------
 ///
-/// @file      PanelToolboxTile.h
+/// @file      DialogToolboxSprites.h
 /// @author    Robbie
-/// Created:   1/05/2016 14:13:14
+/// Created:   1/05/2016 20:50:52
 /// @section   DESCRIPTION
-///            cPanelToolboxTile class declaration
+///            cDialogToolboxSprites class declaration
 ///
 ///------------------------------------------------------------------
 
-#ifndef __CPANELTOOLBOXTILE_H__
-#define __CPANELTOOLBOXTILE_H__
+#ifndef __CDIALOGTOOLBOXSPRITES_H__
+#define __CDIALOGTOOLBOXSPRITES_H__
 
 #ifdef __BORLANDC__
 	#pragma hdrstop
@@ -28,29 +28,19 @@
 ////Header Include Start
 ////Header Include End
 
-#include <wx/dcbuffer.h>
-
 ////Dialog Style Start
-#undef cPanelToolboxTile_STYLE
-#define cPanelToolboxTile_STYLE wxCAPTION | wxSYSTEM_MENU | wxMINIMIZE_BOX
+#undef cDialogToolboxSprites_STYLE
+#define cDialogToolboxSprites_STYLE wxCAPTION | wxRESIZE_BORDER | wxSYSTEM_MENU | wxDIALOG_NO_PARENT
 ////Dialog Style End
 
-class cSurface;
-
-class cPanelToolboxTile : public wxPanel
+class cDialogToolboxSprites : public wxDialog
 {
 	private:
 		DECLARE_EVENT_TABLE();
 		
-		double mScaleWidth, mScaleHeight;
-		cSurface* mCursorSurface;
-		wxCursor  mCursor;
-
 	public:
-		cPanelToolboxTile(wxWindow *parent, wxWindowID id = 1, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = cPanelToolboxTile_STYLE );
-		virtual ~cPanelToolboxTile();
-		void cPanelToolboxTilePaint(wxPaintEvent& event);
-		void OnMouse( wxMouseEvent& event );
+		cDialogToolboxSprites(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Toolbox Sprites"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = cDialogToolboxSprites_STYLE);
+		virtual ~cDialogToolboxSprites();
 	
 	private:
 		//Do not add custom control declarations between 

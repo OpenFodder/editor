@@ -13,15 +13,18 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\Dialog">
+      <UniqueIdentifier>{fc43cfca-5a84-47a2-b1db-003413eb0e3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Panel">
+      <UniqueIdentifier>{ee7fae4c-b903-4744-8b22-d3ab87ff773b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\FrameOFED.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\ofedApp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\PanelTileView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\OFED.cpp">
@@ -40,6 +43,24 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\DialogCreateMap.cpp">
+      <Filter>Source Files\Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\DialogToolboxTiles.cpp">
+      <Filter>Source Files\Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\PanelTileView.cpp">
+      <Filter>Source Files\Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\PanelToolboxTile.cpp">
+      <Filter>Source Files\Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\DialogToolboxSprites.cpp">
+      <Filter>Source Files\Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\PanelToolboxSprite.cpp">
+      <Filter>Source Files\Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Sprites.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -48,9 +69,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\ofedApp.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\PanelTileView.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\OFED.hpp">
@@ -75,6 +93,24 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\DialogCreateMap.h">
+      <Filter>Source Files\Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\DialogToolboxTiles.h">
+      <Filter>Source Files\Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\PanelTileView.h">
+      <Filter>Source Files\Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\PanelToolboxTile.h">
+      <Filter>Source Files\Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\DialogToolboxSprites.h">
+      <Filter>Source Files\Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\PanelToolboxSprite.h">
+      <Filter>Source Files\Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Sprites.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

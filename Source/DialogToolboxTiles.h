@@ -32,7 +32,7 @@
 
 ////Dialog Style Start
 #undef cDialogToolboxTiles_STYLE
-#define cDialogToolboxTiles_STYLE wxCAPTION | wxRESIZE_BORDER | wxSYSTEM_MENU | wxDIALOG_NO_PARENT | wxCLOSE_BOX
+#define cDialogToolboxTiles_STYLE wxCAPTION | wxRESIZE_BORDER | wxSYSTEM_MENU | wxDIALOG_NO_PARENT
 ////Dialog Style End
 
 class cDialogToolboxTiles : public wxDialog

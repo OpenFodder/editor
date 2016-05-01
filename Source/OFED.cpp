@@ -22,6 +22,8 @@ cOFED::cOFED() {
 
 	mBlkBase = new uint8[mBlkSize];
 	mBlkSub = new uint8[mBlkSize];
+	mSpriteCopt = new uint8[0xD5A * 16];
+	mSpriteArmy = new uint8[0xD50 * 16];
 
 	mSurface = 0;
 
@@ -71,6 +73,9 @@ void cOFED::SetSelectedTile( size_t pTile ) {
 void cOFED::LoadPalette( cSurface* pSurface ) {
 	
 	pSurface->paletteLoad( mBlkBase + 0xFA00, 0x80, 0x00 );
+	pSurface->paletteLoad( mSpriteCopt + 0xD2A0, 0x40, 0xB0 );
+	pSurface->paletteLoad( mSpriteCopt + 0xD360, 0x10, 0x90 );
+	pSurface->paletteLoad( mSpriteArmy + 0xD200, 0x10, 0xA0 );
 	pSurface->paletteLoadNewSDL();
 }
 
@@ -92,8 +97,13 @@ void cOFED::CreateMap( eTileTypes pTileType, size_t pWidth, size_t pHeight ) {
 
 	mBaseName = mTileType_Names[pTileType];
 	mSubName = mTileType_Names[pTileType];
+	mBaseCoptName = mTileType_Names[pTileType];
+	mBaseArmyName = mTileType_Names[pTileType];
+
 	mBaseName.append( "base.blk" );
 	mSubName.append( "sub0.blk" );
+	mBaseCoptName.append( "copt.dat" );
+	mBaseArmyName.append( "army.dat" );
 
 	mBaseName.copy( (char*) mMap, 11 );
 	mSubName.copy( (char*)mMap + 0x10, 0x10 + 11 );
@@ -111,6 +121,9 @@ void cOFED::LoadBlk() {
 	mBlkBaseSize = g_Resource.fileLoadTo( mBaseName, mBlkBase );
 	mBlkSubSize = g_Resource.fileLoadTo( mSubName, mBlkSub );
 
+	mBaseCoptSize = g_Resource.fileLoadTo( mBaseCoptName, mSpriteCopt );
+	mBaseArmySize = g_Resource.fileLoadTo( mBaseArmyName, mSpriteArmy );
+
 	mBlocksLoaded = true;
 }
 
@@ -126,6 +139,11 @@ void cOFED::LoadMap( std::string pFilename ) {
 
 	mBaseName.append( mMap, mMap + 11 );
 	mSubName.append( mMap + 0x10, mMap + 0x10 + 11 );
+
+	mBaseCoptName.append( mMap, mMap + 3 );
+	mBaseCoptName.append( "copt.dat" );
+	mBaseArmyName.append( mMap, mMap + 3 );
+	mBaseArmyName.append( "army.dat" );
 
 	mMapWidth = readBEWord( &mMap[0x54] );
 	mMapHeight = readBEWord( &mMap[0x56] );
@@ -145,6 +163,20 @@ void cOFED::SaveMap( std::string pFilename ) {
 
 	tool_EndianSwap( mMap + 0x60, mMapSize - 0x60 );
 
+}
+
+uint8* cOFED::GetSpriteData( uint16 pSegment ) {
+
+	switch (pSegment) {
+
+	case 0x4309:
+		return mSpriteCopt;
+		break;
+
+	case 0x430B:
+		return mSpriteArmy;
+		break;
+	}
 }
 
 void cOFED::SetupBlkPtrs() {
@@ -183,10 +215,10 @@ void cOFED::DrawTiles() {
 		for (uint16 cx2 = 0; cx2 < mCameraTilesX; ++cx2) {
 			uint8* TargetTmp = TargetRow;
 
-			if (MapPtr == &mMap[0x60 + (mSelectedTile * 2)])
-				isSelectedTile = true;
-			else
-				isSelectedTile = false;
+			//if (MapPtr == &mMap[0x60 + (mSelectedTile * 2)])
+			//	isSelectedTile = true;
+			//else
+			//	isSelectedTile = false;
 
 			uint16 Tile = readLEWord( MapPtr ) & 0x1FF;
 			if (Tile > 0x1DF)
@@ -223,6 +255,142 @@ void cOFED::DrawTiles() {
 	}
 
 
+}
+
+void cOFED::DrawSprite( cSurface* pTarget ) {
+
+	uint8*	di = pTarget->GetSurfaceBuffer();
+	uint8* 	si = mDrawSpriteFrameDataPtr;
+	int16	ax, cx;
+
+	di += pTarget->GetWidth() * mDrawSpritePositionY;
+
+	ax = mDrawSpritePositionX;
+	//ax += Fodder->word_40054;
+	//ax >>= 2;
+
+	di += ax;
+	word_42066 = di;
+	cx = mDrawSpritePositionX;
+	//cx += Fodder->word_40054;
+	cx &= 3;
+
+	uint8 Plane = 0;
+
+	int8 bl = byte_42070;
+
+	mDrawSpriteColumns >>= 1;
+	word_42074 = 160 - mDrawSpriteColumns;
+	mDrawSpriteColumns >>= 1;
+
+	word_42076 = (uint16)(pTarget->GetWidth() - (mDrawSpriteColumns * 4));
+
+	di += Plane;
+	for (int16 dx = mDrawSpriteRows; dx > 0; --dx) {
+
+		for (cx = 0; cx < mDrawSpriteColumns; ++cx) {
+			int8 al = (*si) >> 4;
+			if (al)
+				*di = al | bl;
+
+			si += 2;
+			di += 4;
+		}
+
+		si += word_42074;
+		di += word_42076;
+	}
+
+	++Plane;
+	if (Plane == 4) {
+		Plane = 0;
+		++word_42066;
+	}
+
+	si = mDrawSpriteFrameDataPtr;
+	di = word_42066;
+	di += Plane;
+	for (int16 dx = mDrawSpriteRows; dx > 0; --dx) {
+
+		for (cx = mDrawSpriteColumns; cx > 0; --cx) {
+			int8 al = (*si) & 0x0F;
+			if (al)
+				*di = al | bl;
+
+			si += 2;
+			di += 4;
+		}
+
+		si += word_42074;
+		di += word_42076;
+	}
+
+	++Plane;
+	if (Plane == 4) {
+		Plane = 0;
+		++word_42066;
+	}
+
+	++mDrawSpriteFrameDataPtr;
+	si = mDrawSpriteFrameDataPtr;
+	di = word_42066;
+	di += Plane;
+	for (int16 dx = mDrawSpriteRows; dx > 0; --dx) {
+
+		for (cx = mDrawSpriteColumns; cx > 0; --cx) {
+
+			int8 al = (*si) >> 4;
+			if (al)
+				*di = al | bl;
+
+			si += 2;
+			di += 4;
+
+		}
+		si += word_42074;
+		di += word_42076;
+	}
+
+	++Plane;
+	if (Plane == 4) {
+		Plane = 0;
+		++word_42066;
+	}
+
+	si = mDrawSpriteFrameDataPtr;
+	di = word_42066;
+	di += Plane;
+	for (int16 dx = mDrawSpriteRows; dx > 0; --dx) {
+
+		for (cx = mDrawSpriteColumns; cx > 0; --cx) {
+
+			int8 al = (*si) & 0x0F;
+			if (al)
+				*di = al | bl;
+
+			si += 2;
+			di += 4;
+		}
+
+		si += word_42074;
+		di += word_42076;
+	}
+}
+
+void cOFED::DrawSprite( cSurface* pTarget, uint16 pSpriteID, uint16 pDestX, uint16 pDestY ) {
+
+	byte_42070 = off_32C0C[pSpriteID][0].field_C & 0xFF;
+	mDrawSpriteFrameDataPtr = GetSpriteData( off_32C0C[pSpriteID][0].field_2 );
+	mDrawSpriteFrameDataPtr += off_32C0C[pSpriteID][0].field_0;
+
+	mDrawSpriteColumns = off_32C0C[pSpriteID][0].mColCount;
+	mDrawSpriteRows = off_32C0C[pSpriteID][0].mRowCount;
+
+	mDrawSpritePositionX = (off_32C0C[pSpriteID][0].field_E + pDestX) + 0x40;
+	mDrawSpritePositionY = (off_32C0C[pSpriteID][0].field_F + pDestY) - mDrawSpriteRows;
+	mDrawSpritePositionY += 0x10;
+
+	DrawSprite( pTarget );
 }
 
 void cOFED::DrawTile( cSurface* pTarget, uint16 pTile, uint16 pDestX, uint16 pDestY, uint16 pOffset ) {

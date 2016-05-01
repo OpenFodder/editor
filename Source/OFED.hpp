@@ -11,12 +11,15 @@ enum eTileTypes {
 class cOFED : public cSingleton < cOFED > {
 
 	public:
-	std::string		mBaseName, mSubName;
-	size_t			mBlkSize, mBlkBaseSize, mBlkSubSize;
+	std::string		mBaseName, mSubName, mBaseCoptName, mBaseArmyName;
+	size_t			mBlkSize, mBlkBaseSize, mBlkSubSize, mBaseCoptSize, mBaseArmySize;
 	uint8*			mBlkBase;
 	uint8*			mBlkSub;
 	uint8*			mBlkPtrs[480];
 	bool			mBlocksLoaded;
+
+	uint8*			mSpriteCopt;
+	uint8*			mSpriteArmy;
 
 	uint8			mCursorRow[16];
 
@@ -31,14 +34,27 @@ class cOFED : public cSingleton < cOFED > {
 	uint32			mSelectedTile;
 	uint32			mCursorTile;
 
+	uint8*			mDrawSpriteFrameDataPtr;
+	uint16			mDrawSpriteColumns;
+	uint16			mDrawSpriteRows;
+	uint16			mDrawSpritePositionX;
+	uint16			mDrawSpritePositionY;
+	uint8			byte_42070;
+	uint8*			word_42066;
+	uint16			word_42074;
+	uint16			word_42076;
+
 	cSurface*		mSurface;
 
 	void			SetupBlkPtrs();
+	uint8*			GetSpriteData( uint16 pSegment );
 
 	public:
 
 					cOFED();
 
+	void			DrawSprite( cSurface* pTarget );
+	void			DrawSprite( cSurface* pTarget, uint16 pSpriteID, uint16 pDestX, uint16 pDestY );
 	void			DrawTile( cSurface* pTarget, uint16 pTile, uint16 pDestX, uint16 pDestY, uint16 pOffset = 0 );
 	void			DrawTiles();
 

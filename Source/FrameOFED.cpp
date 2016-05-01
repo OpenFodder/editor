@@ -50,6 +50,8 @@ cFrameOFED::cFrameOFED(wxWindow *parent, wxWindowID id, const wxString &title, c
 : wxFrame(parent, id, title, position, size, style)
 {
 	mDialogToolboxTiles = 0;
+	mDialogToolboxSprites = 0;
+
 	mPanelTileView = 0;
 
 	CreateGUIControls();
@@ -90,6 +92,7 @@ void cFrameOFED::CreateGUIControls()
 	////GUI Items Creation End
 
 	mDialogToolboxTiles = new cDialogToolboxTiles( this );
+	mDialogToolboxSprites = new cDialogToolboxSprites( this );
 
 	mPanelTileView = new cPanelTileView( this );
 	mPanelTileView->SetPosition( wxPoint( 12, 10 ) );
@@ -100,6 +103,7 @@ void cFrameOFED::CreateGUIControls()
 	SetScrollbar( wxVERTICAL, 0, 2, 0 );
 
 	mDialogToolboxTiles->Show();
+	mDialogToolboxSprites->Show();
 }
 
 void cFrameOFED::OnClose(wxCloseEvent& event)
@@ -111,7 +115,9 @@ void cFrameOFED::OnMove( wxMoveEvent& event ) {
 
 	if (mDialogToolboxTiles) {
 		wxPoint a( GetPosition().x + GetSize().GetWidth(), GetPosition().y );
+		wxPoint b( GetPosition().x, GetPosition().y + GetSize().GetHeight() );
 		mDialogToolboxTiles->SetPosition( a );
+		mDialogToolboxSprites->SetPosition( b );
 	}
 }
 /*
@@ -166,7 +172,9 @@ void cFrameOFED::cFrameOFEDSize(wxSizeEvent& event)
 
 	if (mDialogToolboxTiles) {
 		wxPoint a( GetPosition().x + GetSize().GetWidth(), GetPosition().y );
+		wxPoint b( GetPosition().x, GetPosition().y + GetSize().GetHeight() );
 		mDialogToolboxTiles->SetPosition( a );
+		mDialogToolboxSprites->SetPosition( b );
 	}
 
 	Refresh();

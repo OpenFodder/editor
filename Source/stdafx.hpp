@@ -12,6 +12,7 @@
 #include "Resources.hpp"
 #include "Resource_PC_CD.hpp"
 #include "Surface.hpp"
+#include "Sprites.hpp"
 #include "OFED.hpp"
 #include "ofedApp.h"
 

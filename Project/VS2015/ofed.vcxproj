@@ -20,24 +20,34 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\DialogCreateMap.cpp" />
+    <ClCompile Include="..\..\Source\DialogToolboxSprites.cpp" />
+    <ClCompile Include="..\..\Source\DialogToolboxTiles.cpp" />
     <ClCompile Include="..\..\Source\FrameOFED.cpp" />
     <ClCompile Include="..\..\Source\OFED.cpp" />
     <ClCompile Include="..\..\Source\ofedApp.cpp" />
     <ClCompile Include="..\..\Source\PanelTileView.cpp" />
+    <ClCompile Include="..\..\Source\PanelToolboxSprite.cpp" />
+    <ClCompile Include="..\..\Source\PanelToolboxTile.cpp" />
     <ClCompile Include="..\..\Source\Resources.cpp" />
     <ClCompile Include="..\..\Source\Resource_PC_CD.cpp" />
+    <ClCompile Include="..\..\Source\Sprites.cpp" />
     <ClCompile Include="..\..\Source\stdafx.cpp" />
     <ClCompile Include="..\..\Source\Surface.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\DialogCreateMap.h" />
+    <ClInclude Include="..\..\Source\DialogToolboxSprites.h" />
+    <ClInclude Include="..\..\Source\DialogToolboxTiles.h" />
     <ClInclude Include="..\..\Source\FrameOFED.h" />
     <ClInclude Include="..\..\Source\OFED.hpp" />
     <ClInclude Include="..\..\Source\ofedApp.h" />
     <ClInclude Include="..\..\Source\PanelTileView.h" />
+    <ClInclude Include="..\..\Source\PanelToolboxSprite.h" />
+    <ClInclude Include="..\..\Source\PanelToolboxTile.h" />
     <ClInclude Include="..\..\Source\Resources.hpp" />
     <ClInclude Include="..\..\Source\Resource_PC_CD.hpp" />
     <ClInclude Include="..\..\Source\Singleton.hpp" />
+    <ClInclude Include="..\..\Source\Sprites.hpp" />
     <ClInclude Include="..\..\Source\stdafx.hpp" />
     <ClInclude Include="..\..\Source\Surface.hpp" />
     <ClInclude Include="..\..\Source\Types.hpp" />
