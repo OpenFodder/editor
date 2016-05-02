@@ -59,6 +59,8 @@ class cFrameOFED : public wxFrame
 		void OnMove( wxMoveEvent& event );
 		void OnPaint(wxPaintEvent& event);
 
+		void ReloadSprites();
+
 	private:
 		//Do not add custom control declarations between
 		//GUI Control Declaration Start and GUI Control Declaration End.

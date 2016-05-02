@@ -32,7 +32,7 @@
 
 ////Dialog Style Start
 #undef cPanelToolboxTile_STYLE
-#define cPanelToolboxTile_STYLE wxCAPTION | wxSYSTEM_MENU | wxMINIMIZE_BOX
+#define cPanelToolboxTile_STYLE wxCAPTION | wxSYSTEM_MENU
 ////Dialog Style End
 
 class cSurface;

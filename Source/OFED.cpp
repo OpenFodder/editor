@@ -386,10 +386,12 @@ void cOFED::DrawSprite( cSurface* pTarget, uint16 pSpriteID, uint16 pDestX, uint
 	mDrawSpriteColumns = off_32C0C[pSpriteID][0].mColCount;
 	mDrawSpriteRows = off_32C0C[pSpriteID][0].mRowCount;
 
-	mDrawSpritePositionX = (off_32C0C[pSpriteID][0].field_E + pDestX) + 0x40;
-	mDrawSpritePositionY = (off_32C0C[pSpriteID][0].field_F + pDestY) - mDrawSpriteRows;
-	mDrawSpritePositionY += 0x10;
+	//mDrawSpritePositionX = (off_32C0C[pSpriteID][0].field_E + pDestX);// +0x40;
+	//mDrawSpritePositionY = (off_32C0C[pSpriteID][0].field_F + pDestY);// -mDrawSpriteRows;
+	//mDrawSpritePositionY += 0x10;
 
+	mDrawSpritePositionX = pDestX;
+	mDrawSpritePositionY = pDestY;
 	DrawSprite( pTarget );
 }
 

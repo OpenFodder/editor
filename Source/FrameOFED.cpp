@@ -19,6 +19,7 @@
 #include "stdafx.hpp"
 #include "DialogCreateMap.h"
 #include "DialogToolboxTiles.h"
+#include "DialogToolboxSprites.h"
 
 //----------------------------------------------------------------------------
 // cFrameOFED
@@ -102,8 +103,9 @@ void cFrameOFED::CreateGUIControls()
 	SetScrollbar( wxHORIZONTAL, 0, 2, 0 );
 	SetScrollbar( wxVERTICAL, 0, 2, 0 );
 
-	mDialogToolboxTiles->Show();
 	mDialogToolboxSprites->Show();
+	mDialogToolboxTiles->Show();
+	
 }
 
 void cFrameOFED::OnClose(wxCloseEvent& event)
@@ -133,10 +135,16 @@ void cFrameOFED::Mnuloadmap1002Click(wxCommandEvent& event) {
 		return;
 
 	g_OFED.LoadMap( filename );
+	mDialogToolboxSprites->ReloadSprites();
 
 	SetScrollbar( wxHORIZONTAL, 0, 2, (g_OFED.mMapWidth - g_OFED.mCameraTilesX) + 2);
 	SetScrollbar( wxVERTICAL, 0, 2, (g_OFED.mMapHeight - g_OFED.mCameraTilesY) + 2);
 	Refresh();
+}
+
+void cFrameOFED::ReloadSprites() {
+
+	mDialogToolboxSprites->ReloadSprites();
 }
 
 /*
@@ -152,6 +160,7 @@ void cFrameOFED::Mnusavemap1003Click(wxCommandEvent& event) {
 		return;
 
 	g_OFED.SaveMap( filename );
+	
 }
 
 void cFrameOFED::Mnuquit1005Click( wxCommandEvent& event ) {
@@ -236,4 +245,7 @@ void cFrameOFED::OnPaint(wxPaintEvent& event)
 {
 	if(mDialogToolboxTiles)
 		mDialogToolboxTiles->Refresh();
+
+	if (mDialogToolboxSprites)
+		mDialogToolboxSprites->Refresh();
 }

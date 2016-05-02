@@ -28,21 +28,36 @@
 ////Header Include Start
 ////Header Include End
 
+#include <wx/dcbuffer.h>
+
 ////Dialog Style Start
 #undef cPanelToolboxSprite_STYLE
-#define cPanelToolboxSprite_STYLE wxCAPTION | wxSYSTEM_MENU | wxMINIMIZE_BOX | wxCLOSE_BOX
+#define cPanelToolboxSprite_STYLE wxCAPTION | wxSYSTEM_MENU
 ////Dialog Style End
+class cSurface;
 
-class cPanelToolboxSprite : public wxDialog
+struct sRange {
+	size_t mX, mY;
+	size_t mWidth, mHeight;
+	size_t mSpriteID;
+};
+
+
+class cPanelToolboxSprite : public wxPanel
 {
 	private:
 		DECLARE_EVENT_TABLE();
-		
+		cSurface*				mFinalSurface;
+		double mScaleWidth,		mScaleHeight;
+		std::vector< sRange >	mSpriteRanges;
+
 	public:
-		cPanelToolboxSprite(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Untitled7"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = cPanelToolboxSprite_STYLE);
+		cPanelToolboxSprite(wxWindow *parent, wxWindowID id = 1, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = cPanelToolboxSprite_STYLE);
 		virtual ~cPanelToolboxSprite();
 		void OnPaint( wxPaintEvent& event );
 		void OnMouse( wxMouseEvent& event );
+		void ReloadSprites();
+		void SetupSprites();
 
 	private:
 		//Do not add custom control declarations between 

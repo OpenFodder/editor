@@ -71,5 +71,6 @@ void cDialogToolboxTiles::OnClose(wxCloseEvent& /*event*/)
  */
 void cDialogToolboxTiles::OnPaint(wxPaintEvent& event)
 {
-	mToolboxTile->Refresh();
+	if(mToolboxTile)
+		mToolboxTile->Refresh();
 }

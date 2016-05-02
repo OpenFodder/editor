@@ -123,7 +123,7 @@ void cPanelToolboxTile::cPanelToolboxTilePaint(wxPaintEvent& event)
 
 		mScaleWidth = (static_cast<double>(width) / static_cast<double>(Surface->GetWidth()));
 		mScaleHeight = (static_cast<double>(height) / static_cast<double>(Surface->GetHeight()));
-
+		Surface->draw();
 		tileView.DrawBitmap( SDL_To_Bitmap( Surface, width, height ), 0, 0 );
 	}
 

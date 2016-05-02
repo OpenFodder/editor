@@ -28,9 +28,24 @@ int cFrameOFEDApp::OnExit()
 	return 0;
 }
 
+void SDL_To_SDL( cSurface *pSource, cSurface *pDest, int pDestX, int pDestY, int pDestWidth, int pDestHeight ) {
+	pSource->draw();
+
+	SDL_Rect SrcRect, DestRect;
+	SrcRect.x = 0;
+	SrcRect.y = 0;
+	SrcRect.w = pSource->GetWidth();
+	SrcRect.h = pSource->GetHeight();
+	DestRect.x = pDestX;
+	DestRect.y = pDestY;
+	DestRect.w = pDestWidth;
+	DestRect.h = pDestHeight;
+
+	SDL_BlitScaled( pSource->GetSurface(), &SrcRect, pDest->GetSurface(), &DestRect );
+}
+
 wxBitmap SDL_To_Bitmap( cSurface* pSurface, int pDestWidth, int pDestHeight ) {
-	pSurface->draw(); 
-	
+
 	SDL_Rect SrcRect, DestRect;
 	SrcRect.x = 0;
 	SrcRect.y = 0;

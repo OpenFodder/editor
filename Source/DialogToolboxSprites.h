@@ -33,6 +33,8 @@
 #define cDialogToolboxSprites_STYLE wxCAPTION | wxRESIZE_BORDER | wxSYSTEM_MENU | wxDIALOG_NO_PARENT
 ////Dialog Style End
 
+class cPanelToolboxSprite;
+
 class cDialogToolboxSprites : public wxDialog
 {
 	private:
@@ -41,7 +43,10 @@ class cDialogToolboxSprites : public wxDialog
 	public:
 		cDialogToolboxSprites(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Toolbox Sprites"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = cDialogToolboxSprites_STYLE);
 		virtual ~cDialogToolboxSprites();
-	
+		void OnPaint( wxPaintEvent& event );
+		void ReloadSprites();
+		void OnSize(wxSizeEvent& event);
+
 	private:
 		//Do not add custom control declarations between 
 		//GUI Control Declaration Start and GUI Control Declaration End.
@@ -49,6 +54,8 @@ class cDialogToolboxSprites : public wxDialog
 		////GUI Control Declaration Start
 		////GUI Control Declaration End
 		
+	cPanelToolboxSprite*	mSpritePanel;
+
 	private:
 		//Note: if you receive any error with these enum IDs, then you need to
 		//change your old form code that are based on the #define control IDs.

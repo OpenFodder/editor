@@ -1,4 +1,4 @@
-object frmNewForm_6: TfrmNewForm
+object frmNewForm_1: TfrmNewForm
   Left = 8
   Top = 8
   AutoScroll = False
@@ -26,7 +26,7 @@ object frmNewForm_6: TfrmNewForm
   Wx_Hidden = False
   Wx_SizeToContents = True
   Wx_GeneralStyle = []
-  Wx_DialogStyle = [wxCAPTION, wxSYSTEM_MENU, wxDIALOG_NO_PARENT, wxMINIMIZE_BOX]
+  Wx_DialogStyle = [wxCAPTION, wxSYSTEM_MENU, wxDIALOG_NO_PARENT]
   Wx_Border = 0
   Wx_BorderAlignment = []
   isAuimanagerAvailable = False

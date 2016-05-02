@@ -7,8 +7,9 @@
 ///            cDialogToolboxSprites class implementation
 ///
 ///------------------------------------------------------------------
-
+#include "stdafx.hpp"
 #include "DialogToolboxSprites.h"
+#include "PanelToolboxSprite.h"
 
 //Do not add custom headers
 //wxDev-C++ designer will remove them
@@ -26,12 +27,14 @@ BEGIN_EVENT_TABLE(cDialogToolboxSprites,wxDialog)
 	////Manual Code End
 	
 	EVT_CLOSE(cDialogToolboxSprites::OnClose)
+	EVT_PAINT(cDialogToolboxSprites::OnPaint)
 END_EVENT_TABLE()
 ////Event Table End
 
 cDialogToolboxSprites::cDialogToolboxSprites(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
 : wxDialog(parent, id, title, position, size, style)
 {
+	mSpritePanel = 0;
 	CreateGUIControls();
 }
 
@@ -49,13 +52,36 @@ void cDialogToolboxSprites::CreateGUIControls()
 
 	SetTitle(_("Toolbox Sprites"));
 	SetIcon(wxNullIcon);
-	SetSize(8,8,798,200);
+	SetSize(8,8,798,350);
 	Center();
 	
 	////GUI Items Creation End
+
+	mSpritePanel = new cPanelToolboxSprite( this );
+	
 }
 
-void cDialogToolboxSprites::OnClose(wxCloseEvent& /*event*/)
-{
+void cDialogToolboxSprites::OnClose(wxCloseEvent& /*event*/) {
+
 	Destroy();
+}
+
+void cDialogToolboxSprites::OnPaint( wxPaintEvent & event ) {
+
+	if (mSpritePanel)
+		mSpritePanel->Refresh();
+}
+
+void cDialogToolboxSprites::ReloadSprites() {
+
+	if(mSpritePanel)
+		mSpritePanel->ReloadSprites();
+}
+
+/*
+ * cDialogToolboxSpritesSize
+ */
+void cDialogToolboxSprites::OnSize(wxSizeEvent& event)
+{
+	// insert your code here
 }

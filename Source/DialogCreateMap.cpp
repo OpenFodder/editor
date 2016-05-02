@@ -16,6 +16,7 @@
 ////Header Include End
 
 #include "stdafx.hpp"
+#include "FrameOFED.h"
 
 //----------------------------------------------------------------------------
 // cDialogCreateMap
@@ -101,5 +102,6 @@ void cDialogCreateMap::ButtonCreateMap(wxCommandEvent& event) {
 	GetParent()->SetScrollbar( wxVERTICAL, 0, 2, (g_OFED.mMapHeight - g_OFED.mCameraTilesY) + 2 );
 	GetParent()->Refresh();
 
+	((cFrameOFED*)GetParent())->ReloadSprites();
 	Close();
 }
