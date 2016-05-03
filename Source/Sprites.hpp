@@ -1,6 +1,7 @@
 
 struct sSpriteDef {
 	uint16 mDirection;
+	uint16 mIgnored;
 	uint16 mX;
 	uint16 mY;
 	uint16 mSpriteID;

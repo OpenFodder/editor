@@ -20,6 +20,7 @@ cOFED::cOFED() {
 	new cResource_PC_CD();
 
 	mMap = 0;
+	mMapSpt = 0;
 	mBlocksLoaded = false;
 
 	mBlkSize = 0xFD00 * 16;
@@ -64,6 +65,7 @@ void cOFED::AddSprite( size_t pTileX, size_t pTileY ) {
 
 	sSpriteDef Sprite;
 
+	Sprite.mIgnored = 0;
 	Sprite.mX = pTileX;
 	Sprite.mY = pTileY;
 	Sprite.mDirection = 0x7C;
@@ -110,6 +112,7 @@ void cOFED::CreateMap( eTileTypes pTileType, size_t pWidth, size_t pHeight ) {
 		pTileType = eTileTypes_Jungle;
 
 	delete[] mMap;
+	delete[] mMapSpt;
 
 	mMapWidth = pWidth;
 	mMapHeight = pHeight;
@@ -193,7 +196,7 @@ void cOFED::SaveMap( std::string pFilename ) {
 	outfile.close();
 
 	tool_EndianSwap( mMap + 0x60, mMapSize - 0x60 );
-
+	SaveSprites( pFilename );
 }
 
 void cOFED::LoadSprites( std::string pFilename ) {
@@ -201,7 +204,12 @@ void cOFED::LoadSprites( std::string pFilename ) {
 
 	SptFilename.replace( pFilename.length() - 3, pFilename.length(), "spt" );
 
+	delete[] mMapSpt;
+
 	mMapSpt = local_FileRead( SptFilename, "", mMapSptSize, true );
+	if (mMapSpt == 0)
+		return;
+
 	tool_EndianSwap( mMapSpt, mMapSptSize );
 
 	uint16* SptPtr = (uint16*) mMapSpt;
@@ -231,6 +239,28 @@ void cOFED::LoadSprites( std::string pFilename ) {
 }
 
 void cOFED::SaveSprites( std::string pFilename ) {
+	std::string SptFilename = pFilename;
+
+	SptFilename.replace( pFilename.length() - 3, pFilename.length(), "spt" );
+
+	std::ofstream outfile( SptFilename, std::ofstream::binary );
+
+	mMapSptSize = 0x0A * mSprites.size();
+	mMapSpt = new uint8[mMapSptSize];
+
+	uint8* SptPtr = mMapSpt;
+
+	for (std::vector<sSpriteDef>::iterator SpriteIT = mSprites.begin(); SpriteIT != mSprites.end(); ++SpriteIT) {
+
+		writeBEWord( SptPtr, SpriteIT->mDirection ); SptPtr += 2;
+		writeBEWord( SptPtr, SpriteIT->mIgnored );	 SptPtr += 2;
+		writeBEWord( SptPtr, SpriteIT->mX );		 SptPtr += 2;
+		writeBEWord( SptPtr, SpriteIT->mY );		 SptPtr += 2;
+		writeBEWord( SptPtr, SpriteIT->mSpriteID );	 SptPtr += 2;
+	}
+
+	outfile.write( (const char*)mMapSpt, mMapSptSize );
+	outfile.close();
 
 }
 
