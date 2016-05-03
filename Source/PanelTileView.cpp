@@ -89,9 +89,15 @@ void cPanelTileView::OnMouseInputTimer( wxTimerEvent& event ) {
 
 		uint32 Tile = g_OFED.mMapTilePtr + (((TileY * g_OFED.mMapWidth) + TileX));
 
-		g_OFED.SetTile( TileX, TileY, g_OFED.mCursorTile );
+		if (g_OFED.mCursorTile > -1) {
+			g_OFED.SetTile( TileX, TileY, g_OFED.mCursorTile );
+			g_OFED.SetSelectedTile( Tile );
+		}
 
-		g_OFED.SetSelectedTile( Tile );
+		if (g_OFED.mCursorSprite > -1) {
+			g_OFED.AddSprite( MouseX - 16, MouseY + 16);
+		}
+
 		g_OFED.DrawTiles();
 		Refresh();
 	}

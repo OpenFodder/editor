@@ -11,7 +11,11 @@ const std::string mTileType_Names[] = {
 	"afx"		// Amiga Format Christmas Special
 };
 
+int32 g_SpriteAnim[111] = {};
+
 cOFED::cOFED() {
+
+	SetupSprites();
 
 	new cResource_PC_CD();
 
@@ -26,6 +30,9 @@ cOFED::cOFED() {
 	mSpriteArmy = new uint8[0xD50 * 16];
 
 	mSurface = 0;
+
+	mCursorTile = -1;
+	mCursorSprite = -1;
 
 	SetupBlkPtrs();
 	ResetCamera();
@@ -53,6 +60,18 @@ void cOFED::ResetCamera() {
 	LoadPalette( mSurface );
 }
 
+void cOFED::AddSprite( size_t pTileX, size_t pTileY ) {
+
+	sSpriteDef Sprite;
+
+	Sprite.mX = pTileX;
+	Sprite.mY = pTileY;
+	Sprite.mDirection = 0x7C;
+	Sprite.mSpriteID = mCursorSprite;
+
+	mSprites.push_back( Sprite );
+}
+
 void cOFED::SetTile( size_t pTileX, size_t pTileY, size_t pTileType ) {
 
 	uint32 Tile = g_OFED.mMapTilePtr + (((pTileY * g_OFED.mMapWidth) + pTileX));
@@ -63,7 +82,13 @@ void cOFED::SetTile( size_t pTileX, size_t pTileY, size_t pTileType ) {
 }
 
 void cOFED::SetCursorTile( size_t pTileType ) {
+	mCursorSprite = -1;
 	mCursorTile = pTileType;
+}
+
+void cOFED::SetCursorSprite( size_t pSpriteID ) {
+	mCursorTile = -1;
+	mCursorSprite = pSpriteID;
 }
 
 void cOFED::SetSelectedTile( size_t pTile ) {
@@ -111,6 +136,8 @@ void cOFED::CreateMap( eTileTypes pTileType, size_t pWidth, size_t pHeight ) {
 	writeBEWord( &mMap[0x54], mMapWidth );
 	writeBEWord( &mMap[0x56], mMapHeight );
 
+	mSprites.clear();
+
 	LoadBlk();
 	ResetCamera();
 	DrawTiles();
@@ -136,6 +163,8 @@ void cOFED::LoadMap( std::string pFilename ) {
 
 	mBaseName.clear();
 	mSubName.clear();
+	mBaseCoptName.clear();
+	mBaseArmyName.clear();
 
 	mBaseName.append( mMap, mMap + 11 );
 	mSubName.append( mMap + 0x10, mMap + 0x10 + 11 );
@@ -147,6 +176,8 @@ void cOFED::LoadMap( std::string pFilename ) {
 
 	mMapWidth = readBEWord( &mMap[0x54] );
 	mMapHeight = readBEWord( &mMap[0x56] );
+
+	LoadSprites( pFilename );
 
 	LoadBlk();
 	ResetCamera();
@@ -162,6 +193,44 @@ void cOFED::SaveMap( std::string pFilename ) {
 	outfile.close();
 
 	tool_EndianSwap( mMap + 0x60, mMapSize - 0x60 );
+
+}
+
+void cOFED::LoadSprites( std::string pFilename ) {
+	std::string SptFilename = pFilename;
+
+	SptFilename.replace( pFilename.length() - 3, pFilename.length(), "spt" );
+
+	mMapSpt = local_FileRead( SptFilename, "", mMapSptSize, true );
+	tool_EndianSwap( mMapSpt, mMapSptSize );
+
+	uint16* SptPtr = (uint16*) mMapSpt;
+	uint16* SptPtrEnd = SptPtr + (mMapSptSize / 2);
+
+	for (; SptPtr != SptPtrEnd; ) {
+		sSpriteDef Sprite;
+
+		++SptPtr;
+		Sprite.mDirection = 0x7C;
+		++SptPtr;
+
+		uint16 ax = SptPtr[0];
+		++SptPtr;
+		Sprite.mX = ax;
+
+		ax = SptPtr[0];
+		++SptPtr;
+		Sprite.mY = ax;
+
+		ax = SptPtr[0];
+		++SptPtr;
+		Sprite.mSpriteID = ax;
+
+		mSprites.push_back( Sprite );
+	}
+}
+
+void cOFED::SaveSprites( std::string pFilename ) {
 
 }
 
@@ -254,7 +323,7 @@ void cOFED::DrawTiles() {
 		CurrentMapPtr += mMapWidth << 1;
 	}
 
-
+	DrawSprites();
 }
 
 void cOFED::DrawSprite( cSurface* pTarget ) {
@@ -377,7 +446,7 @@ void cOFED::DrawSprite( cSurface* pTarget ) {
 	}
 }
 
-void cOFED::DrawSprite( cSurface* pTarget, uint16 pSpriteID, uint16 pDestX, uint16 pDestY ) {
+void cOFED::DrawSprite( cSurface* pTarget, uint16 pSpriteID, uint16 pDestX, uint16 pDestY, bool pAdjust ) {
 
 	byte_42070 = off_32C0C[pSpriteID][0].field_C & 0xFF;
 	mDrawSpriteFrameDataPtr = GetSpriteData( off_32C0C[pSpriteID][0].field_2 );
@@ -386,13 +455,24 @@ void cOFED::DrawSprite( cSurface* pTarget, uint16 pSpriteID, uint16 pDestX, uint
 	mDrawSpriteColumns = off_32C0C[pSpriteID][0].mColCount;
 	mDrawSpriteRows = off_32C0C[pSpriteID][0].mRowCount;
 
-	//mDrawSpritePositionX = (off_32C0C[pSpriteID][0].field_E + pDestX);// +0x40;
-	//mDrawSpritePositionY = (off_32C0C[pSpriteID][0].field_F + pDestY);// -mDrawSpriteRows;
-	//mDrawSpritePositionY += 0x10;
-
-	mDrawSpritePositionX = pDestX;
-	mDrawSpritePositionY = pDestY;
+	if (pAdjust) {
+		mDrawSpritePositionX = (off_32C0C[pSpriteID][0].field_E + pDestX) +0x10;
+		mDrawSpritePositionY = (off_32C0C[pSpriteID][0].field_F + pDestY) - mDrawSpriteRows;
+		//mDrawSpritePositionY += 0x10;
+	}
+	else {
+		mDrawSpritePositionX = pDestX;
+		mDrawSpritePositionY = pDestY;
+	}
 	DrawSprite( pTarget );
+}
+
+void cOFED::DrawSprites() {
+
+	for( std::vector<sSpriteDef>::iterator SpriteIT = mSprites.begin(); SpriteIT != mSprites.end(); ++SpriteIT ) {
+
+		DrawSprite( mSurface, g_SpriteAnim[ SpriteIT->mSpriteID ], SpriteIT->mX, SpriteIT->mY, true );
+	}
 }
 
 void cOFED::DrawTile( cSurface* pTarget, uint16 pTile, uint16 pDestX, uint16 pDestY, uint16 pOffset ) {
@@ -448,4 +528,90 @@ void cOFED::SetMapY( int64 pMapY ) {
 	mMapTilePtr = (mMapY * mMapWidth) + mMapX;
 
 	DrawTiles();
+}
+
+
+void cOFED::SetupSprites() {
+	for (int i = 0; i < 111; ++i) {
+		g_SpriteAnim[i] = -1;
+	}
+
+	g_SpriteAnim[eSprite_Player] = 0x00;
+	g_SpriteAnim[eSprite_Enemy] = 0x52;
+
+	g_SpriteAnim[eSprite_Shrub] = 0x8F;
+	g_SpriteAnim[eSprite_Tree] = 0x90;
+	g_SpriteAnim[eSprite_BuildingRoof] = 0x91;
+	g_SpriteAnim[eSprite_Shrub2] = 0x93;
+	g_SpriteAnim[eSprite_Waterfall] = 0x94;
+	g_SpriteAnim[eSprite_Bird2_Left] = 0x98;
+
+	g_SpriteAnim[eSprite_BuildingDoor] = 0x99;
+	g_SpriteAnim[eSprite_BuildingDoor2] = 0x9B;
+	g_SpriteAnim[eSprite_Floating_Dead_Soldier] = 0x9E;
+	g_SpriteAnim[eSprite_Enemy_Rocket] = 0x39;
+	g_SpriteAnim[eSprite_GrenadeBox] = 0xC2;
+	g_SpriteAnim[eSprite_RocketBox] = 0xC3;
+
+	g_SpriteAnim[eSprite_Helicopter_Grenade_Enemy] = 0x8B;
+	g_SpriteAnim[eSprite_Helicopter_Grenade2_Enemy] = 0x8B;
+	g_SpriteAnim[eSprite_Helicopter_Missile_Enemy] = 0x8B;
+	g_SpriteAnim[eSprite_Helicopter_Homing_Enemy] = 0x8B;
+	g_SpriteAnim[eSprite_Helicopter_Grenade2_Human] = 0x8B;
+	g_SpriteAnim[eSprite_Helicopter_Grenade_Human] = 0x8B;
+	g_SpriteAnim[eSprite_Helicopter_Missile_Human] = 0x8B;
+	g_SpriteAnim[eSprite_Helicopter_Homing_Human] = 0x8B;
+
+	g_SpriteAnim[eSprite_Mine] = 0xC7;
+	g_SpriteAnim[eSprite_Mine2] = 0xC8;
+	g_SpriteAnim[eSprite_Spike] = 0xC9;
+
+	g_SpriteAnim[eSprite_BoilingPot] = 0xCD;
+	g_SpriteAnim[eSprite_Indigenous] = 0xD0;
+	g_SpriteAnim[eSprite_Indigenous2] = 0xD0;
+	g_SpriteAnim[eSprite_VehicleNoGun_Human] = 0xA5;
+	g_SpriteAnim[eSprite_VehicleGun_Human] = 0xA5;
+
+	g_SpriteAnim[eSprite_Tank_Human] = 0xD1;
+	g_SpriteAnim[eSprite_Bird_Left] = 0xD3;
+	g_SpriteAnim[eSprite_Bird_Right] = 0xD4;
+	g_SpriteAnim[eSprite_Seal] = 0xD5;
+	g_SpriteAnim[eSprite_Tank_Enemy] = 0xD1;
+
+	g_SpriteAnim[eSprite_Indigenous_Spear] = 0xD0;
+	g_SpriteAnim[eSprite_Hostage] = 0xD9;
+	g_SpriteAnim[eSprite_Hostage_Rescue_Tent] = 0xDD;
+
+	g_SpriteAnim[eSprite_Door_Indigenous] = 0x9B;
+	g_SpriteAnim[eSprite_Door2_Indigenous] = 0x9B;
+	g_SpriteAnim[eSprite_Door_Indigenous_Spear] = 0x9B;
+
+	g_SpriteAnim[eSprite_Turret_Missile_Human] = 0xD2;
+	g_SpriteAnim[eSprite_Turret_Missile2_Human] = 0xD2;
+
+	g_SpriteAnim[eSprite_VehicleNoGun_Enemy] = 0xA5;
+	g_SpriteAnim[eSprite_VehicleGun_Enemy] = 0xA5;
+	g_SpriteAnim[eSprite_Vehicle_Unk_Enemy] = 0xA5;
+	g_SpriteAnim[eSprite_Indigenous_Invisible] = 0xD6;
+
+	g_SpriteAnim[eSprite_Turret_Missile_Enemy] = 0xD2;
+	g_SpriteAnim[eSprite_Turret_Missile2_Enemy] = 0xD2;
+	g_SpriteAnim[eSprite_BuildingDoor3] = 0xE0;
+
+	g_SpriteAnim[eSprite_OpenCloseDoor] = 0x9B;
+	g_SpriteAnim[eSprite_Seal_Mine] = 0xD5;
+	g_SpriteAnim[eSprite_Spider_Mine] = 0xE2;
+
+	g_SpriteAnim[eSprite_Bonus_RankToGeneral] = 0x95;
+	g_SpriteAnim[eSprite_Bonus_Rockets] = 0xE4;
+	g_SpriteAnim[eSprite_Bonus_RocketsAndGeneral] = 0xE5;
+	g_SpriteAnim[eSprite_Bonus_SquadGeneralRockets] = 0xE6;
+	g_SpriteAnim[eSprite_Helicopter_CallPad] = 0xE7;
+
+	g_SpriteAnim[eSprite_Turret_HomingMissile_Enemy] = 0xD2;
+	g_SpriteAnim[eSprite_Hostage_2] = 0xD9;
+	g_SpriteAnim[eSprite_Helicopter_Homing_Enemy2] = 0x8B;
+	g_SpriteAnim[eSprite_Computer_1] = 0x8F;
+	g_SpriteAnim[eSprite_Computer_2] = 0x8F;
+	g_SpriteAnim[eSprite_Computer_3] = 0x8F;
 }

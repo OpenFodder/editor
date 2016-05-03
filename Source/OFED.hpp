@@ -8,6 +8,8 @@ enum eTileTypes {
 	eTileTypes_AFX = 6,
 };
 
+extern int32 g_SpriteAnim[111];
+
 class cOFED : public cSingleton < cOFED > {
 
 	public:
@@ -21,18 +23,23 @@ class cOFED : public cSingleton < cOFED > {
 	uint8*			mSpriteCopt;
 	uint8*			mSpriteArmy;
 
+	std::vector<sSpriteDef> mSprites;
+
 	uint8			mCursorRow[16];
 
 	uint8*			mMap;
+	uint8*			mMapSpt;
+
 	uint32			mMapTilePtr;
 
-	size_t			mMapSize;
+	size_t			mMapSize, mMapSptSize;
 	size_t			mMapWidth, mMapHeight;
 
 	int64			mMapX, mMapY;
 	size_t			mCameraTilesX, mCameraTilesY;
 	uint32			mSelectedTile;
-	uint32			mCursorTile;
+	int32			mCursorTile;
+	int32			mCursorSprite;
 
 	uint8*			mDrawSpriteFrameDataPtr;
 	uint16			mDrawSpriteColumns;
@@ -54,9 +61,11 @@ class cOFED : public cSingleton < cOFED > {
 					cOFED();
 
 	void			DrawSprite( cSurface* pTarget );
-	void			DrawSprite( cSurface* pTarget, uint16 pSpriteID, uint16 pDestX, uint16 pDestY );
+	void			DrawSprite( cSurface* pTarget, uint16 pSpriteID, uint16 pDestX, uint16 pDestY, bool pAdjust );
 	void			DrawTile( cSurface* pTarget, uint16 pTile, uint16 pDestX, uint16 pDestY, uint16 pOffset = 0 );
+	
 	void			DrawTiles();
+	void			DrawSprites();
 
 	void			SetMapX( int64 pMapX );
 	void			SetMapY( int64 pMapY );
@@ -68,11 +77,18 @@ class cOFED : public cSingleton < cOFED > {
 	void			LoadMap( std::string pFilename );
 	void			SaveMap( std::string pFilename );
 
+	void			LoadSprites( std::string pFilename );
+	void			SaveSprites( std::string pFilename );
+	void			SetupSprites();
+
 	void			ResetCamera();
+
+	void			AddSprite( size_t pTileX, size_t pTileY );
 
 	void			SetTile( size_t pTileX, size_t pTileY, size_t pTileType );
 	void			SetCursorTile( size_t pTileType );
 	void			SetSelectedTile( size_t pTile );
+	void			SetCursorSprite( size_t pSpriteID );
 
 	cSurface*		GetSurface() const { return mSurface; }
 };

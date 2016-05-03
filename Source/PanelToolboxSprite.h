@@ -40,6 +40,14 @@ struct sRange {
 	size_t mX, mY;
 	size_t mWidth, mHeight;
 	size_t mSpriteID;
+
+	sRange( size_t pX, size_t pY, size_t pWidth, size_t pHeight, size_t pSpriteID ) {
+		mX = pX;
+		mY = pY;
+		mWidth = pWidth;
+		mHeight = pHeight;
+		mSpriteID = pSpriteID;
+	}
 };
 
 
@@ -50,6 +58,7 @@ class cPanelToolboxSprite : public wxPanel
 		cSurface*				mFinalSurface;
 		double mScaleWidth,		mScaleHeight;
 		std::vector< sRange >	mSpriteRanges;
+		wxCursor				mCursor;
 
 	public:
 		cPanelToolboxSprite(wxWindow *parent, wxWindowID id = 1, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = cPanelToolboxSprite_STYLE);
@@ -57,7 +66,6 @@ class cPanelToolboxSprite : public wxPanel
 		void OnPaint( wxPaintEvent& event );
 		void OnMouse( wxMouseEvent& event );
 		void ReloadSprites();
-		void SetupSprites();
 
 	private:
 		//Do not add custom control declarations between 

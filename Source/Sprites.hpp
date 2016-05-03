@@ -1,4 +1,11 @@
 
+struct sSpriteDef {
+	uint16 mDirection;
+	uint16 mX;
+	uint16 mY;
+	uint16 mSpriteID;
+};
+
 struct sSpriteSheet {
 	uint16 field_0;
 	uint16 field_2;
