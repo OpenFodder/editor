@@ -1,9 +1,9 @@
-object frmNewForm_1: TfrmNewForm
+object frmNewForm_6: TfrmNewForm
   Left = 8
   Top = 8
   AutoScroll = False
   BorderIcons = [biSystemMenu, biMinimize]
-  Caption = 'Tile Toolbox'
+  Caption = 'Toolbox Tile'
   ClientHeight = 826
   ClientWidth = 704
   Color = clBtnFace

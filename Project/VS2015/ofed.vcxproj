@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\DialogCreateMap.cpp" />
+    <ClCompile Include="..\..\Source\DialogListSprites.cpp" />
     <ClCompile Include="..\..\Source\DialogToolboxSprites.cpp" />
     <ClCompile Include="..\..\Source\DialogToolboxTiles.cpp" />
     <ClCompile Include="..\..\Source\FrameOFED.cpp" />
@@ -36,6 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\DialogCreateMap.h" />
+    <ClInclude Include="..\..\Source\DialogListSprites.h" />
     <ClInclude Include="..\..\Source\DialogToolboxSprites.h" />
     <ClInclude Include="..\..\Source\DialogToolboxTiles.h" />
     <ClInclude Include="..\..\Source\FrameOFED.h" />

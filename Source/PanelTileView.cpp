@@ -95,9 +95,10 @@ void cPanelTileView::OnMouseInputTimer( wxTimerEvent& event ) {
 		}
 
 		if (g_OFED.mCursorSprite > -1) {
-
-			
-			g_OFED.AddSprite( ((MouseX - off_32C0C[g_SpriteAnim[g_OFED.mCursorSprite] ][0].field_E)) - 0x10, MouseY + 16 - off_32C0C[g_SpriteAnim[g_OFED.mCursorSprite]][0].field_F );
+			mMouseTimer->Stop();
+			g_OFED.AddSprite(	((g_OFED.mMapX * 16) + MouseX - off_32C0C[g_SpriteAnim[g_OFED.mCursorSprite] ][0].field_E - 0x10), 
+								((g_OFED.mMapY * 16) + MouseY + 16 - off_32C0C[g_SpriteAnim[g_OFED.mCursorSprite]][0].field_F )
+				);
 		}
 
 		g_OFED.DrawTiles();

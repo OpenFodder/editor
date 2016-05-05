@@ -17,9 +17,9 @@ bool cFrameOFEDApp::OnInit()
 {
 	new cOFED();
 
-    cFrameOFED* frame = new cFrameOFED(NULL);
-    SetTopWindow(frame);
-    frame->Show();
+	g_FrameOFED = new cFrameOFED(NULL);
+    SetTopWindow( g_FrameOFED );
+	g_FrameOFED->Show();
     return true;
 }
  

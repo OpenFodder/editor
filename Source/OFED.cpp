@@ -1,5 +1,6 @@
 
 #include "stdafx.hpp"
+#include "FrameOFED.h"
 
 const std::string mTileType_Names[] = {
 	"jun",
@@ -12,6 +13,8 @@ const std::string mTileType_Names[] = {
 };
 
 int32 g_SpriteAnim[111] = {};
+std::string g_SpriteName[111] = {};
+cFrameOFED* g_FrameOFED;
 
 cOFED::cOFED() {
 
@@ -39,14 +42,24 @@ cOFED::cOFED() {
 	ResetCamera();
 }
 
+cOFED::~cOFED() {
+	
+	delete mMap;
+	delete mMapSpt;
+	delete mBlkBase;
+	delete mBlkSub;
+	delete mSpriteCopt;
+	delete mSpriteArmy;
+}
+
 void cOFED::ResetCamera() {
 	mMapX = 0;
 	mMapY = 0;
 	mMapTilePtr = 0;
 	mSelectedTile = 0;
 
-	mCameraTilesX = 0x20;
-	mCameraTilesY = 0x0F * 2;
+	mCameraTilesX = 0x15;
+	mCameraTilesY = 0x0F;
 
 	if (mCameraTilesX > mMapWidth)
 		mCameraTilesX = mMapWidth;
@@ -72,6 +85,49 @@ void cOFED::AddSprite( size_t pTileX, size_t pTileY ) {
 	Sprite.mSpriteID = mCursorSprite;
 
 	mSprites.push_back( Sprite );
+
+	Sprite.mSpriteID = eSprite_Null;
+
+	switch (mCursorSprite) {
+		case eSprite_BoilingPot:						// 1 Null
+			mSprites.push_back( Sprite );
+			break;
+
+		case eSprite_Helicopter_Grenade_Enemy:			// 3 Nulls
+		case eSprite_Helicopter_Grenade2_Enemy:
+		case eSprite_Helicopter_Missile_Enemy:
+		case eSprite_Helicopter_Homing_Enemy:
+		case eSprite_Helicopter_Homing_Enemy2:
+			mSprites.push_back( Sprite );	
+
+				// Fall Through
+		case eSprite_Helicopter_Grenade2_Human:			// 2 Nulls
+		case eSprite_Helicopter_Grenade_Human:
+		case eSprite_Helicopter_Missile_Human:
+		case eSprite_Helicopter_Homing_Human:
+		case eSprite_Helicopter_Grenade2_Human_Called:
+		case eSprite_Helicopter_Grenade_Human_Called:
+		case eSprite_Helicopter_Missile_Human_Called:
+		case eSprite_Helicopter_Homing_Human_Called:
+			mSprites.push_back( Sprite );
+			mSprites.push_back( Sprite );
+			break;
+
+		case eSprite_Tank_Enemy:						// 2 Nulls
+			mSprites.push_back( Sprite );
+
+		case eSprite_Tank_Human:
+			mSprites.push_back( Sprite );
+			break;
+
+		case eSprite_VehicleNoGun_Human:
+		case eSprite_VehicleGun_Human:
+		case eSprite_VehicleNoGun_Enemy:
+		case eSprite_VehicleGun_Enemy:
+		case eSprite_Vehicle_Unk_Enemy:
+			mSprites.push_back( Sprite );
+			break;
+	}
 }
 
 void cOFED::SetTile( size_t pTileX, size_t pTileY, size_t pTileType ) {
@@ -206,6 +262,8 @@ void cOFED::LoadSprites( std::string pFilename ) {
 
 	delete[] mMapSpt;
 
+	mSprites.clear();
+
 	mMapSpt = local_FileRead( SptFilename, "", mMapSptSize, true );
 	if (mMapSpt == 0)
 		return;
@@ -254,8 +312,8 @@ void cOFED::SaveSprites( std::string pFilename ) {
 
 		writeBEWord( SptPtr, SpriteIT->mDirection ); SptPtr += 2;
 		writeBEWord( SptPtr, SpriteIT->mIgnored );	 SptPtr += 2;
-		writeBEWord( SptPtr, SpriteIT->mX );		 SptPtr += 2;
-		writeBEWord( SptPtr, SpriteIT->mY );		 SptPtr += 2;
+		writeBEWord( SptPtr, SpriteIT->mX  );		 SptPtr += 2;
+		writeBEWord( SptPtr, SpriteIT->mY  );		 SptPtr += 2;
 		writeBEWord( SptPtr, SpriteIT->mSpriteID );	 SptPtr += 2;
 	}
 
@@ -276,6 +334,10 @@ uint8* cOFED::GetSpriteData( uint16 pSegment ) {
 		return mSpriteArmy;
 		break;
 	}
+
+	std::cout << "Invalid Sprite Ptr\n";
+	exit( 1 );
+	return 0;
 }
 
 void cOFED::SetupBlkPtrs() {
@@ -476,6 +538,103 @@ void cOFED::DrawSprite( cSurface* pTarget ) {
 	}
 }
 
+bool cOFED::Sprite_OnScreen_Check() {
+	int16 ax;
+
+	if (mDrawSpritePositionY < 0) {
+		ax = mDrawSpritePositionY + mDrawSpriteRows;
+		--ax;
+		if (ax < 0)
+			return false;
+
+		ax -= 0;
+		ax -= mDrawSpriteRows;
+		++ax;
+		ax = -ax;
+		mDrawSpritePositionY += ax;
+		mDrawSpriteRows -= ax;
+
+		//if (mVersion->mPlatform == ePlatform::PC)
+			ax *= 0xA0;
+
+		//if (mVersion->mPlatform == ePlatform::Amiga)
+		//	ax *= 40;
+
+		mDrawSpriteFrameDataPtr += ax;
+	}
+
+	ax = mDrawSpritePositionY + mDrawSpriteRows;
+	--ax;
+	//if (mVersion->mPlatform == ePlatform::PC) {
+		if (ax > 231) {
+			if (mDrawSpritePositionY > 231)
+				return false;
+
+			ax -= 231;
+			mDrawSpriteRows -= ax;
+
+		}
+	//}
+	/*if (mVersion->mPlatform == ePlatform::Amiga) {
+		if (ax > 256) {
+			if (mDrawSpritePositionY > 256)
+				return false;
+
+			ax -= 256;
+			mDrawSpriteRows -= ax;
+
+		}
+	}*/
+
+	if (mDrawSpritePositionX < 0) {
+		ax = mDrawSpritePositionX + mDrawSpriteColumns;
+		--ax;
+		if (ax < 0)
+			return false;
+
+		ax -= 0;
+		ax -= mDrawSpriteColumns;
+		++ax;
+		ax = -ax;
+		--ax;
+
+		do {
+			++ax;
+		} while (ax & 3);
+
+		mDrawSpritePositionX += ax;
+		mDrawSpriteColumns -= ax;
+		ax >>= 1;
+		mDrawSpriteFrameDataPtr += ax;
+	}
+
+	ax = mDrawSpritePositionX + mDrawSpriteColumns;
+	--ax;
+
+	if (ax > 335) {
+		if (mDrawSpritePositionX > 335)
+			return false;
+
+		ax -= 335;
+		--ax;
+
+		do {
+			++ax;
+		} while (ax & 3);
+
+		mDrawSpriteColumns -= ax;
+	}
+
+	if (mDrawSpriteColumns <= 0)
+		return false;
+
+	if (mDrawSpriteRows <= 0)
+		return false;
+
+	return true;
+}
+
+
 void cOFED::DrawSprite( cSurface* pTarget, uint16 pSpriteID, uint16 pDestX, uint16 pDestY, bool pAdjust ) {
 
 	byte_42070 = off_32C0C[pSpriteID][0].field_C & 0xFF;
@@ -486,20 +645,26 @@ void cOFED::DrawSprite( cSurface* pTarget, uint16 pSpriteID, uint16 pDestX, uint
 	mDrawSpriteRows = off_32C0C[pSpriteID][0].mRowCount;
 
 	if (pAdjust) {
-		mDrawSpritePositionX = (off_32C0C[pSpriteID][0].field_E + pDestX) +0x10;
-		mDrawSpritePositionY = (off_32C0C[pSpriteID][0].field_F + pDestY) - mDrawSpriteRows;
+		mDrawSpritePositionX = (off_32C0C[pSpriteID][0].field_E + pDestX) - (mMapX * 16) + 0x10;
+		mDrawSpritePositionY = (off_32C0C[pSpriteID][0].field_F + pDestY) - mDrawSpriteRows - (mMapY * 16);
 		//mDrawSpritePositionY += 0x10;
 	}
 	else {
 		mDrawSpritePositionX = pDestX;
 		mDrawSpritePositionY = pDestY;
 	}
-	DrawSprite( pTarget );
+	if(Sprite_OnScreen_Check())
+		DrawSprite( pTarget );
 }
 
 void cOFED::DrawSprites() {
 
+	g_FrameOFED->GetDialogListSprites()->AddSprites();
+
 	for( std::vector<sSpriteDef>::iterator SpriteIT = mSprites.begin(); SpriteIT != mSprites.end(); ++SpriteIT ) {
+
+		if (g_SpriteAnim[SpriteIT->mSpriteID] == -1)
+			continue;
 
 		DrawSprite( mSurface, g_SpriteAnim[ SpriteIT->mSpriteID ], SpriteIT->mX, SpriteIT->mY, true );
 	}
@@ -564,6 +729,7 @@ void cOFED::SetMapY( int64 pMapY ) {
 void cOFED::SetupSprites() {
 	for (int i = 0; i < 111; ++i) {
 		g_SpriteAnim[i] = -1;
+		g_SpriteName[i] = "";
 	}
 
 	g_SpriteAnim[eSprite_Player] = 0x00;
@@ -572,11 +738,13 @@ void cOFED::SetupSprites() {
 	g_SpriteAnim[eSprite_Shrub] = 0x8F;
 	g_SpriteAnim[eSprite_Tree] = 0x90;
 	g_SpriteAnim[eSprite_BuildingRoof] = 0x91;
+	g_SpriteAnim[eSprite_Snowman] = 0x92;
 	g_SpriteAnim[eSprite_Shrub2] = 0x93;
 	g_SpriteAnim[eSprite_Waterfall] = 0x94;
 	g_SpriteAnim[eSprite_Bird2_Left] = 0x98;
 
 	g_SpriteAnim[eSprite_BuildingDoor] = 0x99;
+	//g_SpriteAnim[eSprite_GroundHole] = ;
 	g_SpriteAnim[eSprite_BuildingDoor2] = 0x9B;
 	g_SpriteAnim[eSprite_Floating_Dead_Soldier] = 0x9E;
 	g_SpriteAnim[eSprite_Enemy_Rocket] = 0x39;
@@ -584,6 +752,7 @@ void cOFED::SetupSprites() {
 	g_SpriteAnim[eSprite_RocketBox] = 0xC3;
 
 	g_SpriteAnim[eSprite_Helicopter_Grenade_Enemy] = 0x8B;
+	g_SpriteAnim[eSprite_Flashing_Light] = 0xC4;
 	g_SpriteAnim[eSprite_Helicopter_Grenade2_Enemy] = 0x8B;
 	g_SpriteAnim[eSprite_Helicopter_Missile_Enemy] = 0x8B;
 	g_SpriteAnim[eSprite_Helicopter_Homing_Enemy] = 0x8B;
@@ -634,14 +803,112 @@ void cOFED::SetupSprites() {
 
 	g_SpriteAnim[eSprite_Bonus_RankToGeneral] = 0x95;
 	g_SpriteAnim[eSprite_Bonus_Rockets] = 0xE4;
+	g_SpriteAnim[eSprite_Player_Rocket] = 0x3E;
 	g_SpriteAnim[eSprite_Bonus_RocketsAndGeneral] = 0xE5;
+
 	g_SpriteAnim[eSprite_Bonus_SquadGeneralRockets] = 0xE6;
 	g_SpriteAnim[eSprite_Helicopter_CallPad] = 0xE7;
 
+	g_SpriteAnim[eSprite_BuildingDoor_Reinforced] = 0xE0;
+	g_SpriteAnim[eSprite_Helicopter_Grenade2_Human_Called] = 0x8B;
+	g_SpriteAnim[eSprite_Helicopter_Grenade_Human_Called] = 0x8B;
+	g_SpriteAnim[eSprite_Helicopter_Missile_Human_Called] = 0x8B;
+	g_SpriteAnim[eSprite_Helicopter_Homing_Human_Called] = 0x8B;
 	g_SpriteAnim[eSprite_Turret_HomingMissile_Enemy] = 0xD2;
+	
 	g_SpriteAnim[eSprite_Hostage_2] = 0xD9;
 	g_SpriteAnim[eSprite_Helicopter_Homing_Enemy2] = 0x8B;
 	g_SpriteAnim[eSprite_Computer_1] = 0x8F;
 	g_SpriteAnim[eSprite_Computer_2] = 0x8F;
 	g_SpriteAnim[eSprite_Computer_3] = 0x8F;
+
+
+	g_SpriteName[eSprite_Player] = "Human Soldier";
+	g_SpriteName[eSprite_Enemy] = "Enemy Soldier";
+	g_SpriteName[eSprite_Null] = "Null";
+
+	g_SpriteName[eSprite_Snowman] = "Snowman";
+	g_SpriteName[eSprite_Shrub] = "Shrub";
+	g_SpriteName[eSprite_Tree] = "Tree";
+	g_SpriteName[eSprite_BuildingRoof] = "Building Roof";
+	g_SpriteName[eSprite_Shrub2] = "Shrub2";
+	g_SpriteName[eSprite_Waterfall] = "Waterfall";
+	g_SpriteName[eSprite_Bird2_Left] = "Bird2 Left";
+
+	g_SpriteName[eSprite_BuildingDoor] = "Building Door";
+	g_SpriteName[eSprite_GroundHole] = "Ground Hole";
+	g_SpriteName[eSprite_BuildingDoor2] = "Building Door 2";
+	g_SpriteName[eSprite_Floating_Dead_Soldier] = "Floating Dead Soldier";
+	g_SpriteName[eSprite_Enemy_Rocket] = "Enemy Rocket Soldier";
+	g_SpriteName[eSprite_GrenadeBox] = "Box of Grenades";
+	g_SpriteName[eSprite_RocketBox] = "Box of Rockets";
+
+	g_SpriteName[eSprite_Helicopter_Grenade_Enemy] = "Enemy Helicopter: Grenade";
+	g_SpriteName[eSprite_Flashing_Light] = "Flashing Light";
+	g_SpriteName[eSprite_Helicopter_Grenade2_Enemy] = "Enemy Helicopter: Grenade2";
+	g_SpriteName[eSprite_Helicopter_Missile_Enemy] = "Enemy Helicopter: Missile";
+	g_SpriteName[eSprite_Helicopter_Homing_Enemy] = "Enemy Helicopter: Homing Missile";
+	g_SpriteName[eSprite_Helicopter_Grenade2_Human] = "Human Helicopter: Grenade2";
+	g_SpriteName[eSprite_Helicopter_Grenade_Human] = "Human Helicopter: Grenade";
+	g_SpriteName[eSprite_Helicopter_Missile_Human] = "Human Helicopter: Missile";
+	g_SpriteName[eSprite_Helicopter_Homing_Human] = "Human Helicopter: Homing Missile";
+
+	g_SpriteName[eSprite_Mine] = "Mine";
+	g_SpriteName[eSprite_Mine2] = "Mine2";
+	g_SpriteName[eSprite_Spike] = "Spike";
+
+	g_SpriteName[eSprite_BoilingPot] = "Boiling Pot";
+	g_SpriteName[eSprite_Indigenous] = "Indigenous";
+	g_SpriteName[eSprite_Indigenous2] = "Indigenous 2";
+	g_SpriteName[eSprite_VehicleNoGun_Human] = "Human Vehicle: No Weapon";
+	g_SpriteName[eSprite_VehicleGun_Human] = "Human Vehicle: Weapon";
+
+	g_SpriteName[eSprite_Tank_Human] = "Human Tank";
+	g_SpriteName[eSprite_Bird_Left] = "Bird Left";
+	g_SpriteName[eSprite_Bird_Right] = "Bird Right";
+	g_SpriteName[eSprite_Seal] = "Seal";
+	g_SpriteName[eSprite_Tank_Enemy] = "Enemy Tank";
+
+	g_SpriteName[eSprite_Indigenous_Spear] = "Indigenous: Spear";
+	g_SpriteName[eSprite_Hostage] = "Hostage";
+	g_SpriteName[eSprite_Hostage_Rescue_Tent] = "Hostage Rescue Tent";
+
+	g_SpriteName[eSprite_Door_Indigenous] = "Building Door: Indigenous";
+	g_SpriteName[eSprite_Door2_Indigenous] = "Building Door: Indigenous 2";
+	g_SpriteName[eSprite_Door_Indigenous_Spear] = "Building Door: Indigenous Spear";
+
+	g_SpriteName[eSprite_Turret_Missile_Human] = "Human Turret: Missile";
+	g_SpriteName[eSprite_Turret_Missile2_Human] = "Human Turret: Missile 2";
+
+	g_SpriteName[eSprite_VehicleNoGun_Enemy] = "Enemy Vehicle: No Weapon";
+	g_SpriteName[eSprite_VehicleGun_Enemy] = "Enemy Vehicle: Weapon";
+	g_SpriteName[eSprite_Vehicle_Unk_Enemy] = "Enemy Vehicle: Unknown";
+	g_SpriteName[eSprite_Indigenous_Invisible] = "Indigenous: Invisible?";
+
+	g_SpriteName[eSprite_Turret_Missile_Enemy] = "Enemy Turret: Missile";
+	g_SpriteName[eSprite_Turret_Missile2_Enemy] = "Enemy Turret: Missile 2";
+	g_SpriteName[eSprite_BuildingDoor3] = "Building Door3";
+
+	g_SpriteName[eSprite_OpenCloseDoor] = "Building Door: In";
+	g_SpriteName[eSprite_Seal_Mine] = "Seal Mine";
+	g_SpriteName[eSprite_Spider_Mine] = "Spider Mine";
+
+	g_SpriteName[eSprite_Bonus_RankToGeneral] = "Bonus: Rank to General";
+	g_SpriteName[eSprite_Bonus_Rockets] = "Bonus: Rockets";
+	g_SpriteName[eSprite_Player_Rocket] = "Player Rocket";
+	g_SpriteName[eSprite_Bonus_RocketsAndGeneral] = "Bonus: Rockets and General";
+	g_SpriteName[eSprite_Bonus_SquadGeneralRockets] = "Bonus: Squad General and Rockets";
+	g_SpriteName[eSprite_Helicopter_CallPad] = "Helicopter Callpad";
+	g_SpriteName[eSprite_BuildingDoor_Reinforced] = "Building Door: Reinforced";
+	g_SpriteName[eSprite_Helicopter_Grenade2_Human_Called] = "Human Helicopter: Grenade2 Callable";
+	g_SpriteName[eSprite_Helicopter_Grenade_Human_Called] = "Human Helicopter: Grenade Callable";
+	g_SpriteName[eSprite_Helicopter_Missile_Human_Called] = "Human Helicopter: Missile Callable";
+	g_SpriteName[eSprite_Helicopter_Homing_Human_Called] = "Human Helicopter: Homing Missile Callable";
+
+	g_SpriteName[eSprite_Turret_HomingMissile_Enemy] = "Enemey Turret: Homing Missile";
+	g_SpriteName[eSprite_Hostage_2] = "Hostage 2";
+	g_SpriteName[eSprite_Helicopter_Homing_Enemy2] = "Enemy Helicopter: Homing Missile2";
+	g_SpriteName[eSprite_Computer_1] = "Computer 1";
+	g_SpriteName[eSprite_Computer_2] = "Computer 2";
+	g_SpriteName[eSprite_Computer_3] = "Computer 3";
 }

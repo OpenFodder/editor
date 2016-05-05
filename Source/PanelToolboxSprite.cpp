@@ -16,6 +16,8 @@
 ////Header Include End
 
 #include "stdafx.hpp"
+#include "FrameOFED.h"
+#include "PanelTileView.h"
 
 //----------------------------------------------------------------------------
 // cPanelToolboxSprite
@@ -81,7 +83,7 @@ void cPanelToolboxSprite::ReloadSprites() {
 		g_OFED.LoadPalette( Surface );
 		g_OFED.DrawSprite( Surface, AnimID, 0, 0, false );
 
-		if (X + off_32C0C[AnimID][0].mColCount >( 20 * 17 )) {
+		if (X + off_32C0C[AnimID][0].mColCount > ( 20 * 17 )) {
 			X = 0;
 			Y += BigY;
 			BigY = 0;
@@ -127,10 +129,10 @@ void cPanelToolboxSprite::OnMouse( wxMouseEvent& event ) {
 					g_OFED.DrawSprite( Surface, AnimID, 0, 0, false );
 
 					Surface->draw();
-					wxBitmap Cursor = SDL_To_Bitmap( Surface, off_32C0C[AnimID][0].mColCount * 2, off_32C0C[AnimID][0].mRowCount * 2 );
+					wxBitmap Cursor = SDL_To_Bitmap( Surface, off_32C0C[AnimID][0].mColCount, off_32C0C[AnimID][0].mRowCount );
 					wxImage image = Cursor.ConvertToImage();
-					image.SetOption( wxIMAGE_OPTION_CUR_HOTSPOT_X, off_32C0C[AnimID][0].mColCount / 2);
-					image.SetOption( wxIMAGE_OPTION_CUR_HOTSPOT_Y, off_32C0C[AnimID][0].mRowCount / 2);
+					image.SetOption( wxIMAGE_OPTION_CUR_HOTSPOT_X, 1);
+					image.SetOption( wxIMAGE_OPTION_CUR_HOTSPOT_Y, 1);
 					mCursor = wxCursor( image );
 
 					this->GetParent()->GetParent()->SetCursor( mCursor );

@@ -34,6 +34,7 @@ class cPanelTileView;
 
 #include "DialogToolboxTiles.h"
 #include "DialogToolboxSprites.h"
+#include "DialogListSprites.h"
 
 ////Dialog Style Start
 #undef cFrameOFED_STYLE
@@ -61,6 +62,9 @@ class cFrameOFED : public wxFrame
 
 		void ReloadSprites();
 
+		cDialogListSprites*		GetDialogListSprites() const {	return mDialogListSprites; }
+		cPanelTileView*			GetPanelTileView() const { return mPanelTileView; }
+
 	private:
 		//Do not add custom control declarations between
 		//GUI Control Declaration Start and GUI Control Declaration End.
@@ -74,6 +78,7 @@ class cFrameOFED : public wxFrame
 		cPanelTileView*			mPanelTileView;
 		cDialogToolboxTiles*	mDialogToolboxTiles;
 		cDialogToolboxSprites*	mDialogToolboxSprites;
+		cDialogListSprites*		mDialogListSprites;
 
 	private:
 		//Note: if you receive any error with these enum IDs, then you need to

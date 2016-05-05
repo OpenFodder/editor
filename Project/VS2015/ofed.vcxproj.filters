@@ -63,6 +63,9 @@
     <ClCompile Include="..\..\Source\Sprites.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\DialogListSprites.cpp">
+      <Filter>Source Files\Dialog</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\FrameOFED.h">
@@ -112,6 +115,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Sprites.hpp">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\DialogListSprites.h">
+      <Filter>Source Files\Dialog</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,15 +1,15 @@
 ///-----------------------------------------------------------------
 ///
-/// @file      TileView.h
+/// @file      DialogListSprites.h
 /// @author    Robbie
-/// Created:   30/04/2016 17:39:36
+/// Created:   4/05/2016 20:08:32
 /// @section   DESCRIPTION
-///            cPanelTileView class declaration
+///            cDialogListSprites class declaration
 ///
 ///------------------------------------------------------------------
 
-#ifndef __cPanelTileView_H__
-#define __cPanelTileView_H__
+#ifndef __CDIALOGLISTSPRITES_H__
+#define __CDIALOGLISTSPRITES_H__
 
 #ifdef __BORLANDC__
 	#pragma hdrstop
@@ -26,37 +26,40 @@
 //Header Include Start and Header Include End.
 //wxDev-C++ designer will remove them. Add custom headers after the block.
 ////Header Include Start
+#include <wx/menu.h>
+#include <wx/listctrl.h>
 ////Header Include End
 
-#include <wx/dcbuffer.h>
-
 ////Dialog Style Start
-#undef cPanelTileView_STYLE
-#define cPanelTileView_STYLE wxCAPTION | wxSYSTEM_MENU | wxMINIMIZE_BOX | wxCLOSE_BOX
+#undef cDialogListSprites_STYLE
+#define cDialogListSprites_STYLE wxCAPTION | wxSYSTEM_MENU | wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxCLOSE_BOX
 ////Dialog Style End
 
-class cPanelTileView : public wxPanel
+struct sSpriteDef;
+
+class cDialogListSprites : public wxDialog
 {
 	private:
 		DECLARE_EVENT_TABLE();
 		
-		
-		wxTimer				*mMouseTimer;
+		int			mSelectedListItemID;
 
 	public:
-		cPanelTileView(wxWindow *parent, wxWindowID id = 1, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = cPanelTileView_STYLE);
-		virtual ~cPanelTileView();
-		void cTileViewPaint(wxPaintEvent& event);
-		void OnMouse( wxMouseEvent& event );
-		void OnMouseInputTimer( wxTimerEvent& event );
-
-		double				mScaleWidth, mScaleHeight;
+		cDialogListSprites(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Sprite List"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = cDialogListSprites_STYLE);
+		virtual ~cDialogListSprites();
+		void		AddSprite( int pNumber, const sSpriteDef& pSpriteDef );
+		void		AddSprites();
+		void WxListCtrl1RightClick(wxListEvent& event);
+		void WxListCtrl1ItemActivated(wxListEvent& event);
+		void Mnuremovesprite1003Click(wxCommandEvent& event);
 
 	private:
 		//Do not add custom control declarations between 
 		//GUI Control Declaration Start and GUI Control Declaration End.
 		//wxDev-C++ will remove them. Add custom code after the block.
 		////GUI Control Declaration Start
+		wxMenu *WxPopupMenu1;
+		wxListCtrl *WxListCtrl1;
 		////GUI Control Declaration End
 		
 	private:
@@ -67,8 +70,10 @@ class cPanelTileView : public wxPanel
 		enum
 		{
 			////GUI Enum Control ID Start
+			ID_MNU_REMOVESPRITE_1003 = 1003,
+			
+			ID_WXLISTCTRL1 = 1002,
 			////GUI Enum Control ID End
-			ID_EVENT_MOUSE_TIMER,
 			ID_DUMMY_VALUE_ //don't remove this value unless you have other enum values
 		};
 	

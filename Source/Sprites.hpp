@@ -28,7 +28,7 @@ enum eSprites {
 	eSprite_Null							= 4,
 	eSprite_Enemy							= 5,
 	eSprite_Bullet							= 6,
-
+	eSprite_Snowman							= 16,
 	eSprite_Explosion						= 12,
 	eSprite_Shrub							= 13,
 	eSprite_Tree							= 14,
@@ -39,6 +39,7 @@ enum eSprites {
 
 	eSprite_BuildingDoor					= 20,
 	eSprite_Player_Rank						= 21,
+	eSprite_GroundHole						= 24,
 	eSprite_BuildingDoor2					= 25,
 	eSprite_Floating_Dead_Soldier			= 27,
 	eSprite_Text_Complete					= 28,
@@ -108,9 +109,11 @@ enum eSprites {
 	eSprite_Bonus_SquadGeneralRockets			= 98,
 	eSprite_Helicopter_CallPad					= 99,
 
+	eSprite_BuildingDoor_Reinforced				= 100,
 	eSprite_Helicopter_Grenade2_Human_Called	= 101,
 	eSprite_Helicopter_Grenade_Human_Called		= 102,
 	eSprite_Helicopter_Missile_Human_Called		= 103,
+
 	eSprite_Helicopter_Homing_Human_Called		= 104,
 	eSprite_Turret_HomingMissile_Enemy			= 105,
 	eSprite_Hostage_2							= 106,

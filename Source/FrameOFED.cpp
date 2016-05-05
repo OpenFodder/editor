@@ -52,6 +52,7 @@ cFrameOFED::cFrameOFED(wxWindow *parent, wxWindowID id, const wxString &title, c
 {
 	mDialogToolboxTiles = 0;
 	mDialogToolboxSprites = 0;
+	mDialogListSprites = 0;
 
 	mPanelTileView = 0;
 
@@ -94,6 +95,7 @@ void cFrameOFED::CreateGUIControls()
 
 	mDialogToolboxTiles = new cDialogToolboxTiles( this );
 	mDialogToolboxSprites = new cDialogToolboxSprites( this );
+	mDialogListSprites = new cDialogListSprites( this );
 
 	mPanelTileView = new cPanelTileView( this );
 	mPanelTileView->SetPosition( wxPoint( 12, 10 ) );
@@ -105,7 +107,8 @@ void cFrameOFED::CreateGUIControls()
 
 	mDialogToolboxSprites->Show();
 	mDialogToolboxTiles->Show();
-	
+	mDialogListSprites->Show();
+
 }
 
 void cFrameOFED::OnClose(wxCloseEvent& event)
@@ -118,8 +121,11 @@ void cFrameOFED::OnMove( wxMoveEvent& event ) {
 	if (mDialogToolboxTiles) {
 		wxPoint a( GetPosition().x + GetSize().GetWidth(), GetPosition().y );
 		wxPoint b( GetPosition().x, GetPosition().y + GetSize().GetHeight() );
+		wxPoint c( GetPosition().x - mDialogListSprites->GetSize().GetWidth(), GetPosition().y );
+
 		mDialogToolboxTiles->SetPosition( a );
 		mDialogToolboxSprites->SetPosition( b );
+		mDialogListSprites->SetPosition( c );
 	}
 }
 /*
@@ -182,8 +188,11 @@ void cFrameOFED::cFrameOFEDSize(wxSizeEvent& event)
 	if (mDialogToolboxTiles) {
 		wxPoint a( GetPosition().x + GetSize().GetWidth(), GetPosition().y );
 		wxPoint b( GetPosition().x, GetPosition().y + GetSize().GetHeight() );
+		wxPoint c( GetPosition().x - mDialogListSprites->GetSize().GetWidth(), GetPosition().y );
+
 		mDialogToolboxTiles->SetPosition( a );
 		mDialogToolboxSprites->SetPosition( b );
+		mDialogListSprites->SetPosition( c );
 	}
 
 	Refresh();

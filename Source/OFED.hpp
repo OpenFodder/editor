@@ -8,7 +8,12 @@ enum eTileTypes {
 	eTileTypes_AFX = 6,
 };
 
+class cFrameOFED;
+
 extern int32 g_SpriteAnim[111];
+extern std::string g_SpriteName[111];
+
+extern cFrameOFED* g_FrameOFED;
 
 class cOFED : public cSingleton < cOFED > {
 
@@ -44,8 +49,8 @@ class cOFED : public cSingleton < cOFED > {
 	uint8*			mDrawSpriteFrameDataPtr;
 	uint16			mDrawSpriteColumns;
 	uint16			mDrawSpriteRows;
-	uint16			mDrawSpritePositionX;
-	uint16			mDrawSpritePositionY;
+	int16			mDrawSpritePositionX;
+	int16			mDrawSpritePositionY;
 	uint8			byte_42070;
 	uint8*			word_42066;
 	uint16			word_42074;
@@ -59,6 +64,7 @@ class cOFED : public cSingleton < cOFED > {
 	public:
 
 					cOFED();
+					~cOFED();
 
 	void			DrawSprite( cSurface* pTarget );
 	void			DrawSprite( cSurface* pTarget, uint16 pSpriteID, uint16 pDestX, uint16 pDestY, bool pAdjust );
@@ -66,6 +72,7 @@ class cOFED : public cSingleton < cOFED > {
 	
 	void			DrawTiles();
 	void			DrawSprites();
+	bool			Sprite_OnScreen_Check();
 
 	void			SetMapX( int64 pMapX );
 	void			SetMapY( int64 pMapY );

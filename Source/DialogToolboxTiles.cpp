@@ -51,7 +51,7 @@ void cDialogToolboxTiles::CreateGUIControls()
 	//Add the custom code before or after the blocks
 	////GUI Items Creation Start
 
-	SetTitle(_("Tile Toolbox"));
+	SetTitle(_("Toolbox Tile"));
 	SetIcon(wxNullIcon);
 	SetSize(8,8,720,864);
 	Center();

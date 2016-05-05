@@ -106,7 +106,7 @@ ProductName=
 ProductVersion=
 AutoIncBuildNrOnRebuild=0
 AutoIncBuildNrOnCompile=0
-UnitCount=25
+UnitCount=28
 
 [Profile1]
 ProfileName=MingW gcc
@@ -320,6 +320,35 @@ BuildCmd=
 
 [Unit25]
 FileName=..\..\Source\PanelToolboxSprite.wxform
+Folder=ofed
+Compile=0
+Link=0
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit26]
+FileName=..\..\Source\DialogListSprites.h
+CompileCpp=1
+Folder=ofed
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit27]
+FileName=..\..\Source\DialogListSprites.cpp
+CompileCpp=1
+Folder=ofed
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit28]
+FileName=..\..\Source\DialogListSprites.wxform
 Folder=ofed
 Compile=0
 Link=0
