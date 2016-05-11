@@ -56,14 +56,14 @@ void cDialogListSprites::CreateGUIControls()
 	WxPopupMenu1 = new wxMenu(_(""));
 	WxPopupMenu1->Append(ID_MNU_REMOVESPRITE_1003, _("Remove Sprite"), _(""), wxITEM_NORMAL);
 
-	WxListCtrl1 = new wxListCtrl(this, ID_WXLISTCTRL1, wxPoint(8, 16), wxSize(297, 385), wxLC_REPORT, wxDefaultValidator, _("WxListCtrl1"));
+	WxListCtrl1 = new wxListCtrl(this, ID_WXLISTCTRL1, wxPoint(8, 16), wxSize(361, 385), wxLC_REPORT, wxDefaultValidator, _("WxListCtrl1"));
 	WxListCtrl1->InsertColumn(0, _("Number"), wxLIST_FORMAT_LEFT, 66);
 	WxListCtrl1->InsertColumn(1, _("Type"), wxLIST_FORMAT_LEFT, 50);
-	WxListCtrl1->InsertColumn(2, _("Name"), wxLIST_FORMAT_LEFT, 172);
+	WxListCtrl1->InsertColumn(2, _("Name"), wxLIST_FORMAT_LEFT, 240);
 
 	SetTitle(_("Sprite List"));
 	SetIcon(wxNullIcon);
-	SetSize(8,8,330,468);
+	SetSize(8,8,396,468);
 	Center();
 	
 	////GUI Items Creation End

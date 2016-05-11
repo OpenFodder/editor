@@ -52,6 +52,7 @@ class cDialogCreateMap : public wxDialog
 		//GUI Control Declaration Start and GUI Control Declaration End.
 		//wxDev-C++ will remove them. Add custom code after the block.
 		////GUI Control Declaration Start
+		wxComboBox *WxComboBox2;
 		wxStaticText *WxStaticText3;
 		wxStaticText *WxStaticText2;
 		wxStaticText *WxStaticText1;
@@ -69,6 +70,7 @@ class cDialogCreateMap : public wxDialog
 		enum
 		{
 			////GUI Enum Control ID Start
+			ID_WXCOMBOBOX2 = 1010,
 			ID_WXSTATICTEXT3 = 1009,
 			ID_WXSTATICTEXT2 = 1008,
 			ID_WXSTATICTEXT1 = 1007,

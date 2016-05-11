@@ -28,8 +28,8 @@ class cPanelTileView;
 //Header Include Start and Header Include End.
 //wxDev-C++ designer will remove them. Add custom headers after the block.
 ////Header Include Start
-#include <wx/filedlg.h>
 #include <wx/menu.h>
+#include <wx/filedlg.h>
 ////Header Include End
 
 #include "DialogToolboxTiles.h"
@@ -59,6 +59,9 @@ class cFrameOFED : public wxFrame
 		void cFrameOFEDScrollStepDown( wxScrollWinEvent& event );
 		void OnMove( wxMoveEvent& event );
 		void OnPaint(wxPaintEvent& event);
+		void Mnucivilianhut1009Click( wxCommandEvent& event );
+		void Mnumenuitem101010Click( wxCommandEvent& event );
+		void Mnubuilding1011Click( wxCommandEvent& event );
 
 		void ReloadSprites();
 
@@ -70,9 +73,9 @@ class cFrameOFED : public wxFrame
 		//GUI Control Declaration Start and GUI Control Declaration End.
 		//wxDev-C++ will remove them. Add custom code after the block.
 		////GUI Control Declaration Start
-		wxFileDialog *WxOpenFileDialog1;
 		wxFileDialog *WxSaveFileDialog1;
 		wxMenuBar *WxMenuBar1;
+		wxFileDialog *WxOpenFileDialog1;
 		////GUI Control Declaration End
 		
 		cPanelTileView*			mPanelTileView;
@@ -93,6 +96,10 @@ class cFrameOFED : public wxFrame
 			ID_MNU_LOADMAP_1002 = 1002,
 			ID_MNU_SAVEMAP_1003 = 1003,
 			ID_MNU_QUIT_1005 = 1005,
+			ID_MNU_INSERT_1008 = 1008,
+			ID_MNU_CIVILIANHUT_1009 = 1009,
+			ID_MNU_MENUITEM10_1010 = 1010,
+			ID_MNU_BUILDING_1011 = 1011,
 			
 			////GUI Enum Control ID End
 			ID_DUMMY_VALUE_ //don't remove this value unless you have other enum values

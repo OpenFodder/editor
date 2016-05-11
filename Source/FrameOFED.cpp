@@ -44,6 +44,9 @@ BEGIN_EVENT_TABLE(cFrameOFED,wxFrame)
 	EVT_MENU(ID_MNU_LOADMAP_1002, cFrameOFED::Mnuloadmap1002Click)
 	EVT_MENU(ID_MNU_SAVEMAP_1003, cFrameOFED::Mnusavemap1003Click)
 	EVT_MENU(ID_MNU_QUIT_1005, cFrameOFED::Mnuquit1005Click)
+	EVT_MENU(ID_MNU_CIVILIANHUT_1009, cFrameOFED::Mnucivilianhut1009Click)
+	EVT_MENU(ID_MNU_MENUITEM10_1010, cFrameOFED::Mnumenuitem101010Click)
+	EVT_MENU(ID_MNU_BUILDING_1011, cFrameOFED::Mnubuilding1011Click)
 END_EVENT_TABLE()
 ////Event Table End
 
@@ -71,8 +74,6 @@ void cFrameOFED::CreateGUIControls()
 	//Add the custom code before or after the blocks
 	////GUI Items Creation Start
 
-	WxOpenFileDialog1 =  new wxFileDialog(this, _("Choose a file"), _(""), _(""), _("*.map"), wxFD_OPEN);
-
 	WxSaveFileDialog1 =  new wxFileDialog(this, _("Choose a file"), _(""), _(""), _("*.map"), wxFD_SAVE);
 
 	WxMenuBar1 = new wxMenuBar();
@@ -84,7 +85,15 @@ void cFrameOFED::CreateGUIControls()
 	ID_MNU_FILE_1001_Mnu_Obj->AppendSeparator();
 	ID_MNU_FILE_1001_Mnu_Obj->Append(ID_MNU_QUIT_1005, _("&Quit"), _(""), wxITEM_NORMAL);
 	WxMenuBar1->Append(ID_MNU_FILE_1001_Mnu_Obj, _("&File"));
+	
+	wxMenu *ID_MNU_INSERT_1008_Mnu_Obj = new wxMenu();
+	ID_MNU_INSERT_1008_Mnu_Obj->Append(ID_MNU_CIVILIANHUT_1009, _("Civilian Hut"), _(""), wxITEM_NORMAL);
+	ID_MNU_INSERT_1008_Mnu_Obj->Append(ID_MNU_MENUITEM10_1010, _("Reinforced Building"), _(""), wxITEM_NORMAL);
+	ID_MNU_INSERT_1008_Mnu_Obj->Append(ID_MNU_BUILDING_1011, _("Building"), _(""), wxITEM_NORMAL);
+	WxMenuBar1->Append(ID_MNU_INSERT_1008_Mnu_Obj, _("Insert"));
 	SetMenuBar(WxMenuBar1);
+
+	WxOpenFileDialog1 =  new wxFileDialog(this, _("Choose a file"), _(""), _(""), _("*.map"), wxFD_OPEN);
 
 	SetTitle(_("Open Fodder Editor"));
 	SetIcon(wxNullIcon);
@@ -257,4 +266,54 @@ void cFrameOFED::OnPaint(wxPaintEvent& event)
 
 	if (mDialogToolboxSprites)
 		mDialogToolboxSprites->Refresh();
+}
+
+void cFrameOFED::Mnucivilianhut1009Click( wxCommandEvent& event ) {
+	
+}
+
+void cFrameOFED::Mnumenuitem101010Click( wxCommandEvent& event ) {
+
+}
+
+void cFrameOFED::Mnubuilding1011Click( wxCommandEvent& event ) {
+	sTiles Tiles;
+
+	Tiles.mTiles.push_back( sRangeTile( 1, 0, 333 ) );
+	Tiles.mTiles.push_back( sRangeTile( 2, 0, 334 ) );
+
+	Tiles.mTiles.push_back( sRangeTile( 0, 1, 352 ) );
+	Tiles.mTiles.push_back( sRangeTile( 1, 1, 353 ) );
+	Tiles.mTiles.push_back( sRangeTile( 2, 1, 354 ) );
+
+	Tiles.mTiles.push_back( sRangeTile( 0, 2, 372 ) );
+	Tiles.mTiles.push_back( sRangeTile( 1, 2, 373 ) );
+	Tiles.mTiles.push_back( sRangeTile( 2, 2, 374 ) );
+	Tiles.mTiles.push_back( sRangeTile( 3, 2, 375 ) );
+
+	Tiles.mTiles.push_back( sRangeTile( 0, 3, 392 ) );
+	Tiles.mTiles.push_back( sRangeTile( 1, 3, 393 ) );
+	Tiles.mTiles.push_back( sRangeTile( 2, 3, 394 ) );
+
+	Tiles.mSprites.push_back( sRangeSprite( 13, 2, eSprite_BuildingRoof ) );
+	Tiles.mSprites.push_back( sRangeSprite( 9, 34, eSprite_BuildingDoor ) );
+
+	cSurface *Surface = new cSurface( 16 * 4, 16 * 4 );
+
+	for (std::vector<sRangeTile>::iterator TileIT = Tiles.mTiles.begin(); TileIT != Tiles.mTiles.end(); ++ TileIT ) {
+		g_OFED.DrawTile( Surface, TileIT->mTileID, (TileIT->mX + 1), TileIT->mY);
+	}
+
+	g_OFED.LoadPalette( Surface );
+	Surface->draw();
+
+	wxBitmap Cursor = SDL_To_Bitmap( Surface, 16 * 4, 16 * 4 );
+	wxImage image = Cursor.ConvertToImage();
+	image.SetOption( wxIMAGE_OPTION_CUR_HOTSPOT_X, 1 );
+	image.SetOption( wxIMAGE_OPTION_CUR_HOTSPOT_Y, 1 );
+
+	this->SetCursor( wxCursor( image ) );
+	delete Surface;
+
+	g_OFED.SetCursorTileRange( Tiles );
 }

@@ -5,6 +5,14 @@ struct sSpriteDef {
 	uint16 mX;
 	uint16 mY;
 	uint16 mSpriteID;
+
+	sSpriteDef( uint16 pSpriteID ) {
+		mDirection = 0x7C;
+		mIgnored = 0;
+		mX = 0;
+		mY = 0;
+		mSpriteID = pSpriteID;
+	}
 };
 
 struct sSpriteSheet {

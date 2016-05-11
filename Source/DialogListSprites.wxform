@@ -5,7 +5,7 @@ object frmNewForm: TfrmNewForm
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Sprite List'
   ClientHeight = 430
-  ClientWidth = 314
+  ClientWidth = 380
   Color = clBtnFace
   OldCreateOrder = True
   PopupMenu = DesignerPopup.Owner
@@ -33,7 +33,7 @@ object frmNewForm: TfrmNewForm
   object WxListCtrl1: TWxListCtrl
     Left = 8
     Top = 16
-    Width = 297
+    Width = 361
     Height = 385
     Columns = <
       item
@@ -45,7 +45,7 @@ object frmNewForm: TfrmNewForm
       end
       item
         Caption = 'Name'
-        Width = 172
+        Width = 240
       end>
     TabOrder = 0
     ViewStyle = vsReport

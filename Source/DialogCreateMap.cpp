@@ -51,6 +51,11 @@ void cDialogCreateMap::CreateGUIControls()
 	//Add the custom code before or after the blocks
 	////GUI Items Creation Start
 
+	wxArrayString arrayStringFor_WxComboBox2;
+	arrayStringFor_WxComboBox2.Add(_("Sub0"));
+	arrayStringFor_WxComboBox2.Add(_("Sub1"));
+	WxComboBox2 = new wxComboBox(this, ID_WXCOMBOBOX2, _("Sub0"), wxPoint(16, 184), wxSize(153, 23), arrayStringFor_WxComboBox2, 0, wxDefaultValidator, _("WxComboBox2"));
+
 	WxStaticText3 = new wxStaticText(this, ID_WXSTATICTEXT3, _("Terrain"), wxPoint(0, 120), wxDefaultSize, wxALIGN_CENTRE, _("WxStaticText3"));
 
 	WxStaticText2 = new wxStaticText(this, ID_WXSTATICTEXT2, _("Height"), wxPoint(40, 72), wxDefaultSize, 0, _("WxStaticText2"));
@@ -71,11 +76,11 @@ void cDialogCreateMap::CreateGUIControls()
 	arrayStringFor_WxComboBox1.Add(_("Amiga Format Christmas Special"));
 	WxComboBox1 = new wxComboBox(this, ID_WXCOMBOBOX1, _("Jungle"), wxPoint(16, 147), wxSize(154, 23), arrayStringFor_WxComboBox1, 0, wxDefaultValidator, _("WxComboBox1"));
 
-	WxButton1 = new wxButton(this, ID_WXBUTTON1, _("Create It"), wxPoint(27, 205), wxSize(127, 27), 0, wxDefaultValidator, _("WxButton1"));
+	WxButton1 = new wxButton(this, ID_WXBUTTON1, _("Create It"), wxPoint(27, 245), wxSize(127, 27), 0, wxDefaultValidator, _("WxButton1"));
 
 	SetTitle(_("Create Map"));
 	SetIcon(wxNullIcon);
-	SetSize(8,8,206,277);
+	SetSize(8,8,206,313);
 	Center();
 	
 	////GUI Items Creation End
@@ -95,8 +100,9 @@ void cDialogCreateMap::ButtonCreateMap(wxCommandEvent& event) {
 	size_t Height = wxAtoi(WxEdit2->GetValue());
 
 	eTileTypes Tile = (eTileTypes) WxComboBox1->GetSelection();
+	eTileSub Sub = (eTileSub)WxComboBox2->GetSelection();
 
-	g_OFED.CreateMap( Tile, Width, Height );
+	g_OFED.CreateMap( Tile, Sub, Width, Height );
 
 	GetParent()->SetScrollbar( wxHORIZONTAL, 0, 2, (g_OFED.mMapWidth - g_OFED.mCameraTilesX) + 2 );
 	GetParent()->SetScrollbar( wxVERTICAL, 0, 2, (g_OFED.mMapHeight - g_OFED.mCameraTilesY) + 2 );

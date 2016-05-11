@@ -76,12 +76,10 @@ void cOFED::ResetCamera() {
 
 void cOFED::AddSprite( size_t pTileX, size_t pTileY ) {
 
-	sSpriteDef Sprite;
+	sSpriteDef Sprite( mCursorSprite);
 
-	Sprite.mIgnored = 0;
 	Sprite.mX = pTileX;
 	Sprite.mY = pTileY;
-	Sprite.mDirection = 0x7C;
 	Sprite.mSpriteID = mCursorSprite;
 
 	mSprites.push_back( Sprite );
@@ -142,11 +140,19 @@ void cOFED::SetTile( size_t pTileX, size_t pTileY, size_t pTileType ) {
 void cOFED::SetCursorTile( size_t pTileType ) {
 	mCursorSprite = -1;
 	mCursorTile = pTileType;
+	mCursorRangeTiles = sTiles();
 }
 
 void cOFED::SetCursorSprite( size_t pSpriteID ) {
 	mCursorTile = -1;
 	mCursorSprite = pSpriteID;
+	mCursorRangeTiles = sTiles();
+}
+
+void cOFED::SetCursorTileRange( sTiles& pRangeTiles ) {
+	mCursorTile = -1;
+	mCursorSprite = -1;
+	mCursorRangeTiles = pRangeTiles;
 }
 
 void cOFED::SetSelectedTile( size_t pTile ) {
@@ -162,8 +168,11 @@ void cOFED::LoadPalette( cSurface* pSurface ) {
 	pSurface->paletteLoadNewSDL();
 }
 
-void cOFED::CreateMap( eTileTypes pTileType, size_t pWidth, size_t pHeight ) {
+void cOFED::CreateMap( eTileTypes pTileType, eTileSub pTileSub, size_t pWidth, size_t pHeight ) {
 	
+	if (pTileType != eTileTypes_Jungle || pTileSub < 0 )
+		pTileSub = eTileSub_0;
+
 	if (pTileType < 0)
 		pTileType = eTileTypes_Jungle;
 
@@ -185,7 +194,12 @@ void cOFED::CreateMap( eTileTypes pTileType, size_t pWidth, size_t pHeight ) {
 	mBaseArmyName = mTileType_Names[pTileType];
 
 	mBaseName.append( "base.blk" );
-	mSubName.append( "sub0.blk" );
+
+	if(pTileSub == eTileSub_0)
+		mSubName.append( "sub0.blk" );
+	else
+		mSubName.append( "sub1.blk" );
+
 	mBaseCoptName.append( "copt.dat" );
 	mBaseArmyName.append( "army.dat" );
 
@@ -274,7 +288,7 @@ void cOFED::LoadSprites( std::string pFilename ) {
 	uint16* SptPtrEnd = SptPtr + (mMapSptSize / 2);
 
 	for (; SptPtr != SptPtrEnd; ) {
-		sSpriteDef Sprite;
+		sSpriteDef Sprite(0);
 
 		++SptPtr;
 		Sprite.mDirection = 0x7C;
@@ -732,6 +746,7 @@ void cOFED::SetupSprites() {
 		g_SpriteName[i] = "";
 	}
 
+	g_SpriteAnim[77] = 0x96;
 	g_SpriteAnim[eSprite_Player] = 0x00;
 	g_SpriteAnim[eSprite_Enemy] = 0x52;
 

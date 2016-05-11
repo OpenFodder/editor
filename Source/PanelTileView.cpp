@@ -92,13 +92,30 @@ void cPanelTileView::OnMouseInputTimer( wxTimerEvent& event ) {
 		if (g_OFED.mCursorTile > -1) {
 			g_OFED.SetTile( TileX, TileY, g_OFED.mCursorTile );
 			g_OFED.SetSelectedTile( Tile );
-		}
 
-		if (g_OFED.mCursorSprite > -1) {
-			mMouseTimer->Stop();
-			g_OFED.AddSprite(	((g_OFED.mMapX * 16) + MouseX - off_32C0C[g_SpriteAnim[g_OFED.mCursorSprite] ][0].field_E - 0x10), 
-								((g_OFED.mMapY * 16) + MouseY + 16 - off_32C0C[g_SpriteAnim[g_OFED.mCursorSprite]][0].field_F )
-				);
+		} else if (g_OFED.mCursorSprite > -1) {
+
+			g_OFED.AddSprite(	(((g_OFED.mMapX * 16) + (MouseX - 16) - off_32C0C[g_SpriteAnim[g_OFED.mCursorSprite] ][0].field_E)), 
+								((g_OFED.mMapY * 16) + MouseY + 16 - off_32C0C[g_SpriteAnim[g_OFED.mCursorSprite]][0].field_F ));
+		}
+		else if (g_OFED.mCursorRangeTiles.mTiles.size()) {
+			
+			for (std::vector<sRangeTile>::iterator TileIT = g_OFED.mCursorRangeTiles.mTiles.begin(); TileIT != g_OFED.mCursorRangeTiles.mTiles.end(); ++TileIT) {
+
+				g_OFED.SetTile( TileX + TileIT->mX, TileY + TileIT->mY, TileIT->mTileID );
+			}
+
+			for (std::vector<sRangeSprite>::iterator SpriteIT = g_OFED.mCursorRangeTiles.mSprites.begin(); SpriteIT != g_OFED.mCursorRangeTiles.mSprites.end(); ++SpriteIT) {
+				
+				g_OFED.mCursorSprite = SpriteIT->mSpriteID;
+
+				g_OFED.AddSprite( (((g_OFED.mMapX * 16) + ((TileX - 1 ) * 16) + SpriteIT->mX - off_32C0C[g_SpriteAnim[g_OFED.mCursorSprite]][0].field_E) ),
+								  ((g_OFED.mMapY * 16) + ((TileY + 1) * 16) + SpriteIT->mY - off_32C0C[g_SpriteAnim[g_OFED.mCursorSprite]][0].field_F) );
+			}
+
+			g_OFED.mCursorSprite = -1;
+			g_OFED.mCursorRangeTiles.mTiles.clear();
+			g_OFED.mCursorRangeTiles.mSprites.clear();
 		}
 
 		g_OFED.DrawTiles();
