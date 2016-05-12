@@ -70,6 +70,9 @@ class cOFED : public cSingleton < cOFED > {
 	uint8*			mMap;
 	uint8*			mMapSpt;
 
+	eTileTypes		mMapTileType;
+	eTileSub		mMapTileSubType;
+
 	uint32			mMapTilePtr;
 
 	size_t			mMapSize, mMapSptSize;
@@ -116,6 +119,8 @@ class cOFED : public cSingleton < cOFED > {
 
 	void			LoadBlk();
 	void			LoadPalette( cSurface* pSurface );
+
+	void			map_SetTileType();
 
 	void			CreateMap( eTileTypes pTileType, eTileSub pTileSub, size_t pWidth, size_t pHeight );
 	void			LoadMap( std::string pFilename );

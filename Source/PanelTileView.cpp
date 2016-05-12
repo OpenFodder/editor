@@ -109,13 +109,14 @@ void cPanelTileView::OnMouseInputTimer( wxTimerEvent& event ) {
 				
 				g_OFED.mCursorSprite = SpriteIT->mSpriteID;
 
-				g_OFED.AddSprite( (((g_OFED.mMapX * 16) + ((TileX - 1 ) * 16) + SpriteIT->mX - off_32C0C[g_SpriteAnim[g_OFED.mCursorSprite]][0].field_E) ),
-								  ((g_OFED.mMapY * 16) + ((TileY + 1) * 16) + SpriteIT->mY - off_32C0C[g_SpriteAnim[g_OFED.mCursorSprite]][0].field_F) );
+				g_OFED.AddSprite(  ((g_OFED.mMapX * 16) + ((TileX - 1) * 16) + SpriteIT->mX - off_32C0C[g_SpriteAnim[g_OFED.mCursorSprite]][0].field_E),
+								   ((g_OFED.mMapY * 16) + ((TileY + 1) * 16) + SpriteIT->mY - off_32C0C[g_SpriteAnim[g_OFED.mCursorSprite]][0].field_F));
 			}
 
 			g_OFED.mCursorSprite = -1;
 			g_OFED.mCursorRangeTiles.mTiles.clear();
 			g_OFED.mCursorRangeTiles.mSprites.clear();
+			GetParent()->SetCursor( wxCursor () );
 		}
 
 		g_OFED.DrawTiles();

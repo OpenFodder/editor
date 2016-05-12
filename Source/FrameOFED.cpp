@@ -278,27 +278,106 @@ void cFrameOFED::Mnumenuitem101010Click( wxCommandEvent& event ) {
 
 void cFrameOFED::Mnubuilding1011Click( wxCommandEvent& event ) {
 	sTiles Tiles;
+	cSurface *Surface = 0;
 
-	Tiles.mTiles.push_back( sRangeTile( 1, 0, 333 ) );
-	Tiles.mTiles.push_back( sRangeTile( 2, 0, 334 ) );
+	if (g_OFED.mMapTileType == eTileTypes_Jungle) {
+		Tiles.mTiles.push_back( sRangeTile( 1, 0, 333 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 0, 334 ) );
 
-	Tiles.mTiles.push_back( sRangeTile( 0, 1, 352 ) );
-	Tiles.mTiles.push_back( sRangeTile( 1, 1, 353 ) );
-	Tiles.mTiles.push_back( sRangeTile( 2, 1, 354 ) );
+		Tiles.mTiles.push_back( sRangeTile( 0, 1, 352 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 1, 353 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 1, 354 ) );
 
-	Tiles.mTiles.push_back( sRangeTile( 0, 2, 372 ) );
-	Tiles.mTiles.push_back( sRangeTile( 1, 2, 373 ) );
-	Tiles.mTiles.push_back( sRangeTile( 2, 2, 374 ) );
-	Tiles.mTiles.push_back( sRangeTile( 3, 2, 375 ) );
+		Tiles.mTiles.push_back( sRangeTile( 0, 2, 372 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 2, 373 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 2, 374 ) );
+		Tiles.mTiles.push_back( sRangeTile( 3, 2, 375 ) );
 
-	Tiles.mTiles.push_back( sRangeTile( 0, 3, 392 ) );
-	Tiles.mTiles.push_back( sRangeTile( 1, 3, 393 ) );
-	Tiles.mTiles.push_back( sRangeTile( 2, 3, 394 ) );
+		Tiles.mTiles.push_back( sRangeTile( 0, 3, 392 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 3, 393 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 3, 394 ) );
 
-	Tiles.mSprites.push_back( sRangeSprite( 13, 2, eSprite_BuildingRoof ) );
-	Tiles.mSprites.push_back( sRangeSprite( 9, 34, eSprite_BuildingDoor ) );
+		Tiles.mSprites.push_back( sRangeSprite( 13, 2, eSprite_BuildingRoof ) );
+		Tiles.mSprites.push_back( sRangeSprite( 9, 34, eSprite_BuildingDoor ) );
 
-	cSurface *Surface = new cSurface( 16 * 4, 16 * 4 );
+		Surface = new cSurface( 16 * 4, 16 * 4 );
+	}
+
+	if (g_OFED.mMapTileType == eTileTypes_Ice) {
+		Tiles.mTiles.push_back( sRangeTile( 1, 0, 245 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 0, 246 ) );
+		Tiles.mTiles.push_back( sRangeTile( 3, 0, 247 ) );
+
+		Tiles.mTiles.push_back( sRangeTile( 0, 1, 264 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 1, 265 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 1, 266 ) );
+		Tiles.mTiles.push_back( sRangeTile( 3, 1, 267 ) );
+
+		Tiles.mTiles.push_back( sRangeTile( 0, 2, 284 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 2, 285 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 2, 286 ) );
+		Tiles.mTiles.push_back( sRangeTile( 3, 2, 287 ) );
+
+		Tiles.mSprites.push_back( sRangeSprite( 25, -5, eSprite_BuildingRoof ) );
+		Tiles.mSprites.push_back( sRangeSprite( 20, 27, eSprite_BuildingDoor ) );
+
+		Surface = new cSurface( 16 * 3, 16 * 4 );
+	}
+
+	if (g_OFED.mMapTileType == eTileTypes_Desert) {
+		Tiles.mTiles.push_back( sRangeTile( 0, 0, 196 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 0, 197 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 0, 198 ) );
+
+		Tiles.mTiles.push_back( sRangeTile( 0, 1, 216 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 1, 217 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 1, 218 ) );
+
+		Tiles.mTiles.push_back( sRangeTile( 0, 2, 236 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 2, 237 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 2, 238 ) );
+
+		Tiles.mSprites.push_back( sRangeSprite( 12, -15, eSprite_BuildingRoof ) );
+		Tiles.mSprites.push_back( sRangeSprite( 7, 16, eSprite_BuildingDoor ) );
+
+		Surface = new cSurface( 16 * 3, 16 * 4 );
+	}
+
+	if (g_OFED.mMapTileType == eTileTypes_Moors) {
+		Tiles.mTiles.push_back( sRangeTile( 0, 0, 240 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 0, 241 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 0, 242 ) );
+		Tiles.mTiles.push_back( sRangeTile( 3, 0, 243 ) );
+
+		Tiles.mTiles.push_back( sRangeTile( 0, 1, 260 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 1, 261 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 1, 262 ) );
+		Tiles.mTiles.push_back( sRangeTile( 3, 1, 263 ) );
+
+		Tiles.mTiles.push_back( sRangeTile( 0, 2, 280 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 2, 281 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 2, 282 ) );
+		Tiles.mTiles.push_back( sRangeTile( 3, 2, 283 ) );
+
+		Tiles.mTiles.push_back( sRangeTile( 0, 3, 300 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 3, 301 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 3, 302 ) );
+		Tiles.mTiles.push_back( sRangeTile( 3, 3, 303 ) );
+
+		Tiles.mTiles.push_back( sRangeTile( 0, 4, 320 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 4, 321 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 4, 322 ) );
+		Tiles.mTiles.push_back( sRangeTile( 3, 4, 323 ) );
+
+		Tiles.mSprites.push_back( sRangeSprite( 28, 65, eSprite_BuildingDoor2 ) );
+
+		Surface = new cSurface( 16 * 5, 16 * 5 );
+	}
+
+	if (g_OFED.mMapTileType == eTileTypes_Int) {
+
+		return;
+	}
 
 	for (std::vector<sRangeTile>::iterator TileIT = Tiles.mTiles.begin(); TileIT != Tiles.mTiles.end(); ++ TileIT ) {
 		g_OFED.DrawTile( Surface, TileIT->mTileID, (TileIT->mX + 1), TileIT->mY);
@@ -307,7 +386,7 @@ void cFrameOFED::Mnubuilding1011Click( wxCommandEvent& event ) {
 	g_OFED.LoadPalette( Surface );
 	Surface->draw();
 
-	wxBitmap Cursor = SDL_To_Bitmap( Surface, 16 * 4, 16 * 4 );
+	wxBitmap Cursor = SDL_To_Bitmap( Surface, Surface->GetWidth() * 2, Surface->GetHeight() * 2);
 	wxImage image = Cursor.ConvertToImage();
 	image.SetOption( wxIMAGE_OPTION_CUR_HOTSPOT_X, 1 );
 	image.SetOption( wxIMAGE_OPTION_CUR_HOTSPOT_Y, 1 );

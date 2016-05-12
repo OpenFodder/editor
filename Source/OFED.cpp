@@ -179,6 +179,9 @@ void cOFED::CreateMap( eTileTypes pTileType, eTileSub pTileSub, size_t pWidth, s
 	delete[] mMap;
 	delete[] mMapSpt;
 
+	mMapTileType = pTileType;
+	mMapTileSubType = pTileSub;
+
 	mMapWidth = pWidth;
 	mMapHeight = pHeight;
 
@@ -227,6 +230,42 @@ void cOFED::LoadBlk() {
 	mBlocksLoaded = true;
 }
 
+void cOFED::map_SetTileType() {
+	mMapTileSubType = eTileSub_0;
+
+	for (unsigned int x = 0; x < 2; ++x) {
+		if (mMap[0x13] != 's')
+			continue;
+		if (mMap[0x14] != 'u')
+			continue;
+		if (mMap[0x15] != 'b')
+			continue;
+
+		if (mMap[0x16] == '1') {
+			mMapTileSubType = eTileSub_1;
+			break;
+		}
+	}
+
+	for (unsigned int x = 0; x < 7; ++x) {
+		if (mTileType_Names[x][0] != mMap[0])
+			continue;
+
+		if (mTileType_Names[x][1] != mMap[1])
+			continue;
+
+		if (mTileType_Names[x][2] != mMap[2])
+			continue;
+
+		mMapTileType = (eTileTypes) x;
+		return;
+	}
+
+	// Fallback to Jungle
+	mMapTileType = eTileTypes_Jungle;
+	
+}
+
 void cOFED::LoadMap( std::string pFilename ) {
 
 	delete[] mMap;
@@ -250,6 +289,7 @@ void cOFED::LoadMap( std::string pFilename ) {
 	mMapWidth = readBEWord( &mMap[0x54] );
 	mMapHeight = readBEWord( &mMap[0x56] );
 
+	map_SetTileType();
 	LoadSprites( pFilename );
 
 	LoadBlk();
