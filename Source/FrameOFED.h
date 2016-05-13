@@ -23,6 +23,7 @@
 #endif
 
 class cPanelTileView;
+class cSurface;
 
 //Do not add custom headers between 
 //Header Include Start and Header Include End.
@@ -61,20 +62,30 @@ class cFrameOFED : public wxFrame
 		void OnPaint(wxPaintEvent& event);
 		void Mnucivilianhut1009Click( wxCommandEvent& event );
 		void Mnumenuitem101010Click( wxCommandEvent& event );
-		void Mnubuilding1011Click( wxCommandEvent& event );
 
 		void ReloadSprites();
 
 		cDialogListSprites*		GetDialogListSprites() const {	return mDialogListSprites; }
 		cPanelTileView*			GetPanelTileView() const { return mPanelTileView; }
+		void MnuHutSoldier1012Click(wxCommandEvent& event);
+		void MnuHutIndigenous1013Click(wxCommandEvent& event);
+		void Mnuindigenouswithspear1014Click(wxCommandEvent& event);
+		void MnuBunkerSoldier1015Click(wxCommandEvent& event);
+		void MnuBunkerSoldierReinforced1016Click(wxCommandEvent& event);
+		void MnuBarracksSoldier1017Click(wxCommandEvent& event);
+
+		sTiles SetupBarracks( cSurface **pSurface );
+		sTiles SetupHut( cSurface **pSurface );
+
+		void SetupCursorForDraw( cSurface *pSurface, sTiles& pTiles );
 
 	private:
 		//Do not add custom control declarations between
 		//GUI Control Declaration Start and GUI Control Declaration End.
 		//wxDev-C++ will remove them. Add custom code after the block.
 		////GUI Control Declaration Start
-		wxFileDialog *WxSaveFileDialog1;
 		wxMenuBar *WxMenuBar1;
+		wxFileDialog *WxSaveFileDialog1;
 		wxFileDialog *WxOpenFileDialog1;
 		////GUI Control Declaration End
 		
@@ -98,8 +109,14 @@ class cFrameOFED : public wxFrame
 			ID_MNU_QUIT_1005 = 1005,
 			ID_MNU_INSERT_1008 = 1008,
 			ID_MNU_CIVILIANHUT_1009 = 1009,
-			ID_MNU_MENUITEM10_1010 = 1010,
+			ID_MNU_SOLDIER_1012 = 1012,
+			ID_MNU_INDIGENOUS_1013 = 1013,
+			ID_MNU_INDIGENOUSWITHSPEAR_1014 = 1014,
 			ID_MNU_BUILDING_1011 = 1011,
+			ID_MNU_SOLDIER_1017 = 1017,
+			ID_MNU_MENUITEM10_1010 = 1010,
+			ID_MNU_SOLDIER_1015 = 1015,
+			ID_MNU_SOLDIERREINFORCED_1016 = 1016,
 			
 			////GUI Enum Control ID End
 			ID_DUMMY_VALUE_ //don't remove this value unless you have other enum values

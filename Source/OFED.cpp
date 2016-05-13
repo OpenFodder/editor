@@ -187,7 +187,11 @@ void cOFED::CreateMap( eTileTypes pTileType, eTileSub pTileSub, size_t pWidth, s
 
 	mMapSize = 0x60 + ((mMapWidth * mMapHeight) * 2);
 	mMap = new uint8[mMapSize];
-	memset( mMap, 0, mMapSize );
+	
+	if( mMapTileType == eTileTypes_Int)
+		memset( mMap, 4, mMapSize );
+	else
+		memset( mMap, 0, mMapSize );
 
 	mMap[0x50] = 'O';mMap[0x51] = 'F';mMap[0x52] = 'E';mMap[0x53] = 'D';
 

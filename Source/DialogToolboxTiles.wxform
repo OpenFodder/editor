@@ -1,4 +1,4 @@
-object frmNewForm_6: TfrmNewForm
+object frmNewForm: TfrmNewForm
   Left = 8
   Top = 8
   AutoScroll = False

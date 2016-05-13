@@ -1,7 +1,7 @@
 [Project]
 FileName=ofed.dev
 Name=ofed
-UnitCount=9
+UnitCount=15
 PchHead=-1
 PchSource=-1
 Ver=3
@@ -69,7 +69,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit8]
-FileName=..\..\Source\PanelTileView.cpp
+FileName=..\..\Source\PanelTileView.h
 CompileCpp=1
 Folder=ofed
 Compile=1
@@ -79,10 +79,10 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit9]
-FileName=..\..\Source\PanelTileView.h
+FileName=..\..\Source\DialogCreateMap.wxform
 Folder=ofed
-Compile=1
-Link=1
+Compile=0
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
@@ -165,16 +165,17 @@ CompilerSet=9
 CompilerType=9
 
 [Unit7]
-FileName=..\..\Source\TileView.wxform
+FileName=..\..\Source\PanelTileView.cpp
 Folder=ofed
-Compile=0
-Link=0
+Compile=1
+Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
+CompileCpp=1
 
 [Unit10]
-FileName=..\..\Source\PanelTileView.wxform
+FileName=..\..\Source\DialogListSprites.wxform
 Folder=ofed
 Compile=0
 Link=0
@@ -183,27 +184,27 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit11]
-FileName=..\..\Source\DialogCreateMap.h
+FileName=..\..\Source\DialogToolboxSprites.wxform
 CompileCpp=1
 Folder=ofed
-Compile=1
-Link=1
+Compile=0
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
 [Unit12]
-FileName=..\..\Source\DialogCreateMap.cpp
+FileName=..\..\Source\DialogToolboxTiles.wxform
 CompileCpp=1
 Folder=ofed
-Compile=1
-Link=1
+Compile=0
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
 [Unit13]
-FileName=..\..\Source\DialogCreateMap.wxform
+FileName=..\..\Source\PanelTileView.wxform
 Folder=ofed
 Compile=0
 Link=0
@@ -212,21 +213,21 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit14]
-FileName=..\..\Source\DialogToolboxTiles.h
+FileName=..\..\Source\PanelToolboxSprite.wxform
 CompileCpp=1
 Folder=ofed
-Compile=1
-Link=1
+Compile=0
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
 [Unit15]
-FileName=..\..\Source\DialogToolboxTiles.cpp
+FileName=..\..\Source\PanelToolboxTile.wxform
 CompileCpp=1
 Folder=ofed
-Compile=1
-Link=1
+Compile=0
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=

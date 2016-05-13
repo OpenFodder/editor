@@ -7,6 +7,7 @@
 ///            cFrameOFED class implementation
 ///
 ///------------------------------------------------------------------
+#include "stdafx.hpp"
 #include "PanelTileView.h"
 #include "FrameOFED.h"
 
@@ -16,7 +17,7 @@
 ////Header Include Start
 ////Header Include End
 
-#include "stdafx.hpp"
+
 #include "DialogCreateMap.h"
 #include "DialogToolboxTiles.h"
 #include "DialogToolboxSprites.h"
@@ -44,9 +45,12 @@ BEGIN_EVENT_TABLE(cFrameOFED,wxFrame)
 	EVT_MENU(ID_MNU_LOADMAP_1002, cFrameOFED::Mnuloadmap1002Click)
 	EVT_MENU(ID_MNU_SAVEMAP_1003, cFrameOFED::Mnusavemap1003Click)
 	EVT_MENU(ID_MNU_QUIT_1005, cFrameOFED::Mnuquit1005Click)
-	EVT_MENU(ID_MNU_CIVILIANHUT_1009, cFrameOFED::Mnucivilianhut1009Click)
-	EVT_MENU(ID_MNU_MENUITEM10_1010, cFrameOFED::Mnumenuitem101010Click)
-	EVT_MENU(ID_MNU_BUILDING_1011, cFrameOFED::Mnubuilding1011Click)
+	EVT_MENU(ID_MNU_SOLDIER_1012, cFrameOFED::MnuHutSoldier1012Click)
+	EVT_MENU(ID_MNU_INDIGENOUS_1013, cFrameOFED::MnuHutIndigenous1013Click)
+	EVT_MENU(ID_MNU_INDIGENOUSWITHSPEAR_1014, cFrameOFED::Mnuindigenouswithspear1014Click)
+	EVT_MENU(ID_MNU_SOLDIER_1017, cFrameOFED::MnuBarracksSoldier1017Click)
+	EVT_MENU(ID_MNU_SOLDIER_1015, cFrameOFED::MnuBunkerSoldier1015Click)
+	EVT_MENU(ID_MNU_SOLDIERREINFORCED_1016, cFrameOFED::MnuBunkerSoldierReinforced1016Click)
 END_EVENT_TABLE()
 ////Event Table End
 
@@ -74,8 +78,6 @@ void cFrameOFED::CreateGUIControls()
 	//Add the custom code before or after the blocks
 	////GUI Items Creation Start
 
-	WxSaveFileDialog1 =  new wxFileDialog(this, _("Choose a file"), _(""), _(""), _("*.map"), wxFD_SAVE);
-
 	WxMenuBar1 = new wxMenuBar();
 	wxMenu *ID_MNU_FILE_1001_Mnu_Obj = new wxMenu();
 	ID_MNU_FILE_1001_Mnu_Obj->Append(ID_MNU_NEWMAP_1006, _("&New Map"), _(""), wxITEM_NORMAL);
@@ -87,11 +89,25 @@ void cFrameOFED::CreateGUIControls()
 	WxMenuBar1->Append(ID_MNU_FILE_1001_Mnu_Obj, _("&File"));
 	
 	wxMenu *ID_MNU_INSERT_1008_Mnu_Obj = new wxMenu();
-	ID_MNU_INSERT_1008_Mnu_Obj->Append(ID_MNU_CIVILIANHUT_1009, _("Civilian Hut"), _(""), wxITEM_NORMAL);
-	ID_MNU_INSERT_1008_Mnu_Obj->Append(ID_MNU_MENUITEM10_1010, _("Reinforced Building"), _(""), wxITEM_NORMAL);
-	ID_MNU_INSERT_1008_Mnu_Obj->Append(ID_MNU_BUILDING_1011, _("Building"), _(""), wxITEM_NORMAL);
+	
+	wxMenu *ID_MNU_CIVILIANHUT_1009_Mnu_Obj = new wxMenu();
+	ID_MNU_CIVILIANHUT_1009_Mnu_Obj->Append(ID_MNU_SOLDIER_1012, _("Soldier"), _(""), wxITEM_NORMAL);
+	ID_MNU_CIVILIANHUT_1009_Mnu_Obj->Append(ID_MNU_INDIGENOUS_1013, _("Indigenous"), _(""), wxITEM_NORMAL);
+	ID_MNU_CIVILIANHUT_1009_Mnu_Obj->Append(ID_MNU_INDIGENOUSWITHSPEAR_1014, _("Indigenous with spear"), _(""), wxITEM_NORMAL);
+	ID_MNU_INSERT_1008_Mnu_Obj->Append(ID_MNU_CIVILIANHUT_1009, _("Hut"), ID_MNU_CIVILIANHUT_1009_Mnu_Obj);
+	
+	wxMenu *ID_MNU_BUILDING_1011_Mnu_Obj = new wxMenu();
+	ID_MNU_BUILDING_1011_Mnu_Obj->Append(ID_MNU_SOLDIER_1017, _("Soldier"), _(""), wxITEM_NORMAL);
+	ID_MNU_INSERT_1008_Mnu_Obj->Append(ID_MNU_BUILDING_1011, _("Barracks"), ID_MNU_BUILDING_1011_Mnu_Obj);
+	
+	wxMenu *ID_MNU_MENUITEM10_1010_Mnu_Obj = new wxMenu();
+	ID_MNU_MENUITEM10_1010_Mnu_Obj->Append(ID_MNU_SOLDIER_1015, _("Soldier"), _(""), wxITEM_NORMAL);
+	ID_MNU_MENUITEM10_1010_Mnu_Obj->Append(ID_MNU_SOLDIERREINFORCED_1016, _("Soldier Reinforced"), _(""), wxITEM_NORMAL);
+	ID_MNU_INSERT_1008_Mnu_Obj->Append(ID_MNU_MENUITEM10_1010, _("Bunker"), ID_MNU_MENUITEM10_1010_Mnu_Obj);
 	WxMenuBar1->Append(ID_MNU_INSERT_1008_Mnu_Obj, _("Insert"));
 	SetMenuBar(WxMenuBar1);
+
+	WxSaveFileDialog1 =  new wxFileDialog(this, _("Choose a file"), _(""), _(""), _("*.map"), wxFD_SAVE);
 
 	WxOpenFileDialog1 =  new wxFileDialog(this, _("Choose a file"), _(""), _(""), _("*.map"), wxFD_OPEN);
 
@@ -276,9 +292,8 @@ void cFrameOFED::Mnumenuitem101010Click( wxCommandEvent& event ) {
 
 }
 
-void cFrameOFED::Mnubuilding1011Click( wxCommandEvent& event ) {
+sTiles cFrameOFED::SetupBarracks( cSurface **pSurface ) {
 	sTiles Tiles;
-	cSurface *Surface = 0;
 
 	if (g_OFED.mMapTileType == eTileTypes_Jungle) {
 		Tiles.mTiles.push_back( sRangeTile( 1, 0, 333 ) );
@@ -297,10 +312,7 @@ void cFrameOFED::Mnubuilding1011Click( wxCommandEvent& event ) {
 		Tiles.mTiles.push_back( sRangeTile( 1, 3, 393 ) );
 		Tiles.mTiles.push_back( sRangeTile( 2, 3, 394 ) );
 
-		Tiles.mSprites.push_back( sRangeSprite( 13, 2, eSprite_BuildingRoof ) );
-		Tiles.mSprites.push_back( sRangeSprite( 9, 34, eSprite_BuildingDoor ) );
-
-		Surface = new cSurface( 16 * 4, 16 * 4 );
+		*pSurface = new cSurface( 16 * 4, 16 * 4 );
 	}
 
 	if (g_OFED.mMapTileType == eTileTypes_Ice) {
@@ -318,10 +330,7 @@ void cFrameOFED::Mnubuilding1011Click( wxCommandEvent& event ) {
 		Tiles.mTiles.push_back( sRangeTile( 2, 2, 286 ) );
 		Tiles.mTiles.push_back( sRangeTile( 3, 2, 287 ) );
 
-		Tiles.mSprites.push_back( sRangeSprite( 25, -5, eSprite_BuildingRoof ) );
-		Tiles.mSprites.push_back( sRangeSprite( 20, 27, eSprite_BuildingDoor ) );
-
-		Surface = new cSurface( 16 * 3, 16 * 4 );
+		*pSurface = new cSurface( 16 * 3, 16 * 4 );
 	}
 
 	if (g_OFED.mMapTileType == eTileTypes_Desert) {
@@ -337,14 +346,12 @@ void cFrameOFED::Mnubuilding1011Click( wxCommandEvent& event ) {
 		Tiles.mTiles.push_back( sRangeTile( 1, 2, 237 ) );
 		Tiles.mTiles.push_back( sRangeTile( 2, 2, 238 ) );
 
-		Tiles.mSprites.push_back( sRangeSprite( 12, -15, eSprite_BuildingRoof ) );
-		Tiles.mSprites.push_back( sRangeSprite( 7, 16, eSprite_BuildingDoor ) );
-
-		Surface = new cSurface( 16 * 3, 16 * 4 );
+		*pSurface = new cSurface( 16 * 3, 16 * 4 );
 	}
 
 	if (g_OFED.mMapTileType == eTileTypes_Moors) {
-		Tiles.mTiles.push_back( sRangeTile( 0, 0, 240 ) );
+		// TODO: This is the house, needs to be the barracks
+	/*	Tiles.mTiles.push_back( sRangeTile( 0, 0, 240 ) );
 		Tiles.mTiles.push_back( sRangeTile( 1, 0, 241 ) );
 		Tiles.mTiles.push_back( sRangeTile( 2, 0, 242 ) );
 		Tiles.mTiles.push_back( sRangeTile( 3, 0, 243 ) );
@@ -367,32 +374,190 @@ void cFrameOFED::Mnubuilding1011Click( wxCommandEvent& event ) {
 		Tiles.mTiles.push_back( sRangeTile( 0, 4, 320 ) );
 		Tiles.mTiles.push_back( sRangeTile( 1, 4, 321 ) );
 		Tiles.mTiles.push_back( sRangeTile( 2, 4, 322 ) );
-		Tiles.mTiles.push_back( sRangeTile( 3, 4, 323 ) );
+		Tiles.mTiles.push_back( sRangeTile( 3, 4, 323 ) );*/
 
-		Tiles.mSprites.push_back( sRangeSprite( 28, 65, eSprite_BuildingDoor2 ) );
-
-		Surface = new cSurface( 16 * 5, 16 * 5 );
+		*pSurface = new cSurface( 16 * 5, 16 * 5 );
 	}
 
-	if (g_OFED.mMapTileType == eTileTypes_Int) {
+	return Tiles;
+}
 
+sTiles cFrameOFED::SetupHut( cSurface **pSurface ) {
+	sTiles Tiles;
+	
+	if (g_OFED.mMapTileType == eTileTypes_Jungle) {
+		Tiles.mTiles.push_back( sRangeTile( 0, 0, 255 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 0, 256 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 0, 257 ) );
+
+		Tiles.mTiles.push_back( sRangeTile( 0, 1, 275 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 1, 276 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 1, 277 ) );
+
+		Tiles.mTiles.push_back( sRangeTile( 0, 2, 295 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 2, 296 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 2, 297 ) );
+
+		*pSurface = new cSurface( 16 * 4, 16 * 4 );
+	}
+
+	if (g_OFED.mMapTileType == eTileTypes_Desert) {
+		Tiles.mTiles.push_back( sRangeTile( 0, 0, 12 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 0, 15 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 0, 16 ) );
+		Tiles.mTiles.push_back( sRangeTile( 3, 0, 18 ) );
+
+		Tiles.mTiles.push_back( sRangeTile( 0, 1, 32 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 1, 35 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 1, 36 ) );
+		Tiles.mTiles.push_back( sRangeTile( 3, 1, 38 ) );
+
+		Tiles.mTiles.push_back( sRangeTile( 0, 2, 52 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 2, 98 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 2, 99 ) );
+		Tiles.mTiles.push_back( sRangeTile( 3, 2, 58 ) );
+
+		Tiles.mTiles.push_back( sRangeTile( 0, 3, 72 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 3, 118 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 3, 119 ) );
+		Tiles.mTiles.push_back( sRangeTile( 3, 3, 78 ) );
+
+		*pSurface = new cSurface( 16 * 5, 16 * 5 );
+	}
+
+	return Tiles;
+}
+
+/*
+ * MnuHutSoldier1012Click
+ */
+void cFrameOFED::MnuHutSoldier1012Click(wxCommandEvent& event) {
+	cSurface* Surface = 0;
+
+	sTiles Tiles = SetupHut( &Surface );
+
+	if (Surface == 0)
 		return;
+
+	if (g_OFED.mMapTileType == eTileTypes_Jungle) {
+		Tiles.mSprites.push_back( sRangeSprite( 20, 27, eSprite_BuildingDoor2 ) );
 	}
 
-	for (std::vector<sRangeTile>::iterator TileIT = Tiles.mTiles.begin(); TileIT != Tiles.mTiles.end(); ++ TileIT ) {
-		g_OFED.DrawTile( Surface, TileIT->mTileID, (TileIT->mX + 1), TileIT->mY);
+	if (g_OFED.mMapTileType == eTileTypes_Desert) {
+		Tiles.mSprites.push_back( sRangeSprite( 35, 40, eSprite_BuildingDoor2 ) );
 	}
 
-	g_OFED.LoadPalette( Surface );
-	Surface->draw();
+	if (g_OFED.mMapTileType == eTileTypes_Ice) {
+		//Tiles.mSprites.push_back( sRangeSprite( 20, 27, eSprite_BuildingDoor2 ) );
+	}
 
-	wxBitmap Cursor = SDL_To_Bitmap( Surface, Surface->GetWidth() * 2, Surface->GetHeight() * 2);
+	if (g_OFED.mMapTileType == eTileTypes_Moors) {
+		//Tiles.mSprites.push_back( sRangeSprite( 28, 65, eSprite_BuildingDoor2 ) );
+	}
+
+	SetupCursorForDraw( Surface, Tiles );
+}
+
+/*
+ * MnuHutIndigenous1013Click
+ */
+void cFrameOFED::MnuHutIndigenous1013Click(wxCommandEvent& event) {
+	cSurface* Surface = 0;
+
+	sTiles Tiles = SetupHut( &Surface );
+
+	if (Surface == 0)
+		return;
+
+	if (g_OFED.mMapTileType == eTileTypes_Jungle) {
+		Tiles.mSprites.push_back( sRangeSprite( 20, 27, eSprite_Door_Indigenous ) );
+	}
+
+	SetupCursorForDraw( Surface, Tiles );
+}
+
+/*
+ * Mnuindigenouswithspear1014Click
+ */
+void cFrameOFED::Mnuindigenouswithspear1014Click(wxCommandEvent& event) {
+	cSurface* Surface = 0;
+
+	sTiles Tiles = SetupHut( &Surface );
+	if (Surface == 0)
+		return;
+
+	if (g_OFED.mMapTileType == eTileTypes_Jungle) {
+		Tiles.mSprites.push_back( sRangeSprite( 20, 27, eSprite_Door_Indigenous_Spear ) );
+	}
+
+	SetupCursorForDraw( Surface, Tiles );
+}
+
+/*
+ * MnuBunkerSoldier1015Click
+ */
+void cFrameOFED::MnuBunkerSoldier1015Click(wxCommandEvent& event) {
+
+}
+
+/*
+ * MnuBunkerSoldierReinforced1016Click
+ */
+void cFrameOFED::MnuBunkerSoldierReinforced1016Click(wxCommandEvent& event) {
+
+}
+
+/*
+ * MnuBarracksSoldier1017Click
+ */
+void cFrameOFED::MnuBarracksSoldier1017Click(wxCommandEvent& event) {
+	sTiles Tiles;
+	cSurface *Surface = 0;
+
+	Tiles = SetupBarracks( &Surface );
+
+	if (Surface == 0)
+		return;
+
+	if (g_OFED.mMapTileType == eTileTypes_Jungle) {
+		Tiles.mSprites.push_back( sRangeSprite( 13, 2, eSprite_BuildingRoof ) );
+		Tiles.mSprites.push_back( sRangeSprite( 9, 34, eSprite_BuildingDoor ) );
+	}
+
+	if (g_OFED.mMapTileType == eTileTypes_Desert) {
+		Tiles.mSprites.push_back( sRangeSprite( 12, -15, eSprite_BuildingRoof ) );
+		Tiles.mSprites.push_back( sRangeSprite( 7, 16, eSprite_BuildingDoor ) );
+	}
+
+	if (g_OFED.mMapTileType == eTileTypes_Ice) {
+		Tiles.mSprites.push_back( sRangeSprite( 25, -5, eSprite_BuildingRoof ) );
+		Tiles.mSprites.push_back( sRangeSprite( 20, 27, eSprite_BuildingDoor ) );
+	}
+
+	if (g_OFED.mMapTileType == eTileTypes_Moors) {
+		Tiles.mSprites.push_back( sRangeSprite( 28, 65, eSprite_BuildingDoor ) );
+	}
+
+	SetupCursorForDraw( Surface, Tiles );
+}
+
+void cFrameOFED::SetupCursorForDraw( cSurface *pSurface, sTiles& pTiles ) {
+
+	for (std::vector<sRangeTile>::const_iterator TileIT = pTiles.mTiles.begin(); TileIT != pTiles.mTiles.end(); ++TileIT) {
+		g_OFED.DrawTile( pSurface, TileIT->mTileID, (TileIT->mX + 1), TileIT->mY );
+	}
+
+	g_OFED.LoadPalette( pSurface );
+	pSurface->draw();
+
+	wxBitmap Cursor = SDL_To_Bitmap( pSurface, pSurface->GetWidth() * 2, pSurface->GetHeight() * 2 );
 	wxImage image = Cursor.ConvertToImage();
 	image.SetOption( wxIMAGE_OPTION_CUR_HOTSPOT_X, 1 );
 	image.SetOption( wxIMAGE_OPTION_CUR_HOTSPOT_Y, 1 );
 
 	this->SetCursor( wxCursor( image ) );
-	delete Surface;
 
-	g_OFED.SetCursorTileRange( Tiles );
+	g_OFED.SetCursorTileRange( pTiles );
+
+	delete pSurface;
 }
