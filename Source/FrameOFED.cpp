@@ -428,6 +428,28 @@ sTiles cFrameOFED::SetupHut( cSurface **pSurface ) {
 	return Tiles;
 }
 
+sTiles cFrameOFED::SetupBunker( cSurface **pSurface ) {
+	sTiles Tiles;
+
+	if (g_OFED.mMapTileType == eTileTypes_Jungle && g_OFED.mMapTileSubType == eTileSub_0) {
+		Tiles.mTiles.push_back( sRangeTile( 0, 0, 267 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 0, 268 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 0, 269 ) );
+
+		Tiles.mTiles.push_back( sRangeTile( 0, 1, 287 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 1, 288 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 1, 289 ) );
+
+		Tiles.mTiles.push_back( sRangeTile( 0, 2, 307 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 2, 308 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 2, 309 ) );
+
+		*pSurface = new cSurface( 16 * 5, 16 * 5 );
+	}
+
+	return Tiles;
+}
+
 /*
  * MnuHutSoldier1012Click
  */
@@ -497,14 +519,34 @@ void cFrameOFED::Mnuindigenouswithspear1014Click(wxCommandEvent& event) {
  * MnuBunkerSoldier1015Click
  */
 void cFrameOFED::MnuBunkerSoldier1015Click(wxCommandEvent& event) {
+	cSurface* Surface = 0;
 
+	sTiles Tiles = SetupBunker( &Surface );
+	if (Surface == 0)
+		return;
+
+	if (g_OFED.mMapTileType == eTileTypes_Jungle) {
+		Tiles.mSprites.push_back( sRangeSprite( 23, 32, eSprite_BuildingDoor3 ) );
+	}
+
+	SetupCursorForDraw( Surface, Tiles );
 }
 
 /*
  * MnuBunkerSoldierReinforced1016Click
  */
 void cFrameOFED::MnuBunkerSoldierReinforced1016Click(wxCommandEvent& event) {
+	cSurface* Surface = 0;
 
+	sTiles Tiles = SetupBunker( &Surface );
+	if (Surface == 0)
+		return;
+
+	if (g_OFED.mMapTileType == eTileTypes_Jungle) {
+		Tiles.mSprites.push_back( sRangeSprite( 23, 32, eSprite_BuildingDoor_Reinforced ) );
+	}
+
+	SetupCursorForDraw( Surface, Tiles );
 }
 
 /*
@@ -550,7 +592,7 @@ void cFrameOFED::SetupCursorForDraw( cSurface *pSurface, sTiles& pTiles ) {
 	g_OFED.LoadPalette( pSurface );
 	pSurface->draw();
 
-	wxBitmap Cursor = SDL_To_Bitmap( pSurface, pSurface->GetWidth() * 2, pSurface->GetHeight() * 2 );
+	wxBitmap Cursor = SDL_To_Bitmap( pSurface, pSurface->GetWidth(), pSurface->GetHeight() );
 	wxImage image = Cursor.ConvertToImage();
 	image.SetOption( wxIMAGE_OPTION_CUR_HOTSPOT_X, 1 );
 	image.SetOption( wxIMAGE_OPTION_CUR_HOTSPOT_Y, 1 );

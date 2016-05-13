@@ -169,12 +169,13 @@ void cOFED::LoadPalette( cSurface* pSurface ) {
 }
 
 void cOFED::CreateMap( eTileTypes pTileType, eTileSub pTileSub, size_t pWidth, size_t pHeight ) {
-	
-	if (pTileType != eTileTypes_Jungle || pTileSub < 0 )
-		pTileSub = eTileSub_0;
 
 	if (pTileType < 0)
 		pTileType = eTileTypes_Jungle;
+
+	if (pTileType != eTileTypes_Jungle || pTileSub < 0 )
+		pTileSub = eTileSub_0;
+
 
 	delete[] mMap;
 	delete[] mMapSpt;

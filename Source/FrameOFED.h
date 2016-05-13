@@ -76,6 +76,7 @@ class cFrameOFED : public wxFrame
 
 		sTiles SetupBarracks( cSurface **pSurface );
 		sTiles SetupHut( cSurface **pSurface );
+		sTiles SetupBunker( cSurface **pSurface );
 
 		void SetupCursorForDraw( cSurface *pSurface, sTiles& pTiles );
 
