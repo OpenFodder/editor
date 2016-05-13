@@ -226,8 +226,8 @@ void cFrameOFED::cFrameOFEDSize(wxSizeEvent& event)
 /*
  * Mnunewmap1006Click
  */
-void cFrameOFED::Mnunewmap1006Click(wxCommandEvent& event)
-{
+void cFrameOFED::Mnunewmap1006Click(wxCommandEvent& event) {
+
 	cDialogCreateMap* CreateMap = new cDialogCreateMap( this );
 	CreateMap->Show();
 }
@@ -235,8 +235,8 @@ void cFrameOFED::Mnunewmap1006Click(wxCommandEvent& event)
 /*
  * cFrameOFEDScrollWin
  */
-void cFrameOFED::cFrameOFEDScrollWin(wxScrollWinEvent& event)
-{
+void cFrameOFED::cFrameOFEDScrollWin(wxScrollWinEvent& event) {
+
 	if (event.GetOrientation() == wxHORIZONTAL)
 		g_OFED.SetMapX( event.GetPosition() );
 	else
@@ -247,6 +247,7 @@ void cFrameOFED::cFrameOFEDScrollWin(wxScrollWinEvent& event)
 }
 
 void cFrameOFED::cFrameOFEDScrollStepUp( wxScrollWinEvent& event ) {
+
 	if (event.GetOrientation() == wxHORIZONTAL) {
 		g_OFED.SetMapX( g_OFED.mMapX - 1 );
 		SetScrollPos( event.GetOrientation(), g_OFED.mMapX );
@@ -282,14 +283,6 @@ void cFrameOFED::OnPaint(wxPaintEvent& event)
 
 	if (mDialogToolboxSprites)
 		mDialogToolboxSprites->Refresh();
-}
-
-void cFrameOFED::Mnucivilianhut1009Click( wxCommandEvent& event ) {
-	
-}
-
-void cFrameOFED::Mnumenuitem101010Click( wxCommandEvent& event ) {
-
 }
 
 sTiles cFrameOFED::SetupBarracks( cSurface **pSurface ) {
@@ -669,10 +662,6 @@ void cFrameOFED::MnuBunkerSoldierReinforced1016Click(wxCommandEvent& event) {
 		return;
 
 	if (g_OFED.mMapTileType == eTileTypes_Jungle) {
-		Tiles.mSprites.push_back( sRangeSprite( 23, 32, eSprite_BuildingDoor_Reinforced ) );
-	}
-
-	if (g_OFED.mMapTileType == eTileTypes_Desert) {
 		Tiles.mSprites.push_back( sRangeSprite( 23, 32, eSprite_BuildingDoor_Reinforced ) );
 	}
 

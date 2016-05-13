@@ -60,8 +60,6 @@ class cFrameOFED : public wxFrame
 		void cFrameOFEDScrollStepDown( wxScrollWinEvent& event );
 		void OnMove( wxMoveEvent& event );
 		void OnPaint(wxPaintEvent& event);
-		void Mnucivilianhut1009Click( wxCommandEvent& event );
-		void Mnumenuitem101010Click( wxCommandEvent& event );
 
 		void ReloadSprites();
 
