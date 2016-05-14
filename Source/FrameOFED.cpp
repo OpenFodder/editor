@@ -191,7 +191,6 @@ void cFrameOFED::Mnusavemap1003Click(wxCommandEvent& event) {
 		return;
 
 	g_OFED.SaveMap( filename );
-	
 }
 
 void cFrameOFED::Mnuquit1005Click( wxCommandEvent& event ) {
@@ -361,6 +360,13 @@ sTiles cFrameOFED::SetupBarracks( cSurface **pSurface ) {
 		*pSurface = new cSurface( 16 * 4, 16 * 4 );
 	}
 
+	if (g_OFED.mMapTileType == eTileTypes_Int) {
+		Tiles.mTiles.push_back( sRangeTile( 0, 0, 246 ) );
+		Tiles.mTiles.push_back( sRangeTile( 0, 1, 266 ) );
+
+		*pSurface = new cSurface( 16 * 3, 16 * 3 );
+	}
+
 	return Tiles;
 }
 
@@ -456,6 +462,14 @@ sTiles cFrameOFED::SetupHut( cSurface **pSurface ) {
 		*pSurface = new cSurface( 16 * 5, 16 * 5 );
 	}
 
+	if (g_OFED.mMapTileType == eTileTypes_Int) {
+		Tiles.mTiles.push_back( sRangeTile( 0, 0, 246 ) );
+		Tiles.mTiles.push_back( sRangeTile( 0, 1, 266 ) );
+
+
+		*pSurface = new cSurface( 16 * 3, 16 * 3 );
+	}
+
 	return Tiles;
 }
 
@@ -525,6 +539,15 @@ sTiles cFrameOFED::SetupBunker( cSurface **pSurface ) {
 
 		*pSurface = new cSurface( 16 * 4, 16 * 4 );
 	}
+
+
+	if (g_OFED.mMapTileType == eTileTypes_Int) {
+		Tiles.mTiles.push_back( sRangeTile( 0, 0, 331 ) );
+		Tiles.mTiles.push_back( sRangeTile( 0, 1, 351 ) );
+
+		*pSurface = new cSurface( 16 * 3, 16 * 3 );
+	}
+
 	return Tiles;
 }
 
@@ -555,6 +578,10 @@ void cFrameOFED::MnuHutSoldier1012Click(wxCommandEvent& event) {
 
 	if (g_OFED.mMapTileType == eTileTypes_Moors) {
 		Tiles.mSprites.push_back( sRangeSprite( 28, 65, eSprite_BuildingDoor2 ) );
+	}
+
+	if (g_OFED.mMapTileType == eTileTypes_Int) {
+		Tiles.mSprites.push_back( sRangeSprite( 3, 5, eSprite_BuildingDoor2 ) );
 	}
 
 	SetupCursorForDraw( Surface, Tiles );
@@ -589,6 +616,10 @@ void cFrameOFED::MnuHutIndigenous1013Click(wxCommandEvent& event) {
 		Tiles.mSprites.push_back( sRangeSprite( 28, 65, eSprite_Door_Indigenous ) );
 	}
 
+	if (g_OFED.mMapTileType == eTileTypes_Int) {
+		Tiles.mSprites.push_back( sRangeSprite( 3, 5, eSprite_Door_Indigenous ) );
+	}
+
 	SetupCursorForDraw( Surface, Tiles );
 }
 
@@ -619,6 +650,11 @@ void cFrameOFED::Mnuindigenouswithspear1014Click(wxCommandEvent& event) {
 	if (g_OFED.mMapTileType == eTileTypes_Moors) {
 		Tiles.mSprites.push_back( sRangeSprite( 28, 65, eSprite_Door_Indigenous_Spear ) );
 	}
+
+	if (g_OFED.mMapTileType == eTileTypes_Int) {
+		Tiles.mSprites.push_back( sRangeSprite( 3, 5, eSprite_Door_Indigenous_Spear ) );
+	}
+
 	SetupCursorForDraw( Surface, Tiles );
 }
 
@@ -648,6 +684,9 @@ void cFrameOFED::MnuBunkerSoldier1015Click(wxCommandEvent& event) {
 		Tiles.mSprites.push_back( sRangeSprite( 23, 32, eSprite_BuildingDoor3 ) );
 	}
 
+	if (g_OFED.mMapTileType == eTileTypes_Int) {
+		Tiles.mSprites.push_back( sRangeSprite( 3, 3, eSprite_BuildingDoor3 ) );
+	}
 	SetupCursorForDraw( Surface, Tiles );
 }
 
@@ -675,6 +714,10 @@ void cFrameOFED::MnuBunkerSoldierReinforced1016Click(wxCommandEvent& event) {
 
 	if (g_OFED.mMapTileType == eTileTypes_Moors) {
 		Tiles.mSprites.push_back( sRangeSprite( 23, 32, eSprite_BuildingDoor_Reinforced ) );
+	}
+
+	if (g_OFED.mMapTileType == eTileTypes_Int) {
+		Tiles.mSprites.push_back( sRangeSprite( 3, 3, eSprite_BuildingDoor_Reinforced ) );
 	}
 	SetupCursorForDraw( Surface, Tiles );
 }
@@ -711,6 +754,9 @@ void cFrameOFED::MnuBarracksSoldier1017Click(wxCommandEvent& event) {
 		Tiles.mSprites.push_back( sRangeSprite( 7, 33, eSprite_BuildingDoor ) );
 	}
 
+	if (g_OFED.mMapTileType == eTileTypes_Int) {
+		Tiles.mSprites.push_back( sRangeSprite( 3, 5, eSprite_BuildingDoor ) );
+	}
 	SetupCursorForDraw( Surface, Tiles );
 }
 

@@ -84,6 +84,9 @@ void cPanelTileView::OnMouseInputTimer( wxTimerEvent& event ) {
 		wxCoord MouseX = (Point.x - GetScreenPosition().x) / mScaleWidth;
 		wxCoord MouseY = (Point.y - GetScreenPosition().y) / mScaleHeight;
 
+		if (MouseX < 0 || MouseY < 0)
+			return;
+
 		uint32 TileX = MouseX / 16;
 		uint32 TileY = MouseY / 16;
 

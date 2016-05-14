@@ -120,6 +120,7 @@
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>D:\Systems\Librarys\wxWidgets3.1\include\msvc;D:\Systems\Librarys\wxWidgets3.1\include;D:\Systems\Librarys\SDL2-2.0.4\include;$(IncludePath)</IncludePath>
     <LibraryPath>D:\Systems\Librarys\wxWidgets3.1\lib\vc_x64_lib;D:\Systems\Librarys\SDL2-2.0.4\lib\x64;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\..\..\..\..\Run\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
