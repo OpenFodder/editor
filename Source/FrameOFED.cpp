@@ -51,6 +51,7 @@ BEGIN_EVENT_TABLE(cFrameOFED,wxFrame)
 	EVT_MENU(ID_MNU_SOLDIER_1017, cFrameOFED::MnuBarracksSoldier1017Click)
 	EVT_MENU(ID_MNU_SOLDIER_1015, cFrameOFED::MnuBunkerSoldier1015Click)
 	EVT_MENU(ID_MNU_SOLDIERREINFORCED_1016, cFrameOFED::MnuBunkerSoldierReinforced1016Click)
+	EVT_MENU(ID_MNU_CLIFF_1018, cFrameOFED::Mnucliff1018Click)
 END_EVENT_TABLE()
 ////Event Table End
 
@@ -104,12 +105,13 @@ void cFrameOFED::CreateGUIControls()
 	ID_MNU_MENUITEM10_1010_Mnu_Obj->Append(ID_MNU_SOLDIER_1015, _("Soldier"), _(""), wxITEM_NORMAL);
 	ID_MNU_MENUITEM10_1010_Mnu_Obj->Append(ID_MNU_SOLDIERREINFORCED_1016, _("Soldier Reinforced"), _(""), wxITEM_NORMAL);
 	ID_MNU_INSERT_1008_Mnu_Obj->Append(ID_MNU_MENUITEM10_1010, _("Bunker"), ID_MNU_MENUITEM10_1010_Mnu_Obj);
+	ID_MNU_INSERT_1008_Mnu_Obj->Append(ID_MNU_CLIFF_1018, _("Cliff"), _(""), wxITEM_NORMAL);
 	WxMenuBar1->Append(ID_MNU_INSERT_1008_Mnu_Obj, _("Insert"));
 	SetMenuBar(WxMenuBar1);
 
-	WxSaveFileDialog1 =  new wxFileDialog(this, _("Choose a file"), _(""), _(""), _("*.map"), wxFD_SAVE);
-
 	WxOpenFileDialog1 =  new wxFileDialog(this, _("Choose a file"), _(""), _(""), _("*.map"), wxFD_OPEN);
+
+	WxSaveFileDialog1 =  new wxFileDialog(this, _("Choose a file"), _(""), _(""), _("*.map"), wxFD_SAVE);
 
 	SetTitle(_("Open Fodder Editor"));
 	SetIcon(wxNullIcon);
@@ -322,7 +324,7 @@ sTiles cFrameOFED::SetupBarracks( cSurface **pSurface ) {
 		Tiles.mTiles.push_back( sRangeTile( 2, 2, 286 ) );
 		Tiles.mTiles.push_back( sRangeTile( 3, 2, 287 ) );
 
-		*pSurface = new cSurface( 16 * 3, 16 * 4 );
+		*pSurface = new cSurface( 16 * 4, 16 * 3 );
 	}
 
 	if (g_OFED.mMapTileType == eTileTypes_Desert) {
@@ -338,7 +340,7 @@ sTiles cFrameOFED::SetupBarracks( cSurface **pSurface ) {
 		Tiles.mTiles.push_back( sRangeTile( 1, 2, 237 ) );
 		Tiles.mTiles.push_back( sRangeTile( 2, 2, 238 ) );
 
-		*pSurface = new cSurface( 16 * 3, 16 * 4 );
+		*pSurface = new cSurface( 16 * 3, 16 *3 );
 	}
 
 	if (g_OFED.mMapTileType == eTileTypes_Moors) {
@@ -357,14 +359,14 @@ sTiles cFrameOFED::SetupBarracks( cSurface **pSurface ) {
 		Tiles.mTiles.push_back( sRangeTile( 1, 3, 395 ) );
 		Tiles.mTiles.push_back( sRangeTile( 2, 3, 396 ) );
 
-		*pSurface = new cSurface( 16 * 4, 16 * 4 );
+		*pSurface = new cSurface( 16 * 3, 16 * 4 );
 	}
 
 	if (g_OFED.mMapTileType == eTileTypes_Int) {
 		Tiles.mTiles.push_back( sRangeTile( 0, 0, 246 ) );
 		Tiles.mTiles.push_back( sRangeTile( 0, 1, 266 ) );
 
-		*pSurface = new cSurface( 16 * 3, 16 * 3 );
+		*pSurface = new cSurface( 16 * 1, 16 * 2 );
 	}
 
 	return Tiles;
@@ -386,7 +388,7 @@ sTiles cFrameOFED::SetupHut( cSurface **pSurface ) {
 		Tiles.mTiles.push_back( sRangeTile( 1, 2, 296 ) );
 		Tiles.mTiles.push_back( sRangeTile( 2, 2, 297 ) );
 
-		*pSurface = new cSurface( 16 * 4, 16 * 4 );
+		*pSurface = new cSurface( 16 * 3, 16 * 3 );
 	}
 
 	if (g_OFED.mMapTileType == eTileTypes_Desert) {
@@ -410,7 +412,7 @@ sTiles cFrameOFED::SetupHut( cSurface **pSurface ) {
 		Tiles.mTiles.push_back( sRangeTile( 2, 3, 119 ) );
 		Tiles.mTiles.push_back( sRangeTile( 3, 3, 78 ) );
 
-		*pSurface = new cSurface( 16 * 5, 16 * 5 );
+		*pSurface = new cSurface( 16 * 4, 16 * 4 );
 	}
 
 	if (g_OFED.mMapTileType == eTileTypes_Ice) {
@@ -429,7 +431,7 @@ sTiles cFrameOFED::SetupHut( cSurface **pSurface ) {
 		Tiles.mTiles.push_back( sRangeTile( 2, 2, 282 ) );
 		Tiles.mTiles.push_back( sRangeTile( 3, 2, 283 ) );
 
-		*pSurface = new cSurface( 16 * 5, 16 * 5 );
+		*pSurface = new cSurface( 16 * 4, 16 * 3 );
 	}
 
 	if (g_OFED.mMapTileType == eTileTypes_Moors) {
@@ -459,7 +461,7 @@ sTiles cFrameOFED::SetupHut( cSurface **pSurface ) {
 		Tiles.mTiles.push_back( sRangeTile( 2, 4, 322 ) );
 		Tiles.mTiles.push_back( sRangeTile( 3, 4, 323 ) );
 
-		*pSurface = new cSurface( 16 * 5, 16 * 5 );
+		*pSurface = new cSurface( 16 * 4, 16 * 5 );
 	}
 
 	if (g_OFED.mMapTileType == eTileTypes_Int) {
@@ -467,7 +469,7 @@ sTiles cFrameOFED::SetupHut( cSurface **pSurface ) {
 		Tiles.mTiles.push_back( sRangeTile( 0, 1, 266 ) );
 
 
-		*pSurface = new cSurface( 16 * 3, 16 * 3 );
+		*pSurface = new cSurface( 16 * 1, 16 * 2 );
 	}
 
 	return Tiles;
@@ -489,7 +491,7 @@ sTiles cFrameOFED::SetupBunker( cSurface **pSurface ) {
 		Tiles.mTiles.push_back( sRangeTile( 1, 2, 308 ) );
 		Tiles.mTiles.push_back( sRangeTile( 2, 2, 309 ) );
 
-		*pSurface = new cSurface( 16 * 5, 16 * 5 );
+		*pSurface = new cSurface( 16 * 3, 16 * 3 );
 	}
 
 	if (g_OFED.mMapTileType == eTileTypes_Desert) {
@@ -505,7 +507,7 @@ sTiles cFrameOFED::SetupBunker( cSurface **pSurface ) {
 		Tiles.mTiles.push_back( sRangeTile( 1, 2, 50 ) );
 		Tiles.mTiles.push_back( sRangeTile( 2, 2, 51 ) );
 
-		*pSurface = new cSurface( 16 * 5, 16 * 5 );
+		*pSurface = new cSurface( 16 * 3, 16 * 3 );
 	}
 
 	if (g_OFED.mMapTileType == eTileTypes_Ice ) {
@@ -521,7 +523,7 @@ sTiles cFrameOFED::SetupBunker( cSurface **pSurface ) {
 		Tiles.mTiles.push_back( sRangeTile( 1, 2, 348 ) );
 		Tiles.mTiles.push_back( sRangeTile( 2, 2, 349 ) );
 
-		*pSurface = new cSurface( 16 * 5, 16 * 5 );
+		*pSurface = new cSurface( 16 * 3, 16 * 3 );
 	}
 
 	if (g_OFED.mMapTileType == eTileTypes_Moors) {
@@ -537,7 +539,7 @@ sTiles cFrameOFED::SetupBunker( cSurface **pSurface ) {
 		Tiles.mTiles.push_back( sRangeTile( 1, 2, 201 ) );
 		Tiles.mTiles.push_back( sRangeTile( 2, 2, 202 ) );
 
-		*pSurface = new cSurface( 16 * 4, 16 * 4 );
+		*pSurface = new cSurface( 16 * 3, 16 * 3 );
 	}
 
 
@@ -545,7 +547,7 @@ sTiles cFrameOFED::SetupBunker( cSurface **pSurface ) {
 		Tiles.mTiles.push_back( sRangeTile( 0, 0, 331 ) );
 		Tiles.mTiles.push_back( sRangeTile( 0, 1, 351 ) );
 
-		*pSurface = new cSurface( 16 * 3, 16 * 3 );
+		*pSurface = new cSurface( 16 * 1, 16 * 2 );
 	}
 
 	return Tiles;
@@ -760,10 +762,68 @@ void cFrameOFED::MnuBarracksSoldier1017Click(wxCommandEvent& event) {
 	SetupCursorForDraw( Surface, Tiles );
 }
 
+void cFrameOFED::Mnucliff1018Click( wxCommandEvent& event ) {
+
+	if (g_OFED.mMapTileType != eTileTypes_Ice)
+		return;
+
+	sTiles Tiles;
+	cSurface *Surface = 0;
+
+	Tiles.mTiles.push_back( sRangeTile( 0, 0, 120 ) );
+	Tiles.mTiles.push_back( sRangeTile( 1, 0, 121 ) );
+	Tiles.mTiles.push_back( sRangeTile( 2, 0, 122 ) );
+	Tiles.mTiles.push_back( sRangeTile( 3, 0, 123 ) );
+	Tiles.mTiles.push_back( sRangeTile( 4, 0, 124 ) );
+	Tiles.mTiles.push_back( sRangeTile( 5, 0, 125 ) );
+	Tiles.mTiles.push_back( sRangeTile( 6, 0, 126 ) );
+	Tiles.mTiles.push_back( sRangeTile( 7, 0, 127 ) );
+
+	Tiles.mTiles.push_back( sRangeTile( 0, 1, 140 ) );
+	Tiles.mTiles.push_back( sRangeTile( 1, 1, 141 ) );
+	Tiles.mTiles.push_back( sRangeTile( 2, 1, 142 ) );
+	Tiles.mTiles.push_back( sRangeTile( 3, 1, 143 ) );
+	Tiles.mTiles.push_back( sRangeTile( 4, 1, 144 ) );
+	Tiles.mTiles.push_back( sRangeTile( 5, 1, 145 ) );
+	Tiles.mTiles.push_back( sRangeTile( 6, 1, 146 ) );
+	Tiles.mTiles.push_back( sRangeTile( 7, 1, 147 ) );
+
+	Tiles.mTiles.push_back( sRangeTile( 0, 2, 160 ) );
+	Tiles.mTiles.push_back( sRangeTile( 1, 2, 161 ) );
+	Tiles.mTiles.push_back( sRangeTile( 2, 2, 162 ) );
+	Tiles.mTiles.push_back( sRangeTile( 3, 2, 163 ) );
+	Tiles.mTiles.push_back( sRangeTile( 4, 2, 164 ) );
+	Tiles.mTiles.push_back( sRangeTile( 5, 2, 165 ) );
+	Tiles.mTiles.push_back( sRangeTile( 6, 2, 166 ) );
+	Tiles.mTiles.push_back( sRangeTile( 7, 2, 167 ) );
+
+	Tiles.mTiles.push_back( sRangeTile( 0, 3, 180 ) );
+	Tiles.mTiles.push_back( sRangeTile( 1, 3, 181 ) );
+	Tiles.mTiles.push_back( sRangeTile( 2, 3, 182 ) );
+	Tiles.mTiles.push_back( sRangeTile( 3, 3, 183 ) );
+	Tiles.mTiles.push_back( sRangeTile( 4, 3, 184 ) );
+	Tiles.mTiles.push_back( sRangeTile( 5, 3, 185 ) );
+	Tiles.mTiles.push_back( sRangeTile( 6, 3, 186 ) );
+	Tiles.mTiles.push_back( sRangeTile( 7, 3, 187 ) );
+
+	Tiles.mTiles.push_back( sRangeTile( 0, 4, 200 ) );
+	Tiles.mTiles.push_back( sRangeTile( 1, 4, 201 ) );
+	Tiles.mTiles.push_back( sRangeTile( 2, 4, 202 ) );
+	Tiles.mTiles.push_back( sRangeTile( 3, 4, 203 ) );
+	Tiles.mTiles.push_back( sRangeTile( 4, 4, 204 ) );
+	Tiles.mTiles.push_back( sRangeTile( 5, 4, 205 ) );
+	Tiles.mTiles.push_back( sRangeTile( 6, 4, 206 ) );
+	Tiles.mTiles.push_back( sRangeTile( 7, 4, 207 ) );
+
+	Surface = new cSurface( 16 * 8, 16 * 5 );
+	
+	SetupCursorForDraw( Surface, Tiles );
+}
+
 void cFrameOFED::SetupCursorForDraw( cSurface *pSurface, sTiles& pTiles ) {
 
 	for (std::vector<sRangeTile>::const_iterator TileIT = pTiles.mTiles.begin(); TileIT != pTiles.mTiles.end(); ++TileIT) {
-		g_OFED.DrawTile( pSurface, TileIT->mTileID, (TileIT->mX + 1), TileIT->mY );
+		g_OFED.DrawTile( pSurface, TileIT->mTileID, (TileIT->mX), TileIT->mY );
 	}
 
 	g_OFED.LoadPalette( pSurface );

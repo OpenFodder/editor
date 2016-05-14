@@ -71,6 +71,7 @@ class cFrameOFED : public wxFrame
 		void MnuBunkerSoldier1015Click(wxCommandEvent& event);
 		void MnuBunkerSoldierReinforced1016Click(wxCommandEvent& event);
 		void MnuBarracksSoldier1017Click(wxCommandEvent& event);
+		void Mnucliff1018Click( wxCommandEvent& event );
 
 		sTiles SetupBarracks( cSurface **pSurface );
 		sTiles SetupHut( cSurface **pSurface );
@@ -84,8 +85,8 @@ class cFrameOFED : public wxFrame
 		//wxDev-C++ will remove them. Add custom code after the block.
 		////GUI Control Declaration Start
 		wxMenuBar *WxMenuBar1;
-		wxFileDialog *WxSaveFileDialog1;
 		wxFileDialog *WxOpenFileDialog1;
+		wxFileDialog *WxSaveFileDialog1;
 		////GUI Control Declaration End
 		
 		cPanelTileView*			mPanelTileView;
@@ -116,6 +117,7 @@ class cFrameOFED : public wxFrame
 			ID_MNU_MENUITEM10_1010 = 1010,
 			ID_MNU_SOLDIER_1015 = 1015,
 			ID_MNU_SOLDIERREINFORCED_1016 = 1016,
+			ID_MNU_CLIFF_1018 = 1018,
 			
 			////GUI Enum Control ID End
 			ID_DUMMY_VALUE_ //don't remove this value unless you have other enum values

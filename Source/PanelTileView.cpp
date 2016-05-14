@@ -79,6 +79,7 @@ void cPanelTileView::OnMouseInputTimer( wxTimerEvent& event ) {
 	wxPoint Point = wxGetMousePosition();
 	wxMouseState state = wxGetMouseState();
 
+	
 	if (state.LeftIsDown()) {
 
 		wxCoord MouseX = (Point.x - GetScreenPosition().x) / mScaleWidth;

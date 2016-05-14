@@ -136,6 +136,7 @@ void cPanelToolboxSprite::OnMouse( wxMouseEvent& event ) {
 					mCursor = wxCursor( image );
 
 					this->GetParent()->GetParent()->SetCursor( mCursor );
+					delete Surface;
 				}
 			}
 		}

@@ -89,7 +89,6 @@ void cPanelToolboxTile::OnMouse( wxMouseEvent& event ) {
 		image.SetOption( wxIMAGE_OPTION_CUR_HOTSPOT_Y, 16 );
 		mCursor = wxCursor( image );
 		
-		//this->GetParent()->SetCursor( mCursor );
 		this->GetParent()->GetParent()->SetCursor( mCursor );
 	}
 }
