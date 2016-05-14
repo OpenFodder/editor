@@ -72,6 +72,7 @@ void cPanelToolboxSprite::ReloadSprites() {
 
 	size_t X = 0, Y = 0;
 	size_t BigY = 0;
+	mSpriteRanges.clear();
 
 	for (size_t SpriteID = 0; SpriteID < 111; ++SpriteID) {
 		int32 AnimID = g_SpriteAnim[SpriteID];

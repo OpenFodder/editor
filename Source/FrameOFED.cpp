@@ -747,7 +747,7 @@ void cFrameOFED::MnuBarracksSoldier1017Click(wxCommandEvent& event) {
 	}
 
 	if (g_OFED.mMapTileType == eTileTypes_Ice) {
-		Tiles.mSprites.push_back( sRangeSprite( 25, -5, eSprite_BuildingRoof ) );
+		Tiles.mSprites.push_back( sRangeSprite( 23, -5, eSprite_BuildingRoof ) );
 		Tiles.mSprites.push_back( sRangeSprite( 20, 27, eSprite_BuildingDoor ) );
 	}
 
@@ -763,61 +763,170 @@ void cFrameOFED::MnuBarracksSoldier1017Click(wxCommandEvent& event) {
 }
 
 void cFrameOFED::Mnucliff1018Click( wxCommandEvent& event ) {
-
-	if (g_OFED.mMapTileType != eTileTypes_Ice)
-		return;
-
 	sTiles Tiles;
 	cSurface *Surface = 0;
 
-	Tiles.mTiles.push_back( sRangeTile( 0, 0, 120 ) );
-	Tiles.mTiles.push_back( sRangeTile( 1, 0, 121 ) );
-	Tiles.mTiles.push_back( sRangeTile( 2, 0, 122 ) );
-	Tiles.mTiles.push_back( sRangeTile( 3, 0, 123 ) );
-	Tiles.mTiles.push_back( sRangeTile( 4, 0, 124 ) );
-	Tiles.mTiles.push_back( sRangeTile( 5, 0, 125 ) );
-	Tiles.mTiles.push_back( sRangeTile( 6, 0, 126 ) );
-	Tiles.mTiles.push_back( sRangeTile( 7, 0, 127 ) );
+	if (g_OFED.mMapTileType == eTileTypes_Ice) {
+		Tiles.mTiles.push_back( sRangeTile( 0, 0, 120 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 0, 121 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 0, 122 ) );
+		Tiles.mTiles.push_back( sRangeTile( 3, 0, 123 ) );
+		Tiles.mTiles.push_back( sRangeTile( 4, 0, 124 ) );
+		Tiles.mTiles.push_back( sRangeTile( 5, 0, 125 ) );
+		Tiles.mTiles.push_back( sRangeTile( 6, 0, 126 ) );
+		Tiles.mTiles.push_back( sRangeTile( 7, 0, 127 ) );
 
-	Tiles.mTiles.push_back( sRangeTile( 0, 1, 140 ) );
-	Tiles.mTiles.push_back( sRangeTile( 1, 1, 141 ) );
-	Tiles.mTiles.push_back( sRangeTile( 2, 1, 142 ) );
-	Tiles.mTiles.push_back( sRangeTile( 3, 1, 143 ) );
-	Tiles.mTiles.push_back( sRangeTile( 4, 1, 144 ) );
-	Tiles.mTiles.push_back( sRangeTile( 5, 1, 145 ) );
-	Tiles.mTiles.push_back( sRangeTile( 6, 1, 146 ) );
-	Tiles.mTiles.push_back( sRangeTile( 7, 1, 147 ) );
+		Tiles.mTiles.push_back( sRangeTile( 0, 1, 140 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 1, 141 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 1, 142 ) );
+		Tiles.mTiles.push_back( sRangeTile( 3, 1, 143 ) );
+		Tiles.mTiles.push_back( sRangeTile( 4, 1, 144 ) );
+		Tiles.mTiles.push_back( sRangeTile( 5, 1, 145 ) );
+		Tiles.mTiles.push_back( sRangeTile( 6, 1, 146 ) );
+		Tiles.mTiles.push_back( sRangeTile( 7, 1, 147 ) );
 
-	Tiles.mTiles.push_back( sRangeTile( 0, 2, 160 ) );
-	Tiles.mTiles.push_back( sRangeTile( 1, 2, 161 ) );
-	Tiles.mTiles.push_back( sRangeTile( 2, 2, 162 ) );
-	Tiles.mTiles.push_back( sRangeTile( 3, 2, 163 ) );
-	Tiles.mTiles.push_back( sRangeTile( 4, 2, 164 ) );
-	Tiles.mTiles.push_back( sRangeTile( 5, 2, 165 ) );
-	Tiles.mTiles.push_back( sRangeTile( 6, 2, 166 ) );
-	Tiles.mTiles.push_back( sRangeTile( 7, 2, 167 ) );
+		Tiles.mTiles.push_back( sRangeTile( 0, 2, 160 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 2, 161 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 2, 162 ) );
+		Tiles.mTiles.push_back( sRangeTile( 3, 2, 163 ) );
+		Tiles.mTiles.push_back( sRangeTile( 4, 2, 164 ) );
+		Tiles.mTiles.push_back( sRangeTile( 5, 2, 165 ) );
+		Tiles.mTiles.push_back( sRangeTile( 6, 2, 166 ) );
+		Tiles.mTiles.push_back( sRangeTile( 7, 2, 167 ) );
 
-	Tiles.mTiles.push_back( sRangeTile( 0, 3, 180 ) );
-	Tiles.mTiles.push_back( sRangeTile( 1, 3, 181 ) );
-	Tiles.mTiles.push_back( sRangeTile( 2, 3, 182 ) );
-	Tiles.mTiles.push_back( sRangeTile( 3, 3, 183 ) );
-	Tiles.mTiles.push_back( sRangeTile( 4, 3, 184 ) );
-	Tiles.mTiles.push_back( sRangeTile( 5, 3, 185 ) );
-	Tiles.mTiles.push_back( sRangeTile( 6, 3, 186 ) );
-	Tiles.mTiles.push_back( sRangeTile( 7, 3, 187 ) );
+		Tiles.mTiles.push_back( sRangeTile( 0, 3, 180 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 3, 181 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 3, 182 ) );
+		Tiles.mTiles.push_back( sRangeTile( 3, 3, 183 ) );
+		Tiles.mTiles.push_back( sRangeTile( 4, 3, 184 ) );
+		Tiles.mTiles.push_back( sRangeTile( 5, 3, 185 ) );
+		Tiles.mTiles.push_back( sRangeTile( 6, 3, 186 ) );
+		Tiles.mTiles.push_back( sRangeTile( 7, 3, 187 ) );
 
-	Tiles.mTiles.push_back( sRangeTile( 0, 4, 200 ) );
-	Tiles.mTiles.push_back( sRangeTile( 1, 4, 201 ) );
-	Tiles.mTiles.push_back( sRangeTile( 2, 4, 202 ) );
-	Tiles.mTiles.push_back( sRangeTile( 3, 4, 203 ) );
-	Tiles.mTiles.push_back( sRangeTile( 4, 4, 204 ) );
-	Tiles.mTiles.push_back( sRangeTile( 5, 4, 205 ) );
-	Tiles.mTiles.push_back( sRangeTile( 6, 4, 206 ) );
-	Tiles.mTiles.push_back( sRangeTile( 7, 4, 207 ) );
+		Tiles.mTiles.push_back( sRangeTile( 0, 4, 200 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 4, 201 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 4, 202 ) );
+		Tiles.mTiles.push_back( sRangeTile( 3, 4, 203 ) );
+		Tiles.mTiles.push_back( sRangeTile( 4, 4, 204 ) );
+		Tiles.mTiles.push_back( sRangeTile( 5, 4, 205 ) );
+		Tiles.mTiles.push_back( sRangeTile( 6, 4, 206 ) );
+		Tiles.mTiles.push_back( sRangeTile( 7, 4, 207 ) );
 
-	Surface = new cSurface( 16 * 8, 16 * 5 );
+		Surface = new cSurface( 16 * 8, 16 * 5 );
+	}
+
+	if (g_OFED.mMapTileType == eTileTypes_Jungle) {
+		Tiles.mTiles.push_back( sRangeTile( 0, 0, 89 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 0, 90 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 0, 91 ) );
+		Tiles.mTiles.push_back( sRangeTile( 3, 0, 92 ) );
+		Tiles.mTiles.push_back( sRangeTile( 4, 0, 93 ) );
+		Tiles.mTiles.push_back( sRangeTile( 5, 0, 94 ) );
+
+		Tiles.mTiles.push_back( sRangeTile( 0, 1, 109 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 1, 110 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 1, 111 ) );
+		Tiles.mTiles.push_back( sRangeTile( 3, 1, 112 ) );
+		Tiles.mTiles.push_back( sRangeTile( 4, 1, 113 ) );
+		Tiles.mTiles.push_back( sRangeTile( 5, 1, 114 ) );
+
+		Tiles.mTiles.push_back( sRangeTile( 0, 2, 129 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 2, 130 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 2, 131 ) );
+		Tiles.mTiles.push_back( sRangeTile( 3, 2, 132 ) );
+		Tiles.mTiles.push_back( sRangeTile( 4, 2, 133 ) );
+		Tiles.mTiles.push_back( sRangeTile( 5, 2, 134 ) );
+
+		Tiles.mTiles.push_back( sRangeTile( 0, 3, 149 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 3, 150 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 3, 151 ) );
+		Tiles.mTiles.push_back( sRangeTile( 3, 3, 152 ) );
+		Tiles.mTiles.push_back( sRangeTile( 4, 3, 153 ) );
+		Tiles.mTiles.push_back( sRangeTile( 5, 3, 154 ) );
+
+		Tiles.mTiles.push_back( sRangeTile( 0, 4, 169 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 4, 170 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 4, 171 ) );
+		Tiles.mTiles.push_back( sRangeTile( 3, 4, 172 ) );
+		Tiles.mTiles.push_back( sRangeTile( 4, 4, 173 ) );
+		Tiles.mTiles.push_back( sRangeTile( 5, 4, 174 ) );
+
+		Tiles.mTiles.push_back( sRangeTile( 0, 5, 189 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 5, 190 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 5, 191 ) );
+		Tiles.mTiles.push_back( sRangeTile( 3, 5, 192 ) );
+		Tiles.mTiles.push_back( sRangeTile( 4, 5, 193 ) );
+		Tiles.mTiles.push_back( sRangeTile( 5, 5, 194 ) );
+
+		Tiles.mTiles.push_back( sRangeTile( 4, 6, 213 ) );
+		Tiles.mTiles.push_back( sRangeTile( 5, 6, 214 ) );
+
+		Surface = new cSurface( 16 * 6, 16 * 6 );
+	}
 	
-	SetupCursorForDraw( Surface, Tiles );
+
+	if (g_OFED.mMapTileType == eTileTypes_Desert) {
+		Tiles.mTiles.push_back( sRangeTile( 0, 0, 80 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 0, 81 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 0, 82 ) );
+		Tiles.mTiles.push_back( sRangeTile( 3, 0, 83 ) );
+		Tiles.mTiles.push_back( sRangeTile( 4, 0, 84 ) );
+		Tiles.mTiles.push_back( sRangeTile( 5, 0, 85 ) );
+
+		Tiles.mTiles.push_back( sRangeTile( 0, 1, 100 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 1, 101 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 1, 102 ) );
+		Tiles.mTiles.push_back( sRangeTile( 3, 1, 103 ) );
+		Tiles.mTiles.push_back( sRangeTile( 4, 1, 104 ) );
+		Tiles.mTiles.push_back( sRangeTile( 5, 1, 105 ) );
+
+		Tiles.mTiles.push_back( sRangeTile( 0, 2, 120 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 2, 121 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 2, 122 ) );
+		Tiles.mTiles.push_back( sRangeTile( 3, 2, 123 ) );
+		Tiles.mTiles.push_back( sRangeTile( 4, 2, 124 ) );
+		Tiles.mTiles.push_back( sRangeTile( 5, 2, 125 ) );
+
+		Tiles.mTiles.push_back( sRangeTile( 0, 3, 140 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 3, 141 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 3, 142 ) );
+		Tiles.mTiles.push_back( sRangeTile( 3, 3, 143 ) );
+		Tiles.mTiles.push_back( sRangeTile( 4, 3, 144 ) );
+		Tiles.mTiles.push_back( sRangeTile( 5, 3, 145 ) );
+
+		Tiles.mTiles.push_back( sRangeTile( 0, 4, 160 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 4, 161 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 4, 162 ) );
+		Tiles.mTiles.push_back( sRangeTile( 3, 4, 163 ) );
+		Tiles.mTiles.push_back( sRangeTile( 4, 4, 164 ) );
+		Tiles.mTiles.push_back( sRangeTile( 5, 4, 165 ) );
+
+		Tiles.mTiles.push_back( sRangeTile( 0, 5, 180 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 5, 181 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 5, 182 ) );
+		Tiles.mTiles.push_back( sRangeTile( 3, 5, 183 ) );
+		Tiles.mTiles.push_back( sRangeTile( 4, 5, 184 ) );
+		Tiles.mTiles.push_back( sRangeTile( 5, 5, 185 ) );
+
+		Tiles.mTiles.push_back( sRangeTile( 0, 6, 200 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 6, 201 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 6, 202 ) );
+		Tiles.mTiles.push_back( sRangeTile( 3, 6, 203 ) );
+		Tiles.mTiles.push_back( sRangeTile( 4, 6, 204 ) );
+		Tiles.mTiles.push_back( sRangeTile( 5, 6, 205 ) );
+
+		Tiles.mTiles.push_back( sRangeTile( 0, 7, 220 ) );
+		Tiles.mTiles.push_back( sRangeTile( 1, 7, 221 ) );
+		Tiles.mTiles.push_back( sRangeTile( 2, 7, 222 ) );
+		Tiles.mTiles.push_back( sRangeTile( 3, 7, 223 ) );
+		Tiles.mTiles.push_back( sRangeTile( 4, 7, 224 ) );
+		Tiles.mTiles.push_back( sRangeTile( 5, 7, 225 ) );
+
+		Surface = new cSurface( 16 * 6, 16 * 8 );
+	}
+
+	if(Surface)
+		SetupCursorForDraw( Surface, Tiles );
 }
 
 void cFrameOFED::SetupCursorForDraw( cSurface *pSurface, sTiles& pTiles ) {
