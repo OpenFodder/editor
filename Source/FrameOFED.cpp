@@ -135,7 +135,6 @@ void cFrameOFED::CreateGUIControls()
 	mDialogToolboxSprites->Show();
 	mDialogToolboxTiles->Show();
 	mDialogListSprites->Show();
-
 }
 
 void cFrameOFED::OnClose(wxCloseEvent& event)

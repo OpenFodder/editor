@@ -58,6 +58,7 @@ void cDialogToolboxSprites::CreateGUIControls()
 	////GUI Items Creation End
 
 	mSpritePanel = new cPanelToolboxSprite( this );
+	ReloadSprites();
 	
 }
 

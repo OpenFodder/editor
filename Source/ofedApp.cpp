@@ -18,8 +18,14 @@ bool cFrameOFEDApp::OnInit()
 	new cOFED();
 
 	g_FrameOFED = new cFrameOFED(NULL);
+
+
     SetTopWindow( g_FrameOFED );
 	g_FrameOFED->Show();
+
+	g_OFED.CreateMap( eTileTypes::eTileTypes_Jungle, eTileSub_0, 20, 15 );
+	g_FrameOFED->ReloadSprites();
+
     return true;
 }
  
