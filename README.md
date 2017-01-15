@@ -11,5 +11,5 @@ Open Fodder Editor is a Map Editor for [OpenFodder](https://github.com/segrax/op
 
 #####Requirements
 
-* DOS CD version available at [Good Old Games] (http://www.gog.com/game/cannon_fodder)
+* Cannon Fodder DOS CD version available at [Good Old Games] (http://www.gog.com/game/cannon_fodder)
 

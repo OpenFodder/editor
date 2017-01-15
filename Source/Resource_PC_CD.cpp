@@ -21,7 +21,7 @@
  */
 
 #include "stdafx.hpp"
-
+#include <wx/wx.h>
 #include <algorithm>
 
 const uint8 cResource_PC_CD::byte_29921[0x100] = {
@@ -98,7 +98,7 @@ cResource_PC_CD::cResource_PC_CD( std::string pDataPath ) : cResources(pDataPath
 
 	mData = local_FileRead( "CF_ENG.DAT", pDataPath, mDataSize );
 	if (!mData) {
-		std::cout << "CF_ENG.DAT not found\n";
+		wxMessageBox( "CF_ENG.DAT not found\n" );
 		exit( 1 );
 	}
 
@@ -158,8 +158,11 @@ uint8* cResource_PC_CD::fileGet( std::string pFilename, size_t &pFileSize ) {
 		}
 	}
 	
-	std::cout << "File " << pFilename << " Not Found!\n";
-	exit( 1 );
+	std::stringstream Error;
+	Error << "File ";
+	Error << pFilename << " Not Fond!";
+
+	wxMessageBox( Error.str() );
 	return 0;
 }
 
