@@ -25,6 +25,7 @@
 BEGIN_EVENT_TABLE(cPanelTileView,wxPanel)
 	////Manual Code Start
 	EVT_TIMER( ID_EVENT_MOUSE_TIMER, cPanelTileView::OnMouseInputTimer )
+    EVT_ERASE_BACKGROUND( cPanelTileView::OnEraseBackground )
 	////Manual Code End
 	
 	EVT_CLOSE(cPanelTileView::OnClose)
@@ -128,6 +129,9 @@ void cPanelTileView::OnMouseInputTimer( wxTimerEvent& event ) {
 	}
 }
 
+void cPanelTileView::OnEraseBackground( wxEraseEvent& pEvent ) {
+
+}
 /*
  * cTileViewPaint
  */

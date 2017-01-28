@@ -47,6 +47,7 @@ class cPanelTileView : public wxPanel
 		cPanelTileView(wxWindow *parent, wxWindowID id = 1, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = cPanelTileView_STYLE);
 		virtual ~cPanelTileView();
 		void cTileViewPaint(wxPaintEvent& event);
+        void OnEraseBackground( wxEraseEvent& pEvent );
 		void OnMouse( wxMouseEvent& event );
 		void OnMouseInputTimer( wxTimerEvent& event );
 
