@@ -375,13 +375,13 @@ void cOFED::SaveSprites( std::string pFilename ) {
 
 	uint8* SptPtr = mMapSpt;
 
-	for (std::vector<sSpriteDef>::iterator SpriteIT = mSprites.begin(); SpriteIT != mSprites.end(); ++SpriteIT) {
+	for (const auto SpriteIT : mSprites) {
 
-		writeBEWord( SptPtr, SpriteIT->mDirection ); SptPtr += 2;
-		writeBEWord( SptPtr, SpriteIT->mIgnored );	 SptPtr += 2;
-		writeBEWord( SptPtr, SpriteIT->mX  );		 SptPtr += 2;
-		writeBEWord( SptPtr, SpriteIT->mY  );		 SptPtr += 2;
-		writeBEWord( SptPtr, SpriteIT->mSpriteID );	 SptPtr += 2;
+		writeBEWord( SptPtr, SpriteIT.mDirection ); SptPtr += 2;
+		writeBEWord( SptPtr, SpriteIT.mIgnored );	SptPtr += 2;
+		writeBEWord( SptPtr, SpriteIT.mX  );		SptPtr += 2;
+		writeBEWord( SptPtr, SpriteIT.mY  );		SptPtr += 2;
+		writeBEWord( SptPtr, SpriteIT.mSpriteID );	SptPtr += 2;
 	}
 
 	outfile.write( (const char*)mMapSpt, mMapSptSize );
@@ -728,12 +728,12 @@ void cOFED::DrawSprites() {
 
 	g_FrameOFED->GetDialogListSprites()->AddSprites();
 
-	for( std::vector<sSpriteDef>::iterator SpriteIT = mSprites.begin(); SpriteIT != mSprites.end(); ++SpriteIT ) {
+	for( const auto SpriteIT : mSprites ) {
 
-		if (g_SpriteAnim[SpriteIT->mSpriteID] == -1)
+		if (g_SpriteAnim[SpriteIT.mSpriteID] == -1)
 			continue;
 
-		DrawSprite( mSurface, g_SpriteAnim[ SpriteIT->mSpriteID ], SpriteIT->mX, SpriteIT->mY, true );
+		DrawSprite( mSurface, g_SpriteAnim[ SpriteIT.mSpriteID ], SpriteIT.mX, SpriteIT.mY, true );
 	}
 }
 
