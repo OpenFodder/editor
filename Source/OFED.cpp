@@ -82,7 +82,11 @@ void cOFED::AddSprite( size_t pTileX, size_t pTileY ) {
 	Sprite.mY = pTileY;
 	Sprite.mSpriteID = mCursorSprite;
 
-	mSprites.push_back( Sprite );
+    // Humans need to be first, so the game starts panned on them
+    if(mCursorSprite == 0)
+        mSprites.insert( mSprites.begin(), Sprite );
+    else
+    	mSprites.push_back( Sprite );
 
 	Sprite.mSpriteID = eSprite_Null;
 
@@ -362,6 +366,10 @@ void cOFED::SaveSprites( std::string pFilename ) {
 
 	std::ofstream outfile( SptFilename, std::ofstream::binary );
 
+    // Ensure humans are first
+    std::sort( mSprites.begin(), mSprites.end(), []( auto && l, auto && r ) { return l.mSpriteID == 0; } );
+
+    delete mMapSpt;
 	mMapSptSize = 0x0A * mSprites.size();
 	mMapSpt = new uint8[mMapSptSize];
 
