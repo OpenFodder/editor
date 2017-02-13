@@ -485,12 +485,19 @@ sTiles cFrameOFED::SetupBunker( cSurface **pSurface ) {
 		Tiles.mTiles.push_back( sRangeTile( 0, 1, 287 ) );
 		Tiles.mTiles.push_back( sRangeTile( 1, 1, 288 ) );
 		Tiles.mTiles.push_back( sRangeTile( 2, 1, 289 ) );
+        Tiles.mTiles.push_back( sRangeTile( 3, 1, 330 ) );
 
 		Tiles.mTiles.push_back( sRangeTile( 0, 2, 307 ) );
 		Tiles.mTiles.push_back( sRangeTile( 1, 2, 308 ) );
 		Tiles.mTiles.push_back( sRangeTile( 2, 2, 309 ) );
+        Tiles.mTiles.push_back( sRangeTile( 3, 2, 350 ) );
 
-		*pSurface = new cSurface( 16 * 3, 16 * 3 );
+        Tiles.mTiles.push_back( sRangeTile( 0, 3, 315 ) );
+        Tiles.mTiles.push_back( sRangeTile( 1, 3, 316 ) );
+        Tiles.mTiles.push_back( sRangeTile( 2, 3, 317 ) );
+        Tiles.mTiles.push_back( sRangeTile( 3, 3, 371 ) );
+
+		*pSurface = new cSurface( 16 * 4, 16 * 4 );
 	}
 
 	if (g_OFED.mMapTileType == eTileTypes_Desert) {
