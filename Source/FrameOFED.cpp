@@ -513,16 +513,24 @@ sTiles cFrameOFED::SetupBunker( cSurface **pSurface ) {
 		Tiles.mTiles.push_back( sRangeTile( 0, 0, 307 ) );
 		Tiles.mTiles.push_back( sRangeTile( 1, 0, 308 ) );
 		Tiles.mTiles.push_back( sRangeTile( 2, 0, 309 ) );
+        Tiles.mTiles.push_back( sRangeTile( 3, 0, 310 ) );
 
 		Tiles.mTiles.push_back( sRangeTile( 0, 1, 327 ) );
 		Tiles.mTiles.push_back( sRangeTile( 1, 1, 328 ) );
 		Tiles.mTiles.push_back( sRangeTile( 2, 1, 329 ) );
+        Tiles.mTiles.push_back( sRangeTile( 3, 1, 330 ) );
 
 		Tiles.mTiles.push_back( sRangeTile( 0, 2, 347 ) );
 		Tiles.mTiles.push_back( sRangeTile( 1, 2, 348 ) );
 		Tiles.mTiles.push_back( sRangeTile( 2, 2, 349 ) );
+        Tiles.mTiles.push_back( sRangeTile( 3, 2, 350 ) );
 
-		*pSurface = new cSurface( 16 * 3, 16 * 3 );
+        Tiles.mTiles.push_back( sRangeTile( 0, 3, 367 ) );
+        Tiles.mTiles.push_back( sRangeTile( 1, 3, 368 ) );
+        Tiles.mTiles.push_back( sRangeTile( 2, 3, 369 ) );
+        Tiles.mTiles.push_back( sRangeTile( 3, 3, 370 ) );
+
+		*pSurface = new cSurface( 16 * 4, 16 * 4 );
 	}
 
 	if (g_OFED.mMapTileType == eTileTypes_Moors) {
