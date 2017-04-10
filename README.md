@@ -4,7 +4,7 @@
 
 #### About
 
-Open Fodder Editor is a Map Editor for [Open Fodder](https://github.com/segrax/openfodder) and Cannon Fodder
+Open Fodder Editor is a Map Editor for [Open Fodder](https://github.com/OpenFodder/openfodder) and Cannon Fodder
 
 ##### To Compile
 
