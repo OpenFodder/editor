@@ -1,0 +1,319 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>moc;h;cpp</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Source Files\Dialog">
+      <UniqueIdentifier>{eda73b38-0362-423b-bc23-09ea0677c6a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OpenFodder">
+      <UniqueIdentifier>{9997acf5-bbb4-4870-ab0f-0e66f37f5933}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OpenFodder\Amiga">
+      <UniqueIdentifier>{bbb9e8f9-f6aa-472c-801a-d8888d5b08d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OpenFodder\MissionData">
+      <UniqueIdentifier>{7db12678-a256-4b2b-af25-9c67f80d784d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OpenFodder\PC">
+      <UniqueIdentifier>{07712274-34e8-47c0-a1a1-a8b1d313580e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OpenFodder\Utils">
+      <UniqueIdentifier>{54ebd8f1-b802-410f-8a6f-61086d1e2895}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GeneratedFiles\qrc_ofed.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\ofed.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ofed.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ofed.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Resources.cpp">
+      <Filter>OpenFodder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Sound.cpp">
+      <Filter>OpenFodder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Sprites.cpp">
+      <Filter>OpenFodder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\SpriteSheet.cpp">
+      <Filter>OpenFodder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\stdafx.cpp">
+      <Filter>OpenFodder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Surface.cpp">
+      <Filter>OpenFodder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Tiles.cpp">
+      <Filter>OpenFodder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Versions.cpp">
+      <Filter>OpenFodder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Window.cpp">
+      <Filter>OpenFodder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\CopyProtection.cpp">
+      <Filter>OpenFodder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Event.cpp">
+      <Filter>OpenFodder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Fodder.cpp">
+      <Filter>OpenFodder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\FontData.cpp">
+      <Filter>OpenFodder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Graphics.cpp">
+      <Filter>OpenFodder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\GUI_Element.cpp">
+      <Filter>OpenFodder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\md5.cpp">
+      <Filter>OpenFodder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\MissionData.cpp">
+      <Filter>OpenFodder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Recruits.cpp">
+      <Filter>OpenFodder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\PC\IntroData_PC.cpp">
+      <Filter>OpenFodder\PC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\PC\Resource_PC_CD.cpp">
+      <Filter>OpenFodder\PC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\PC\Sound_PC.cpp">
+      <Filter>OpenFodder\PC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\PC\Sound_PC2.cpp">
+      <Filter>OpenFodder\PC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\PC\Graphics_PC.cpp">
+      <Filter>OpenFodder\PC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\MissionData\Retail.cpp">
+      <Filter>OpenFodder\MissionData</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\MissionData\Retail2.cpp">
+      <Filter>OpenFodder\MissionData</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\MissionData\Custom.cpp">
+      <Filter>OpenFodder\MissionData</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\MissionData\Demo.cpp">
+      <Filter>OpenFodder\MissionData</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Amiga\Graphics_Amiga.cpp">
+      <Filter>OpenFodder\Amiga</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Amiga\IntroData_Amiga.cpp">
+      <Filter>OpenFodder\Amiga</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Amiga\paula.cpp">
+      <Filter>OpenFodder\Amiga</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Amiga\Resource_Amiga_File.cpp">
+      <Filter>OpenFodder\Amiga</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Amiga\rjp1.cpp">
+      <Filter>OpenFodder\Amiga</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Amiga\Sound_Amiga.cpp">
+      <Filter>OpenFodder\Amiga</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Amiga\dernc.cpp">
+      <Filter>OpenFodder\Amiga</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\WindowQT.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Dialogs\NewMapDialog.cpp">
+      <Filter>Source Files\Dialog</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="ofed.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ofed.qrc">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\Source\ofed.h">
+      <Filter>Source Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\Source\Dialogs\NewMapDialog.ui">
+      <Filter>Source Files\Dialog</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GeneratedFiles\ui_ofed.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Resources.hpp">
+      <Filter>OpenFodder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Singleton.hpp">
+      <Filter>OpenFodder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Sound.hpp">
+      <Filter>OpenFodder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Sprites.hpp">
+      <Filter>OpenFodder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\SpriteSheet.hpp">
+      <Filter>OpenFodder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\stdafx.hpp">
+      <Filter>OpenFodder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Surface.hpp">
+      <Filter>OpenFodder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Tiles.hpp">
+      <Filter>OpenFodder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Types.hpp">
+      <Filter>OpenFodder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Versions.hpp">
+      <Filter>OpenFodder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Window.hpp">
+      <Filter>OpenFodder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\CopyProtection.hpp">
+      <Filter>OpenFodder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Dimension.hpp">
+      <Filter>OpenFodder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Event.hpp">
+      <Filter>OpenFodder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Fodder.hpp">
+      <Filter>OpenFodder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\FontData.hpp">
+      <Filter>OpenFodder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Graphics.hpp">
+      <Filter>OpenFodder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\GUI_Element.hpp">
+      <Filter>OpenFodder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\IntroData.hpp">
+      <Filter>OpenFodder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Map.hpp">
+      <Filter>OpenFodder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\md5.hpp">
+      <Filter>OpenFodder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\MissionData.hpp">
+      <Filter>OpenFodder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Position.hpp">
+      <Filter>OpenFodder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Recruits.hpp">
+      <Filter>OpenFodder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\PC\Resource_PC_CD.hpp">
+      <Filter>OpenFodder\PC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\PC\Sound_PC.hpp">
+      <Filter>OpenFodder\PC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\PC\Sound_PC2.hpp">
+      <Filter>OpenFodder\PC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\PC\SpriteData_PC.hpp">
+      <Filter>OpenFodder\PC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\PC\VocTable.hpp">
+      <Filter>OpenFodder\PC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\PC\Graphics_PC.hpp">
+      <Filter>OpenFodder\PC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Amiga\Graphics_Amiga.hpp">
+      <Filter>OpenFodder\Amiga</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Amiga\paula.hpp">
+      <Filter>OpenFodder\Amiga</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Amiga\Resource_Amiga_File.hpp">
+      <Filter>OpenFodder\Amiga</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Amiga\rjp1.hpp">
+      <Filter>OpenFodder\Amiga</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Amiga\Sound_Amiga.hpp">
+      <Filter>OpenFodder\Amiga</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Amiga\SpriteData_Amiga.hpp">
+      <Filter>OpenFodder\Amiga</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Amiga\audiostream.hpp">
+      <Filter>OpenFodder\Amiga</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Amiga\dernc.hpp">
+      <Filter>OpenFodder\Amiga</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\WindowQT.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\stdafx_ofed.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_NewMapDialog.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Dialogs\NewMapDialog.hpp">
+      <Filter>Source Files\Dialog</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+</Project>

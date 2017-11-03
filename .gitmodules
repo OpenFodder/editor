@@ -1,0 +1,3 @@
+[submodule "Dependencies/OpenFodder"]
+	path = Dependencies/OpenFodder
+	url = https://github.com/OpenFodder/openfodder

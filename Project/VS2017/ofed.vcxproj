@@ -1,0 +1,236 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{B12702AD-ABFB-343A-A199-8E24837244A3}</ProjectGuid>
+    <Keyword>Qt4VSv1.0</Keyword>
+    <ProjectName>Editor</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>UNICODE;_UNICODE;WIN32;WIN64;QT_DLL;QT_CORE_LIB;QT_GUI_LIB;QT_WIDGETS_LIB;_OFED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtWidgets;$(ProjectDIr)..\..\Dependencies\OpenFodder\Source;$(ProjectDIr)..\..\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Disabled</Optimization>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
+      <AdditionalLibraryDirectories>$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>qtmaind.lib;Qt5Cored.lib;Qt5Guid.lib;Qt5Widgetsd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>UNICODE;_UNICODE;WIN32;WIN64;QT_DLL;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;QT_GUI_LIB;QT_WIDGETS_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat />
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
+      <AdditionalLibraryDirectories>$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <AdditionalDependencies>qtmain.lib;Qt5Core.lib;Qt5Gui.lib;Qt5Widgets.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Amiga\dernc.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Amiga\Graphics_Amiga.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Amiga\IntroData_Amiga.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Amiga\paula.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Amiga\Resource_Amiga_File.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Amiga\rjp1.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Amiga\Sound_Amiga.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\CopyProtection.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Event.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Fodder.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\FontData.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Graphics.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\GUI_Element.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\md5.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\MissionData.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\MissionData\Custom.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\MissionData\Demo.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\MissionData\Retail.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\MissionData\Retail2.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\PC\Graphics_PC.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\PC\IntroData_PC.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\PC\Resource_PC_CD.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\PC\Sound_PC.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\PC\Sound_PC2.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Recruits.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Resources.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Sound.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Sprites.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\SpriteSheet.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\stdafx.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Surface.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Tiles.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Versions.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Window.cpp" />
+    <ClCompile Include="..\..\Source\Dialogs\NewMapDialog.cpp" />
+    <ClCompile Include="..\..\Source\main.cpp" />
+    <ClCompile Include="..\..\Source\ofed.cpp" />
+    <ClCompile Include="..\..\Source\WindowQT.cpp" />
+    <ClCompile Include="GeneratedFiles\Debug\moc_ofed.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\qrc_ofed.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ofed.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="ofed.ui">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Uic%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Uic%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\Source\ofed.h">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing ofed.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -D_UNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -D_OFED  "-I.\GeneratedFiles" "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(ProjectDIr)..\..\Dependencies\OpenFodder\Source" "-I$(ProjectDIr)..\..\Source"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Moc%27ing ofed.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -D_UNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB "-I.\GeneratedFiles" "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets"</Command>
+    </CustomBuild>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Amiga\audiostream.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Amiga\dernc.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Amiga\Graphics_Amiga.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Amiga\paula.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Amiga\Resource_Amiga_File.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Amiga\rjp1.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Amiga\Sound_Amiga.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Amiga\SpriteData_Amiga.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\CopyProtection.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Dimension.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Event.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Fodder.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\FontData.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Graphics.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\GUI_Element.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\IntroData.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Map.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\md5.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\MissionData.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\PC\Graphics_PC.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\PC\Resource_PC_CD.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\PC\Sound_PC.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\PC\Sound_PC2.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\PC\SpriteData_PC.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\PC\VocTable.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Position.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Recruits.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Resources.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Singleton.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Sound.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Sprites.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\SpriteSheet.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\stdafx.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Surface.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Tiles.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Types.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Versions.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Window.hpp" />
+    <ClInclude Include="..\..\Source\Dialogs\NewMapDialog.hpp" />
+    <ClInclude Include="..\..\Source\stdafx_ofed.hpp" />
+    <ClInclude Include="..\..\Source\WindowQT.hpp" />
+    <ClInclude Include="GeneratedFiles\ui_NewMapDialog.h" />
+    <ClInclude Include="GeneratedFiles\ui_ofed.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="ofed.qrc">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(FullPath);%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Rcc%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\qrc_%(Filename).cpp;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\rcc.exe" -name "%(Filename)" -no-compress "%(FullPath)" -o .\GeneratedFiles\qrc_%(Filename).cpp</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(FullPath);%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Rcc%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\qrc_%(Filename).cpp;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\rcc.exe" -name "%(Filename)" -no-compress "%(FullPath)" -o .\GeneratedFiles\qrc_%(Filename).cpp</Command>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\Source\Dialogs\NewMapDialog.ui">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Uic%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Uic%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
+    </CustomBuild>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="packages\sdl2.redist.2.0.5\build\native\sdl2.redist.targets" Condition="Exists('packages\sdl2.redist.2.0.5\build\native\sdl2.redist.targets')" />
+    <Import Project="packages\sdl2.2.0.5\build\native\sdl2.targets" Condition="Exists('packages\sdl2.2.0.5\build\native\sdl2.targets')" />
+    <Import Project="packages\sdl2_mixer.vc.redist.2.0.1.1\build\native\sdl2_mixer.vc.redist.targets" Condition="Exists('packages\sdl2_mixer.vc.redist.2.0.1.1\build\native\sdl2_mixer.vc.redist.targets')" />
+    <Import Project="packages\sdl2_mixer.vc.2.0.1.1\build\native\sdl2_mixer.vc.targets" Condition="Exists('packages\sdl2_mixer.vc.2.0.1.1\build\native\sdl2_mixer.vc.targets')" />
+  </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties MocDir=".\GeneratedFiles\$(ConfigurationName)" UicDir=".\GeneratedFiles" RccDir=".\GeneratedFiles" lupdateOptions="" lupdateOnBuild="0" lreleaseOptions="" Qt5Version_x0020_x64="msvc2017_64" MocOptions="" />
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\sdl2.redist.2.0.5\build\native\sdl2.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\sdl2.redist.2.0.5\build\native\sdl2.redist.targets'))" />
+    <Error Condition="!Exists('packages\sdl2.2.0.5\build\native\sdl2.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\sdl2.2.0.5\build\native\sdl2.targets'))" />
+    <Error Condition="!Exists('packages\sdl2_mixer.vc.redist.2.0.1.1\build\native\sdl2_mixer.vc.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\sdl2_mixer.vc.redist.2.0.1.1\build\native\sdl2_mixer.vc.redist.targets'))" />
+    <Error Condition="!Exists('packages\sdl2_mixer.vc.2.0.1.1\build\native\sdl2_mixer.vc.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\sdl2_mixer.vc.2.0.1.1\build\native\sdl2_mixer.vc.targets'))" />
+  </Target>
+</Project>
