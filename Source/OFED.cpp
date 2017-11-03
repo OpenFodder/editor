@@ -1,4 +1,4 @@
-#include "ofed.h"
+#include "ofed.hpp"
 #include "ui_NewMapDialog.h"
 
 cOFED::cOFED(QWidget *parent)
@@ -49,7 +49,7 @@ void cOFED::OpenFodder_Prepare() {
 	Fodder->Mission_Troop_Attach_Sprites();
 
 	Fodder->mMission_Aborted = 0;
-	Fodder->Camera_Reset();
+
 	Fodder->Map_Tiles_Draw();
 	Fodder->Camera_Reset();
 
@@ -84,8 +84,6 @@ void cOFED::OpenFodder_Prepare() {
 	Fodder->mMission_ShowMapOverview = 0;
 
 	while (Fodder->mImage->palette_FadeTowardNew());
-
-	int count = 0;
 
 	Fodder->Map_Tiles_Draw();
 

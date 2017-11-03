@@ -50,12 +50,6 @@
     <ClCompile Include="..\..\Source\ofed.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_ofed.cpp">
-      <Filter>Generated Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_ofed.cpp">
-      <Filter>Generated Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -167,6 +161,12 @@
     <ClCompile Include="..\..\Source\Dialogs\NewMapDialog.cpp">
       <Filter>Source Files\Dialog</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ofed.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ofed.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="ofed.ui">
@@ -175,11 +175,11 @@
     <CustomBuild Include="ofed.qrc">
       <Filter>Resource Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\..\Source\ofed.h">
-      <Filter>Source Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="..\..\Source\Dialogs\NewMapDialog.ui">
       <Filter>Source Files\Dialog</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\Source\ofed.hpp">
+      <Filter>Source Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
