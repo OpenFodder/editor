@@ -9,6 +9,7 @@ cOFED::cOFED(QWidget *parent)
 	// Menu Items
 	QObject::connect(ui.action_New_Map, &QAction::triggered, this, &cOFED::ShowDialog_NewMap);
 
+	// Prepare OpenFOdder
 	cFodder* Fodder = new cFodder(g_Window.GetSingletonPtr());
 
 	Fodder->Prepare();
