@@ -7,8 +7,8 @@ cOFED* g_OFED;
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
-	cOFED* w = new cOFED();
-	w->show();
+	g_OFED = new cOFED();
+	g_OFED->show();
 
 	return a.exec();
 }

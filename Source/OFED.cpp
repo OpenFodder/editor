@@ -2,6 +2,7 @@
 #include "ui_NewMapDialog.h"
 #include "ui_ToolboxTiles.h"
 #include <QDesktopWidget>
+#include <qpainter.h>
 
 cOFED::cOFED(QWidget *parent)
 	: QMainWindow(parent)
@@ -9,22 +10,24 @@ cOFED::cOFED(QWidget *parent)
 	ui.setupUi(this);
 
 	mToolboxTiles = 0;
+	mCursorSurface = new cSurface(16, 16);
+
+	CursorReset();
 
 	// Menu Items
 	QObject::connect(ui.action_New_Map, &QAction::triggered, this, &cOFED::ShowDialog_NewMap);
 
-	// Prepare OpenFOdder
+	// Prepare OpenFodder
 	cFodder* Fodder = new cFodder(g_Window.GetSingletonPtr());
-
 	Fodder->Prepare();
 
 	if (!Fodder->mVersions.size()) {
 
-		// TODO: Show a message?
+		// TODO: Show a message that no data was found
 		return;
 	}
 
-	Fodder->VersionSelect_0();
+	Fodder->VersionSelect_2();
 
 	Fodder->Mouse_Setup();
 	Fodder->Mouse_Inputs_Get();
@@ -101,10 +104,10 @@ void cOFED::OpenFodder_Prepare() {
 
 	Fodder->mImage->surfaceSetToPaletteNew();
 
-	Fodder->Map_Tiles_Draw();
+	//Fodder->Map_Tiles_Draw();
 
 	// Set the top left
-	Fodder->mMapTilePtr = 0x5E - (Fodder->mMapWidth << 1);
+	Fodder->mMapTilePtr = 0x60 - Fodder->mMapWidth * 2;
 	g_Graphics.Map_Tiles_Draw();
 	g_Window.FrameEnd();
 }
@@ -152,9 +155,69 @@ void cOFED::Create_NewMap(const std::string& pTileSet, const std::string& pTileS
 			if (pTileSub == "Sub1")
 				Sub = 1;
 
+			CursorReset();
+
 			g_Fodder.Map_Create(TileType, Sub, pWidth, pHeight);
 			g_Window.FrameEnd();
 			return;
 		}
 	}
+}
+
+/**
+ * Clear the cursor status
+ */
+void cOFED::CursorReset() {
+	mCursorTile = -1;
+	mCursorSprite = -1;
+	mCursorRangeTiles = sTiles();
+
+	CursorUpdate();
+}
+
+/**
+ * Refresh the drawn cursor
+ */
+void cOFED::CursorUpdate() {
+
+	double ScaleWidth = ((cWindowQT*)&g_Window)->mScaleWidth;
+	double ScaleHeight = ((cWindowQT*)&g_Window)->mScaleHeight;
+
+	// Tile Mode?
+	if (mCursorTile != -1) {
+
+		mCursorImageFinal = QImage(mCursorImage.width() * ScaleWidth, mCursorImage.height() * ScaleHeight, QImage::Format_RGB32);
+
+		// Scale the cursor into mCursorImageFinal
+		QPainter painter(&mCursorImageFinal);
+		QRectF Dest(0, 0, mCursorImageFinal.width(), mCursorImageFinal.height());
+		QRectF Src(0, 0, mCursorImage.width(), mCursorImage.height());
+		painter.drawImage(Dest, mCursorImage, Src);
+	}
+	
+	// Set the actual cursor
+	if(!mCursorImageFinal.isNull())
+		setCursor(QCursor(QPixmap::fromImage(mCursorImageFinal)));
+}
+
+/**
+ * Set the cursor to a tile
+ */
+void cOFED::SetCursorTileID(const size_t pCursorTileID) {
+
+	CursorReset();
+	mCursorTile = pCursorTileID;
+
+	mCursorSurface->clearBuffer();
+
+	g_Graphics.Map_Tile_Draw(mCursorSurface, mCursorTile, 0, 0, 0);
+	g_Graphics.PaletteSet(mCursorSurface);
+
+	mCursorSurface->surfaceSetToPaletteNew();
+	mCursorSurface->draw();
+
+	SDL_Surface* Source = mCursorSurface->GetSurface();
+	mCursorImage = QImage(static_cast<uchar*>(Source->pixels), Source->w, Source->h, QImage::Format_RGB32);
+
+	CursorUpdate();
 }

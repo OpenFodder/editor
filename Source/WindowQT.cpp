@@ -21,9 +21,11 @@
  */
 
 #include "stdafx_ofed.hpp"
+#include "ofed.hpp"
 #include <qpixmap.h>
 #include <qpainter.h>
 #include <qevent.h>
+
 
 cWindowQT::cWindowQT(QWidget* pParent) : QWidget(pParent), cWindow() {
 
@@ -33,6 +35,9 @@ cWindowQT::cWindowQT(QWidget* pParent) : QWidget(pParent), cWindow() {
 	// Number of tiles which are shown
 	mCameraTilesX = 0x15;
 	mCameraTilesY = 0x0F;
+
+	mScaleWidth = 0;
+	mScaleHeight = 0;
 
 	// Mouse inside widget callback
 	connect(&mMouseInTimer, &QTimer::timeout, this, &cWindowQT::CameraUpdate);
@@ -91,6 +96,9 @@ void cWindowQT::leaveEvent(QEvent *pEvent) {
 }
 
 void cWindowQT::CameraTilesUpdate() {
+	mScaleWidth = (static_cast<double>(size().width()) / static_cast<double>(mScreenSize.mWidth));
+	mScaleHeight = (static_cast<double>(size().height()) / static_cast<double>(mScreenSize.mHeight));
+
 	if (mCameraTilesX > g_Fodder.mMapWidth)
 		mCameraTilesX = g_Fodder.mMapWidth;
 
@@ -106,15 +114,25 @@ void cWindowQT::CameraUpdate() {
 
 	cFodder *Fodder = &g_Fodder;
 
+	if (Fodder->mMouseButtons & 1) {
+		uint32 TileX = (Fodder->mMousePosition.mX + 8) / 16;
+		uint32 TileY = (Fodder->mMousePosition.mY + 8) / 16;
+
+		g_Fodder.MapTile_Set(TileX, TileY, g_OFED->CursorTileGet());
+	}
+
+	size_t Height = height() / mScaleHeight;
+	size_t Width = width() / mScaleWidth;
+
 	// Up
 	if (Fodder->mMousePosition.mY < mEdgeWidth) {
-		if (Fodder->mMapTile_MovedVertical >= 0) {
+		if (Fodder->mMapTile_MovedVertical > 0) {
 			g_Fodder.MapTile_Move_Up(1);
 		}
 	}
 
 	// Down
-	if (Fodder->mMousePosition.mY > height() - mEdgeWidth) {
+	if (Fodder->mMousePosition.mY > Height - mEdgeWidth) {
 		if (Fodder->mMapTile_MovedVertical < Fodder->mMapHeight - mCameraTilesY) {
 			g_Fodder.MapTile_Move_Down(1);
 		}
@@ -122,13 +140,13 @@ void cWindowQT::CameraUpdate() {
 
 	// Left
 	if (Fodder->mMousePosition.mX < mEdgeWidth) {
-		if (Fodder->mMapTile_MovedHorizontal >= 0) {
+		if (Fodder->mMapTile_MovedHorizontal > 0) {
 			g_Fodder.MapTile_Move_Left(1);
 		}
 	}
 
 	// Right
-	if (Fodder->mMousePosition.mX > width() - mEdgeWidth) {
+	if (Fodder->mMousePosition.mX > Width - mEdgeWidth) {
 		if (Fodder->mMapTile_MovedHorizontal < Fodder->mMapWidth - mCameraTilesX) {
 			g_Fodder.MapTile_Move_Right(1);
 		}
@@ -141,7 +159,7 @@ void cWindowQT::CameraUpdate() {
 void cWindowQT::mouseMoveEvent(QMouseEvent *eventMove) {
 	cEvent Event;
 	Event.mType = eEvent_MouseMove;
-	Event.mPosition = cPosition(eventMove->x(), eventMove->y());
+	Event.mPosition = cPosition(eventMove->x() / mScaleWidth, eventMove->y() / mScaleHeight);
 
 	g_Fodder.EventAdd(Event);
 	g_Fodder.eventProcess();
@@ -160,7 +178,8 @@ void cWindowQT::mousePressEvent(QMouseEvent *eventPress) {
 		Event.mButton = 3;
 	}
 	
-	Event.mPosition = cPosition(eventPress->x(), eventPress->y());
+	Event.mPosition = cPosition(eventPress->x() / mScaleWidth, eventPress->y() / mScaleHeight);
+
 	g_Fodder.EventAdd(Event);
 	g_Fodder.eventProcess();
 }
@@ -178,7 +197,8 @@ void cWindowQT::mouseReleaseEvent(QMouseEvent *releaseEvent) {
 		Event.mButton = 3;
 	}
 
-	Event.mPosition = cPosition(releaseEvent->x(), releaseEvent->y());
+	Event.mPosition = cPosition(releaseEvent->x() / mScaleWidth, releaseEvent->y() / mScaleHeight);
+
 	g_Fodder.EventAdd(Event);
 	g_Fodder.eventProcess();
 }

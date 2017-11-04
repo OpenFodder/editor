@@ -31,6 +31,9 @@ class cWindowQT : public QWidget, public cWindow {
 	int16				mMouseX;
 	int16				mMouseY;
 
+public:
+	double				mScaleWidth, mScaleHeight;
+
 protected:
 	void				paintEvent(QPaintEvent* e);
 

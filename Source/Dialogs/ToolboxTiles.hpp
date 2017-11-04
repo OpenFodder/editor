@@ -2,11 +2,17 @@ class Ui_ToolboxTiles;
 
 class cToolboxTiles : public QDialog {
 	Ui_ToolboxTiles *mUi;
+
 	cSurface		*mTileSurface;
-	QImage			 mSurface;
+
+	QImage			 mImage;
+
+	double			 mScaleWidth, mScaleHeight;
+
 protected:
 
 	void paintEvent(QPaintEvent* e);
+	void mousePressEvent(QMouseEvent *eventPress);
 
 public:
 	cToolboxTiles( QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
