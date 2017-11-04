@@ -1,11 +1,14 @@
 #include "ofed.hpp"
 #include "ui_NewMapDialog.h"
 #include "ui_ToolboxTiles.h"
+#include <QDesktopWidget>
 
 cOFED::cOFED(QWidget *parent)
 	: QMainWindow(parent)
 {
 	ui.setupUi(this);
+
+	mToolboxTiles = 0;
 
 	// Menu Items
 	QObject::connect(ui.action_New_Map, &QAction::triggered, this, &cOFED::ShowDialog_NewMap);
@@ -27,6 +30,15 @@ cOFED::cOFED(QWidget *parent)
 	Fodder->Mouse_Inputs_Get();
 
 	OpenFodder_Prepare();
+
+	setGeometry(
+		QStyle::alignedRect(
+			Qt::LeftToRight,
+			Qt::AlignCenter,
+			size(),
+			qApp->desktop()->availableGeometry()
+		)
+	);
 
 	ShowDialog_ToolboxTiles();
 }
@@ -87,7 +99,7 @@ void cOFED::OpenFodder_Prepare() {
 	Fodder->mMission_Finished = 0;
 	Fodder->mMission_ShowMapOverview = 0;
 
-	while (Fodder->mImage->palette_FadeTowardNew());
+	Fodder->mImage->surfaceSetToPaletteNew();
 
 	Fodder->Map_Tiles_Draw();
 
@@ -107,11 +119,11 @@ void cOFED::moveEvent(QMoveEvent *event) {
  * Launch the Tile Toobox dialog 
  */
 void cOFED::ShowDialog_ToolboxTiles() {
-	Ui_ToolboxTiles* ui = new Ui_ToolboxTiles();
 
-	mToolboxTiles = new cToolboxTiles(ui, this, 0);
+	mToolboxTiles = new cToolboxTiles(this, 0);
 
-	ui->setupUi(mToolboxTiles);
+	// Position to the right of map editor
+	mToolboxTiles->move(x() + width(), y());
 
 	mToolboxTiles->show();
 }
@@ -120,27 +132,15 @@ void cOFED::ShowDialog_ToolboxTiles() {
  * Launch the New Map dialog
  */
 void cOFED::ShowDialog_NewMap() {
-	Ui_NewMapDialog* ui = new Ui_NewMapDialog();
 
-	cNewMapDialog* NewMap = new cNewMapDialog(ui, this, 0);
-
-	ui->setupUi(NewMap);
-
-	// Add available terrain types
-	for (auto TileType : mTileTypes)
-		ui->mTerrainType->addItem(TileType.mFullName.c_str());
-	
-	// Add sub terrain types
-	ui->mTileSub->addItem("Sub0");
-	ui->mTileSub->addItem("Sub1");
-
-	// 19 x 15 Map Default
-	ui->mWidth->setText("19");
-	ui->mHeight->setText("15");
+	cNewMapDialog* NewMap = new cNewMapDialog( this, 0);
 
 	NewMap->show();
 }
 
+/**
+ * Create a new map
+ */
 void cOFED::Create_NewMap(const std::string& pTileSet, const std::string& pTileSub, size_t pWidth, size_t pHeight) {
 	
 	// Loop each known tile type

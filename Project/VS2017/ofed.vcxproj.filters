@@ -167,6 +167,9 @@
     <ClCompile Include="GeneratedFiles\Release\moc_ofed.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Dialogs\ToolboxTiles.cpp">
+      <Filter>Source Files\Dialog</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="ofed.ui">
@@ -180,6 +183,9 @@
     </CustomBuild>
     <CustomBuild Include="..\..\Source\ofed.hpp">
       <Filter>Source Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\Source\Dialogs\ToolboxTiles.ui">
+      <Filter>Source Files\Dialog</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -310,6 +316,12 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Dialogs\NewMapDialog.hpp">
+      <Filter>Source Files\Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_ToolboxTiles.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Dialogs\ToolboxTiles.hpp">
       <Filter>Source Files\Dialog</Filter>
     </ClInclude>
   </ItemGroup>
