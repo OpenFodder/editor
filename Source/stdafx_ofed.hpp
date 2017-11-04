@@ -11,6 +11,7 @@
 #include "WindowQT.hpp"
 #include "Dialogs//NewMapDialog.hpp"
 #include "Dialogs//ToolboxTiles.hpp"
+#include "Dialogs//ToolboxSprites.hpp"
 
 class cOFED;
 

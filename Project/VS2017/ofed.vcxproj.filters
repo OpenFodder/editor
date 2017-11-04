@@ -170,6 +170,9 @@
     <ClCompile Include="..\..\Source\Dialogs\ToolboxTiles.cpp">
       <Filter>Source Files\Dialog</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Dialogs\ToolboxSprites.cpp">
+      <Filter>Source Files\Dialog</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="ofed.ui">
@@ -185,6 +188,9 @@
       <Filter>Source Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\..\Source\Dialogs\ToolboxTiles.ui">
+      <Filter>Source Files\Dialog</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\Source\Dialogs\ToolboxSprites.ui">
       <Filter>Source Files\Dialog</Filter>
     </CustomBuild>
   </ItemGroup>
@@ -322,6 +328,12 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Dialogs\ToolboxTiles.hpp">
+      <Filter>Source Files\Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_ToolboxSprites.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Dialogs\ToolboxSprites.hpp">
       <Filter>Source Files\Dialog</Filter>
     </ClInclude>
   </ItemGroup>

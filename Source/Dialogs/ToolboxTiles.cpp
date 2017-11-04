@@ -56,6 +56,8 @@ void cToolboxTiles::RenderTiles() {
 
 	mScaleWidth = (static_cast<double>(size().width()) / static_cast<double>(mImage.width()));
 	mScaleHeight = (static_cast<double>(size().height()) / static_cast<double>(mImage.height()));
+
+	this->repaint();
 }
 
 void cToolboxTiles::paintEvent(QPaintEvent* e) {

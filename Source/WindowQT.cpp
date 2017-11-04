@@ -45,7 +45,7 @@ cWindowQT::cWindowQT(QWidget* pParent) : QWidget(pParent), cWindow() {
 
 void cWindowQT::FrameEnd() {
 
-	g_Window.RenderAt(g_Fodder.mImage);
+	RenderAt(g_Fodder.mImage);
 	this->repaint();
 }
 
@@ -87,7 +87,7 @@ void cWindowQT::paintEvent(QPaintEvent* e) {
 
 void cWindowQT::enterEvent(QEvent *pEvent) {
 
-	mMouseInTimer.start(2);
+	mMouseInTimer.start(4);
 }
 
 void cWindowQT::leaveEvent(QEvent *pEvent) {
@@ -114,6 +114,7 @@ void cWindowQT::CameraUpdate() {
 
 	cFodder *Fodder = &g_Fodder;
 
+	// Button Pressed?
 	if (Fodder->mMouseButtons & 1) {
 		uint32 TileX = (Fodder->mMousePosition.mX + 8) / 16;
 		uint32 TileY = (Fodder->mMousePosition.mY + 8) / 16;
@@ -121,12 +122,13 @@ void cWindowQT::CameraUpdate() {
 		g_Fodder.MapTile_Set(TileX, TileY, g_OFED->CursorTileGet());
 	}
 
+	// Calculate the width/height of the playfield, adjusted to the window scale
 	size_t Height = height() / mScaleHeight;
 	size_t Width = width() / mScaleWidth;
 
 	// Up
 	if (Fodder->mMousePosition.mY < mEdgeWidth) {
-		if (Fodder->mMapTile_MovedVertical > 0) {
+		if (Fodder->mMapTile_MovedVertical > 0 || Fodder->mMapTile_RowOffset) {
 			g_Fodder.MapTile_Move_Up(1);
 		}
 	}
@@ -140,7 +142,7 @@ void cWindowQT::CameraUpdate() {
 
 	// Left
 	if (Fodder->mMousePosition.mX < mEdgeWidth) {
-		if (Fodder->mMapTile_MovedHorizontal > 0) {
+		if (Fodder->mMapTile_MovedHorizontal > 0 || Fodder->mMapTile_ColumnOffset) {
 			g_Fodder.MapTile_Move_Left(1);
 		}
 	}
@@ -152,7 +154,7 @@ void cWindowQT::CameraUpdate() {
 		}
 	}
 
-	g_Graphics.Map_Tiles_Draw();
+	g_Graphics.MapTiles_Draw();
 	FrameEnd();
 }
 

@@ -32,6 +32,9 @@ struct sTiles {
 	std::vector<sRangeSprite> mSprites;
 };
 
+extern int32 g_SpriteAnim[111];
+extern std::string g_SpriteName[111];
+
 class cOFED : public QMainWindow
 {
 	Q_OBJECT
@@ -47,6 +50,7 @@ public:
 
 	void ShowDialog_NewMap();
 	void ShowDialog_ToolboxTiles();
+	void ShowDialog_ToolboxSprites();
 
 	void Create_NewMap(const std::string& pTileSet, const std::string& pTileSub, size_t pWidth, size_t pHeight);
 
@@ -56,9 +60,12 @@ public:
 
 	int16 CursorTileGet() { return mCursorTile; }
 
+	void SetupSprites();
+
 private:
 	Ui::mOFED ui;
 	cToolboxTiles*	mToolboxTiles;
+	cToolboxSprites* mToolboxSprites;
 
 	int16	mCursorTile;
 	int16	mCursorSprite;

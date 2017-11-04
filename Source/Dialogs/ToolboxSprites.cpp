@@ -27,8 +27,8 @@ void cToolboxSprites::RenderSprites() {
 
 	size_t X = 0, Y = 0;
 	size_t BigY = 0;
-	size_t MultiplierX = g_Fodder.mVersion->mPlatform == ePlatform::Amiga ? 8 : 16;
-	size_t MultiplierY = g_Fodder.mVersion->mPlatform == ePlatform::Amiga ? 2 : 16;
+	size_t MultiplierX = g_Fodder.mVersion->mPlatform == ePlatform::Amiga ? 8 : 1;
+	size_t MultiplierY = g_Fodder.mVersion->mPlatform == ePlatform::Amiga ? 1 : 1;
 
 	mSpriteRanges.clear();
 
@@ -41,18 +41,20 @@ void cToolboxSprites::RenderSprites() {
 		if (AnimID < 0)
 			continue;
 
-		size_t SpriteWidth = g_Fodder.mSpriteSheetPtr[AnimID][0].mColCount * MultiplierX;
-		size_t SpriteHeight = g_Fodder.mSpriteSheetPtr[AnimID][0].mRowCount * MultiplierY;
-		
-		size_t SpriteWidth2 = g_Fodder.mSpriteSheetPtr[AnimID][0].mColCount;
-		size_t SpriteHeight2 = g_Fodder.mSpriteSheetPtr[AnimID][0].mRowCount;
+		size_t SpriteWidth = g_Fodder.mSpriteSheetPtr[AnimID][0].mColCount  ;
+		size_t SpriteHeight = g_Fodder.mSpriteSheetPtr[AnimID][0].mRowCount ;
 
+		if (g_Fodder.mVersion->mPlatform == ePlatform::Amiga) {
+			SpriteWidth -= 1;
+			SpriteWidth <<= 1;
+			SpriteWidth *= MultiplierX;
+		}
 		Sprite.field_0 = -0x40;
-		Sprite.field_4 = 9;
+		Sprite.field_4 = SpriteHeight - 0x10;
 		Sprite.field_52 = 0;
 		Sprite.field_20 = 0;
 
-		cSurface *Surface = new cSurface(SpriteWidth, SpriteHeight);
+		cSurface *Surface = new cSurface(SpriteWidth , SpriteHeight );
 
 		g_Graphics.PaletteSet(Surface);
 		g_Fodder.Sprite_Draw_Frame(&Sprite, AnimID, 0, Surface);
@@ -68,14 +70,14 @@ void cToolboxSprites::RenderSprites() {
 		SDL_Rect SrcRect;
 		SrcRect.x = 0;
 		SrcRect.y = 0;
-		SrcRect.w = SpriteWidth;
-		SrcRect.h = SpriteHeight;
+		SrcRect.w = SpriteWidth ;
+		SrcRect.h = SpriteHeight ;
 
 		SDL_Rect DstRect;
 		DstRect.x = X;
 		DstRect.y = Y;
-		DstRect.w = SpriteWidth;
-		DstRect.h = SpriteHeight;
+		DstRect.w = SpriteWidth ;
+		DstRect.h = SpriteHeight ;
 
 		g_Graphics.PaletteSet(Surface);
 		Surface->surfaceSetToPaletteNew();
@@ -93,7 +95,7 @@ void cToolboxSprites::RenderSprites() {
 			BigY = 0;
 		}
 
-		delete Surface; 
+		delete Surface;
 	}
 
 	// Load the tileset palette to the surface
@@ -104,6 +106,8 @@ void cToolboxSprites::RenderSprites() {
 
 	mScaleWidth = (static_cast<double>(size().width()) / static_cast<double>(mImage.width()));
 	mScaleHeight = (static_cast<double>(size().height()) / static_cast<double>(mImage.height()));
+
+	this->repaint();
 }
 
 void cToolboxSprites::paintEvent(QPaintEvent* e) {
