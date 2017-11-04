@@ -33,7 +33,7 @@ class cWindowQT : public QWidget, public cWindow {
 
 protected:
 	void				paintEvent(QPaintEvent* e);
-	void				resizeEvent(QResizeEvent *event);
+
 	void				mouseMoveEvent(QMouseEvent *eventMove);
 	void				mousePressEvent(QMouseEvent *eventPress);
 	void				mouseReleaseEvent(QMouseEvent *releaseEvent);

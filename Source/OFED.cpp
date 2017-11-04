@@ -1,5 +1,6 @@
 #include "ofed.hpp"
 #include "ui_NewMapDialog.h"
+#include "ui_ToolboxTiles.h"
 
 cOFED::cOFED(QWidget *parent)
 	: QMainWindow(parent)
@@ -26,6 +27,8 @@ cOFED::cOFED(QWidget *parent)
 	Fodder->Mouse_Inputs_Get();
 
 	OpenFodder_Prepare();
+
+	ShowDialog_ToolboxTiles();
 }
 
 void cOFED::OpenFodder_Prepare() {
@@ -94,6 +97,25 @@ void cOFED::OpenFodder_Prepare() {
 	g_Window.FrameEnd();
 }
 
+void cOFED::moveEvent(QMoveEvent *event) {
+	
+	if(mToolboxTiles)
+		mToolboxTiles->move(x() + width(), y());
+}
+
+/**
+ * Launch the Tile Toobox dialog 
+ */
+void cOFED::ShowDialog_ToolboxTiles() {
+	Ui_ToolboxTiles* ui = new Ui_ToolboxTiles();
+
+	mToolboxTiles = new cToolboxTiles(ui, this, 0);
+
+	ui->setupUi(mToolboxTiles);
+
+	mToolboxTiles->show();
+}
+
 /**
  * Launch the New Map dialog
  */
@@ -121,7 +143,9 @@ void cOFED::ShowDialog_NewMap() {
 
 void cOFED::Create_NewMap(const std::string& pTileSet, const std::string& pTileSub, size_t pWidth, size_t pHeight) {
 	
+	// Loop each known tile type
 	for (auto TileType : mTileTypes) {
+
 		if (pTileSet == TileType.mFullName) {
 			size_t Sub = 0;
 
@@ -130,7 +154,7 @@ void cOFED::Create_NewMap(const std::string& pTileSet, const std::string& pTileS
 
 			g_Fodder.Map_Create(TileType, Sub, pWidth, pHeight);
 			g_Window.FrameEnd();
-			break;
+			return;
 		}
 	}
 }

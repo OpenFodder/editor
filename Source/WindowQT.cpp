@@ -29,9 +29,12 @@ cWindowQT::cWindowQT(QWidget* pParent) : QWidget(pParent), cWindow() {
 
 	setAttribute(Qt::WA_Hover);
 	setMouseTracking(true);
+
+	// Number of tiles which are shown
 	mCameraTilesX = 0x15;
 	mCameraTilesY = 0x0F;
 
+	// Mouse inside widget callback
 	connect(&mMouseInTimer, &QTimer::timeout, this, &cWindowQT::CameraUpdate);
 }
 
@@ -77,18 +80,6 @@ void cWindowQT::paintEvent(QPaintEvent* e) {
 	painter.drawImage( Dest, mSurface, Src);
 }
 
-void cWindowQT::resizeEvent(QResizeEvent *event) {
-	
-}
-
-void cWindowQT::CameraTilesUpdate() {
-	if (mCameraTilesX > g_Fodder.mMapWidth)
-		mCameraTilesX = g_Fodder.mMapWidth;
-
-	if (mCameraTilesY > g_Fodder.mMapHeight)
-		mCameraTilesY = g_Fodder.mMapHeight;
-}
-
 void cWindowQT::enterEvent(QEvent *pEvent) {
 
 	mMouseInTimer.start(2);
@@ -99,14 +90,21 @@ void cWindowQT::leaveEvent(QEvent *pEvent) {
 	mMouseInTimer.stop();
 }
 
+void cWindowQT::CameraTilesUpdate() {
+	if (mCameraTilesX > g_Fodder.mMapWidth)
+		mCameraTilesX = g_Fodder.mMapWidth;
+
+	if (mCameraTilesY > g_Fodder.mMapHeight)
+		mCameraTilesY = g_Fodder.mMapHeight;
+}
+
 void cWindowQT::CameraUpdate() {
+	size_t mEdgeWidth = 40;
 
 	CameraTilesUpdate();
 	g_Fodder.sub_12018();
 
 	cFodder *Fodder = &g_Fodder;
-
-	size_t mEdgeWidth = 40;
 
 	// Up
 	if (Fodder->mMousePosition.mY < mEdgeWidth) {
@@ -141,7 +139,6 @@ void cWindowQT::CameraUpdate() {
 }
 
 void cWindowQT::mouseMoveEvent(QMouseEvent *eventMove) {
-
 	cEvent Event;
 	Event.mType = eEvent_MouseMove;
 	Event.mPosition = cPosition(eventMove->x(), eventMove->y());
@@ -152,13 +149,7 @@ void cWindowQT::mouseMoveEvent(QMouseEvent *eventMove) {
 
 void cWindowQT::mousePressEvent(QMouseEvent *eventPress) {
 	cEvent Event;
-	/*g_Fodder.VersionSelect_2();
 
-	g_Fodder.Map_Load_Resources();
-	g_Fodder.Map_Load_Sprites();
-
-	g_Fodder.mImage->surfaceSetToPaletteNew();
-	*/
 	if (eventPress->button() == Qt::MouseButton::LeftButton) {
 		Event.mType = eEvent_MouseLeftDown;
 		Event.mButton = 1;
@@ -171,10 +162,7 @@ void cWindowQT::mousePressEvent(QMouseEvent *eventPress) {
 	
 	Event.mPosition = cPosition(eventPress->x(), eventPress->y());
 	g_Fodder.EventAdd(Event);
-
-	g_Graphics.Map_Tiles_Draw();
-	FrameEnd();
-	
+	g_Fodder.eventProcess();
 }
 
 void cWindowQT::mouseReleaseEvent(QMouseEvent *releaseEvent) {
@@ -191,6 +179,6 @@ void cWindowQT::mouseReleaseEvent(QMouseEvent *releaseEvent) {
 	}
 
 	Event.mPosition = cPosition(releaseEvent->x(), releaseEvent->y());
-	
 	g_Fodder.EventAdd(Event);
+	g_Fodder.eventProcess();
 }

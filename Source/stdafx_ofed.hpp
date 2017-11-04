@@ -10,6 +10,7 @@
 #include "stdafx.hpp"
 #include "WindowQT.hpp"
 #include "Dialogs//NewMapDialog.hpp"
+#include "Dialogs//ToolboxTiles.hpp"
 
 class cOFED;
 
