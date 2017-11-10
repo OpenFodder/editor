@@ -33,9 +33,6 @@
     <Filter Include="OpenFodder\Amiga">
       <UniqueIdentifier>{bbb9e8f9-f6aa-472c-801a-d8888d5b08d6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="OpenFodder\MissionData">
-      <UniqueIdentifier>{7db12678-a256-4b2b-af25-9c67f80d784d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="OpenFodder\PC">
       <UniqueIdentifier>{07712274-34e8-47c0-a1a1-a8b1d313580e}</UniqueIdentifier>
     </Filter>
@@ -101,9 +98,6 @@
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\md5.cpp">
       <Filter>OpenFodder</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\MissionData.cpp">
-      <Filter>OpenFodder</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Recruits.cpp">
       <Filter>OpenFodder</Filter>
     </ClCompile>
@@ -121,18 +115,6 @@
     </ClCompile>
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\PC\Graphics_PC.cpp">
       <Filter>OpenFodder\PC</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\MissionData\Retail.cpp">
-      <Filter>OpenFodder\MissionData</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\MissionData\Retail2.cpp">
-      <Filter>OpenFodder\MissionData</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\MissionData\Custom.cpp">
-      <Filter>OpenFodder\MissionData</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\MissionData\Demo.cpp">
-      <Filter>OpenFodder\MissionData</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Amiga\Graphics_Amiga.cpp">
       <Filter>OpenFodder\Amiga</Filter>
@@ -172,6 +154,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Dialogs\ToolboxSprites.cpp">
       <Filter>Source Files\Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Campaign.cpp">
+      <Filter>OpenFodder</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -261,9 +246,6 @@
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\md5.hpp">
       <Filter>OpenFodder</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\MissionData.hpp">
-      <Filter>OpenFodder</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Position.hpp">
       <Filter>OpenFodder</Filter>
     </ClInclude>
@@ -335,6 +317,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Dialogs\ToolboxSprites.hpp">
       <Filter>Source Files\Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Campaign.hpp">
+      <Filter>OpenFodder</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

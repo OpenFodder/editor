@@ -28,7 +28,7 @@ cOFED::cOFED(QWidget *parent)
 	cFodder* Fodder = new cFodder(g_Window.GetSingletonPtr());
 	Fodder->Prepare();
 
-	if (!Fodder->mVersions.size()) {
+	if (!g_AvailableDataVersions.size()) {
 
 		// TODO: Show a message that no data was found
 		return;
@@ -56,7 +56,9 @@ cOFED::cOFED(QWidget *parent)
 
 void cOFED::OpenFodder_Prepare() {
 	cFodder* Fodder = &g_Fodder;
+
 	Fodder->Game_Setup(0);
+	Fodder->Campaign_Load("Cannon Fodder");
 
 	Fodder->Mission_Memory_Clear();
 	Fodder->Mission_Prepare_Squads();
@@ -64,6 +66,7 @@ void cOFED::OpenFodder_Prepare() {
 
 	Fodder->Squad_Set_Squad_Leader();
 	Fodder->Sprite_Clear_All();
+
 
 	Fodder->Mission_Phase_Goals_Set();
 
@@ -86,8 +89,6 @@ void cOFED::OpenFodder_Prepare() {
 	Fodder->mCamera_Start_Adjust = 1;
 	Fodder->mCamera_Position_X = Fodder->mSprites[0].field_0;
 	Fodder->mCamera_Position_Y = Fodder->mSprites[0].field_4;
-	Fodder->word_3ABE9 = 0;
-	Fodder->word_3ABEB = 0;
 	Fodder->word_3ABE7 = 0;
 	Fodder->mInput_Enabled = -1;
 	Fodder->sub_11CAD();

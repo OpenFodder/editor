@@ -83,11 +83,7 @@
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Graphics.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\GUI_Element.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\md5.cpp" />
-    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\MissionData.cpp" />
-    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\MissionData\Custom.cpp" />
-    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\MissionData\Demo.cpp" />
-    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\MissionData\Retail.cpp" />
-    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\MissionData\Retail2.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Campaign.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\PC\Graphics_PC.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\PC\IntroData_PC.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\PC\Resource_PC_CD.cpp" />
@@ -153,7 +149,7 @@
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\IntroData.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Map.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\md5.hpp" />
-    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\MissionData.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Campaign.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\PC\Graphics_PC.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\PC\Resource_PC_CD.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\PC\Sound_PC.hpp" />
