@@ -27,6 +27,8 @@ void cToolboxTiles::RenderTiles() {
 
 	int32 X = 0, Y = 0;
 	
+	mTileSurface->clearBuffer();
+
 	// Loop each tile
 	for (int16 TileNumber = 0; TileNumber < 480; ++TileNumber) {
 
