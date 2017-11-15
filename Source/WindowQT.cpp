@@ -116,10 +116,13 @@ void cWindowQT::CameraUpdate() {
 
 	// Button Pressed?
 	if (Fodder->mMouseButtons & 1) {
-		uint32 TileX = (Fodder->mMousePosition.mX + 8) / 16;
-		uint32 TileY = (Fodder->mMousePosition.mY + 8) / 16;
+		if (Fodder->mMousePosition.mX >= 0 || Fodder->mMousePosition.mY >= 0) {
 
-		g_Fodder.MapTile_Set(TileX, TileY, g_OFED->CursorTileGet());
+			uint32 TileX = (Fodder->mMousePosition.mX + 8) / 16;
+			uint32 TileY = (Fodder->mMousePosition.mY + 8) / 16;
+
+			g_Fodder.MapTile_Set(TileX, TileY, g_OFED->CursorTileGet());
+		}
 	}
 
 	// Calculate the width/height of the playfield, adjusted to the window scale

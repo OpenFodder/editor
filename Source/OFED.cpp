@@ -84,12 +84,12 @@ void cOFED::OpenFodder_Prepare() {
 	Fodder->Camera_Reset();
 
 	Fodder->Mouse_Inputs_Get();
-	Fodder->sub_18D5E();
+	Fodder->Sprite_Frame_Modifier_Update();
 
 	Fodder->mCamera_Start_Adjust = 1;
 	Fodder->mCamera_Position_X = Fodder->mSprites[0].field_0;
 	Fodder->mCamera_Position_Y = Fodder->mSprites[0].field_4;
-	Fodder->word_3ABE7 = 0;
+
 	Fodder->mInput_Enabled = -1;
 	Fodder->sub_11CAD();
 
@@ -327,7 +327,7 @@ void cOFED::SetupSprites() {
 
 	g_SpriteAnim[eSprite_Bonus_RankToGeneral] = 0x95;
 	g_SpriteAnim[eSprite_Bonus_Rockets] = 0xE4;
-	g_SpriteAnim[eSprite_Player_Rocket] = 0x3E;
+	g_SpriteAnim[eSprite_Bonus_Armour] = 0xE3;
 	g_SpriteAnim[eSprite_Bonus_RankHomingInvin_SquadLeader] = 0xE5;
 
 	g_SpriteAnim[eSprite_Bonus_RankHomingInvin_Squad] = 0xE6;
@@ -419,7 +419,7 @@ void cOFED::SetupSprites() {
 
 	g_SpriteName[eSprite_Bonus_RankToGeneral] = "Bonus: Rank to General";
 	g_SpriteName[eSprite_Bonus_Rockets] = "Bonus: Rockets";
-	g_SpriteName[eSprite_Player_Rocket] = "Player Rocket";
+	g_SpriteName[eSprite_Bonus_Armour] = "Bonus Armour";
 	g_SpriteName[eSprite_Bonus_RankHomingInvin_SquadLeader] = "Bonus: Rockets and General";
 	g_SpriteName[eSprite_Bonus_RankHomingInvin_Squad] = "Bonus: Squad General and Rockets";
 	g_SpriteName[eSprite_Helicopter_CallPad] = "Helicopter Callpad";
