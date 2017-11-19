@@ -48,6 +48,12 @@ public:
 
 	void OpenFodder_Prepare();
 
+	sTiles SetupHut(cSurface **pSurface);
+
+	void AddHut_With_Soldier();
+	void AddHut_With_Indigenous();
+	void AddHut_With_Indigenous_Spear();
+
 	void ShowDialog_LoadMap();
 	void ShowDialog_SaveMap();
 
@@ -59,19 +65,20 @@ public:
 	void Create_NewMap(const std::string& pTileSet, const std::string& pTileSub, size_t pWidth, size_t pHeight);
 
 	void SetCursorTileID(const size_t pCursorTile);
+	void setCursorTiles( sTiles& pTiles);
+
 	void CursorUpdate();
 	void CursorReset();
 
-	int16 CursorTileGet() { return mCursorTile; }
-
 	void SetupSprites();
+
+	sTiles GetCursorRangeTiles() { return mCursorRangeTiles; }
 
 private:
 	Ui::mOFED ui;
 	cToolboxTiles*	mToolboxTiles;
 	cToolboxSprites* mToolboxSprites;
 
-	int16	mCursorTile;
 	int16	mCursorSprite;
 	sTiles	mCursorRangeTiles;
 

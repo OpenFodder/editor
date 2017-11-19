@@ -36,7 +36,7 @@
      <x>0</x>
      <y>0</y>
      <width>948</width>
-     <height>26</height>
+     <height>31</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -45,9 +45,30 @@
     </property>
     <addaction name="action_New_Map"/>
     <addaction name="separator"/>
+    <addaction name="action_Load_Map"/>
     <addaction name="action_Save_Map"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuInsert">
+    <property name="title">
+     <string>Insert</string>
+    </property>
+    <widget class="QMenu" name="menuHut">
+     <property name="title">
+      <string>Hut</string>
+     </property>
+     <addaction name="action_Hut_Soldier"/>
+     <addaction name="action_Hut_Indeigenous"/>
+     <addaction name="action_Hut_Indigenous_With_Spear"/>
+    </widget>
+    <addaction name="menuHut"/>
+    <addaction name="actionBraracks"/>
+    <addaction name="actionBunker"/>
+    <addaction name="actionCliff"/>
    </widget>
    <addaction name="menu_File"/>
+   <addaction name="menuInsert"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -71,6 +92,46 @@
   <action name="action_Save_Map">
    <property name="text">
     <string>&amp;Save Map</string>
+   </property>
+  </action>
+  <action name="action_Load_Map">
+   <property name="text">
+    <string>Load Map</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
+  <action name="action_Hut_Soldier">
+   <property name="text">
+    <string>Soldier</string>
+   </property>
+  </action>
+  <action name="action_Hut_Indeigenous">
+   <property name="text">
+    <string>Indigenous</string>
+   </property>
+  </action>
+  <action name="action_Hut_Indigenous_With_Spear">
+   <property name="text">
+    <string>Indigenous With Spear</string>
+   </property>
+  </action>
+  <action name="actionBraracks">
+   <property name="text">
+    <string>Barracks</string>
+   </property>
+  </action>
+  <action name="actionBunker">
+   <property name="text">
+    <string>Bunker</string>
+   </property>
+  </action>
+  <action name="actionCliff">
+   <property name="text">
+    <string>Cliff</string>
    </property>
   </action>
  </widget>

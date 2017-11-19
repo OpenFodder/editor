@@ -130,7 +130,10 @@ void cWindowQT::CameraUpdate() {
 			uint32 TileX = (Fodder->mMousePosition.mX + 8) / 16;
 			uint32 TileY = (Fodder->mMousePosition.mY + 8) / 16;
 
-			g_Fodder.MapTile_Set(TileX, TileY, g_OFED->CursorTileGet());
+			for (auto Tile : g_OFED->GetCursorRangeTiles().mTiles) {
+
+				g_Fodder.MapTile_Set(TileX + Tile.mX, TileY + Tile.mY, Tile.mTileID);
+			}
 		}
 	}
 
