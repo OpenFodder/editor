@@ -30,6 +30,10 @@ struct sRangeSprite {
 struct sTiles {
 	std::vector<sRangeTile> mTiles;
 	std::vector<sRangeSprite> mSprites;
+
+	bool mOnce;
+
+	sTiles( bool pOnce = false ) { mOnce = pOnce;  }
 };
 
 extern int32 g_SpriteAnim[111];
@@ -49,10 +53,13 @@ public:
 	void OpenFodder_Prepare();
 
 	sTiles SetupHut(cSurface **pSurface);
+	sTiles SetupBarracks(cSurface **pSurface);
 
 	void AddHut_With_Soldier();
 	void AddHut_With_Indigenous();
 	void AddHut_With_Indigenous_Spear();
+
+	void AddBarracks_With_Soldier();
 
 	void ShowDialog_LoadMap();
 	void ShowDialog_SaveMap();

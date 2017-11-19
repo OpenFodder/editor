@@ -134,6 +134,10 @@ void cWindowQT::CameraUpdate() {
 
 				g_Fodder.MapTile_Set(TileX + Tile.mX, TileY + Tile.mY, Tile.mTileID);
 			}
+
+			if (g_OFED->GetCursorRangeTiles().mOnce) {
+				g_OFED->CursorReset();
+			}
 		}
 	}
 

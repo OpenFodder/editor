@@ -29,6 +29,10 @@ cOFED::cOFED(QWidget *parent)
 	QObject::connect(ui.action_Save_Map, &QAction::triggered, this, &cOFED::ShowDialog_SaveMap);
 
 	QObject::connect(ui.action_Hut_Soldier, &QAction::triggered, this, &cOFED::AddHut_With_Soldier);
+	QObject::connect(ui.action_Hut_Indeigenous, &QAction::triggered, this, &cOFED::AddHut_With_Indigenous);
+	QObject::connect(ui.action_Hut_Indigenous_With_Spear, &QAction::triggered, this, &cOFED::AddHut_With_Indigenous_Spear);
+
+	QObject::connect(ui.action_Barracks_Soldier, &QAction::triggered, this, &cOFED::AddBarracks_With_Soldier);
 
 	// Prepare OpenFodder
 	cFodder* Fodder = new cFodder(g_Window.GetSingletonPtr());
@@ -171,7 +175,7 @@ void cOFED::ShowDialog_NewMap() {
 }
 
 sTiles cOFED::SetupHut(cSurface **pSurface) {
-	sTiles Tiles;
+	sTiles Tiles(true);
 
 	if (g_Fodder.mMap_TileSet  == eTileTypes_Jungle) {
 		Tiles.mTiles.push_back(sRangeTile(0, 0, 255));
@@ -273,6 +277,91 @@ sTiles cOFED::SetupHut(cSurface **pSurface) {
 	return Tiles;
 }
 
+sTiles cOFED::SetupBarracks(cSurface **pSurface) {
+	sTiles Tiles(true);
+
+	if (g_Fodder.mMap_TileSet  == eTileTypes_Jungle) {
+		Tiles.mTiles.push_back(sRangeTile(1, 0, 333));
+		Tiles.mTiles.push_back(sRangeTile(2, 0, 334));
+
+		Tiles.mTiles.push_back(sRangeTile(0, 1, 352));
+		Tiles.mTiles.push_back(sRangeTile(1, 1, 353));
+		Tiles.mTiles.push_back(sRangeTile(2, 1, 354));
+
+		Tiles.mTiles.push_back(sRangeTile(0, 2, 372));
+		Tiles.mTiles.push_back(sRangeTile(1, 2, 373));
+		Tiles.mTiles.push_back(sRangeTile(2, 2, 374));
+		Tiles.mTiles.push_back(sRangeTile(3, 2, 375));
+
+		Tiles.mTiles.push_back(sRangeTile(0, 3, 392));
+		Tiles.mTiles.push_back(sRangeTile(1, 3, 393));
+		Tiles.mTiles.push_back(sRangeTile(2, 3, 394));
+
+		*pSurface = new cSurface(16 * 4, 16 * 4);
+	}
+
+	if (g_Fodder.mMap_TileSet  == eTileTypes_Ice) {
+		Tiles.mTiles.push_back(sRangeTile(1, 0, 245));
+		Tiles.mTiles.push_back(sRangeTile(2, 0, 246));
+		Tiles.mTiles.push_back(sRangeTile(3, 0, 247));
+
+		Tiles.mTiles.push_back(sRangeTile(0, 1, 264));
+		Tiles.mTiles.push_back(sRangeTile(1, 1, 265));
+		Tiles.mTiles.push_back(sRangeTile(2, 1, 266));
+		Tiles.mTiles.push_back(sRangeTile(3, 1, 267));
+
+		Tiles.mTiles.push_back(sRangeTile(0, 2, 284));
+		Tiles.mTiles.push_back(sRangeTile(1, 2, 285));
+		Tiles.mTiles.push_back(sRangeTile(2, 2, 286));
+		Tiles.mTiles.push_back(sRangeTile(3, 2, 287));
+
+		*pSurface = new cSurface(16 * 4, 16 * 3);
+	}
+
+	if (g_Fodder.mMap_TileSet  == eTileTypes_Desert) {
+		Tiles.mTiles.push_back(sRangeTile(0, 0, 196));
+		Tiles.mTiles.push_back(sRangeTile(1, 0, 197));
+		Tiles.mTiles.push_back(sRangeTile(2, 0, 198));
+
+		Tiles.mTiles.push_back(sRangeTile(0, 1, 216));
+		Tiles.mTiles.push_back(sRangeTile(1, 1, 217));
+		Tiles.mTiles.push_back(sRangeTile(2, 1, 218));
+
+		Tiles.mTiles.push_back(sRangeTile(0, 2, 236));
+		Tiles.mTiles.push_back(sRangeTile(1, 2, 237));
+		Tiles.mTiles.push_back(sRangeTile(2, 2, 238));
+
+		*pSurface = new cSurface(16 * 3, 16 * 3);
+	}
+
+	if (g_Fodder.mMap_TileSet  == eTileTypes_Moors) {
+		Tiles.mTiles.push_back(sRangeTile(1, 0, 335));
+		Tiles.mTiles.push_back(sRangeTile(2, 0, 336));
+
+		Tiles.mTiles.push_back(sRangeTile(0, 1, 354));
+		Tiles.mTiles.push_back(sRangeTile(1, 1, 355));
+		Tiles.mTiles.push_back(sRangeTile(2, 1, 356));
+
+		Tiles.mTiles.push_back(sRangeTile(0, 2, 374));
+		Tiles.mTiles.push_back(sRangeTile(1, 2, 375));
+		Tiles.mTiles.push_back(sRangeTile(2, 2, 376));
+
+		Tiles.mTiles.push_back(sRangeTile(0, 3, 394));
+		Tiles.mTiles.push_back(sRangeTile(1, 3, 395));
+		Tiles.mTiles.push_back(sRangeTile(2, 3, 396));
+
+		*pSurface = new cSurface(16 * 3, 16 * 4);
+	}
+
+	if (g_Fodder.mMap_TileSet  == eTileTypes_Int) {
+		Tiles.mTiles.push_back(sRangeTile(0, 0, 246));
+		Tiles.mTiles.push_back(sRangeTile(0, 1, 266));
+
+		*pSurface = new cSurface(16 * 1, 16 * 2);
+	}
+
+	return Tiles;
+}
 
 void cOFED::AddHut_With_Soldier() {
 
@@ -301,19 +390,95 @@ void cOFED::AddHut_With_Soldier() {
 	}
 
 	setCursorTiles(Tiles);
-
-	SDL_Surface* Source = mCursorSurface->GetSurface();
-	mCursorImage = QImage(static_cast<uchar*>(Source->pixels), Source->w, Source->h, QImage::Format_RGB32);
-
 	CursorUpdate();
 }
 
 void cOFED::AddHut_With_Indigenous() {
+	sTiles Tiles = SetupHut(&mCursorSurface);
 
+	if (g_Fodder.mMap_TileSet  == eTileTypes_Jungle) {
+		Tiles.mSprites.push_back(sRangeSprite(20, 27, eSprite_Door_Indigenous));
+	}
+
+	if (g_Fodder.mMap_TileSet  == eTileTypes_Desert) {
+		Tiles.mSprites.push_back(sRangeSprite(35, 40, eSprite_Door_Indigenous));
+	}
+
+	if (g_Fodder.mMap_TileSet  == eTileTypes_Ice) {
+		// In this case 'Shrub' is roof
+		Tiles.mSprites.push_back(sRangeSprite(20, 1, eSprite_Shrub));
+		Tiles.mSprites.push_back(sRangeSprite(12, 23, eSprite_Door_Indigenous));
+	}
+
+	if (g_Fodder.mMap_TileSet  == eTileTypes_Moors) {
+		Tiles.mSprites.push_back(sRangeSprite(28, 65, eSprite_Door_Indigenous));
+	}
+
+	if (g_Fodder.mMap_TileSet  == eTileTypes_Int) {
+		Tiles.mSprites.push_back(sRangeSprite(3, 5, eSprite_Door_Indigenous));
+	}
+
+	setCursorTiles(Tiles);
+	CursorUpdate();
 }
 
 void cOFED::AddHut_With_Indigenous_Spear() {
+	sTiles Tiles = SetupHut(&mCursorSurface);
 
+	if (g_Fodder.mMap_TileSet  == eTileTypes_Jungle) {
+		Tiles.mSprites.push_back(sRangeSprite(20, 27, eSprite_Door_Indigenous_Spear));
+	}
+
+	if (g_Fodder.mMap_TileSet  == eTileTypes_Desert) {
+		Tiles.mSprites.push_back(sRangeSprite(35, 40, eSprite_Door_Indigenous_Spear));
+	}
+
+	if (g_Fodder.mMap_TileSet  == eTileTypes_Ice) {
+		// In this case 'Shrub' is roof
+		Tiles.mSprites.push_back(sRangeSprite(20, 1, eSprite_Shrub));
+		Tiles.mSprites.push_back(sRangeSprite(12, 23, eSprite_Door_Indigenous_Spear));
+	}
+
+	if (g_Fodder.mMap_TileSet  == eTileTypes_Moors) {
+		Tiles.mSprites.push_back(sRangeSprite(28, 65, eSprite_Door_Indigenous_Spear));
+	}
+
+	if (g_Fodder.mMap_TileSet  == eTileTypes_Int) {
+		Tiles.mSprites.push_back(sRangeSprite(3, 5, eSprite_Door_Indigenous_Spear));
+	}
+	setCursorTiles(Tiles);
+	CursorUpdate();
+}
+
+void cOFED::AddBarracks_With_Soldier() {
+	sTiles Tiles = SetupBarracks(&mCursorSurface);
+
+	if (g_Fodder.mMap_TileSet  == eTileTypes_Jungle) {
+		Tiles.mSprites.push_back(sRangeSprite(13, 2, eSprite_BuildingRoof));
+		Tiles.mSprites.push_back(sRangeSprite(9, 34, eSprite_BuildingDoor));
+	}
+
+	if (g_Fodder.mMap_TileSet  == eTileTypes_Desert) {
+		Tiles.mSprites.push_back(sRangeSprite(12, -15, eSprite_BuildingRoof));
+		Tiles.mSprites.push_back(sRangeSprite(7, 16, eSprite_BuildingDoor));
+	}
+
+	if (g_Fodder.mMap_TileSet  == eTileTypes_Ice) {
+		Tiles.mSprites.push_back(sRangeSprite(23, -5, eSprite_BuildingRoof));
+		Tiles.mSprites.push_back(sRangeSprite(20, 27, eSprite_BuildingDoor));
+	}
+
+	if (g_Fodder.mMap_TileSet  == eTileTypes_Moors) {
+		Tiles.mSprites.push_back(sRangeSprite(15, 1, eSprite_BuildingRoof));
+		Tiles.mSprites.push_back(sRangeSprite(7, 33, eSprite_BuildingDoor));
+	}
+
+	if (g_Fodder.mMap_TileSet  == eTileTypes_Int) {
+		Tiles.mSprites.push_back(sRangeSprite(3, 5, eSprite_BuildingDoor));
+	}
+
+	setCursorTiles(Tiles);
+	CursorUpdate();
 }
 
 /**
@@ -417,6 +582,10 @@ void cOFED::CursorUpdate() {
 		QRectF Src(0, 0, mCursorImage.width(), mCursorImage.height());
 		painter.drawImage(Dest, mCursorImage, Src);
 	}
+	else {
+		this->setCursor(Qt::ArrowCursor);
+		return;
+	}
 
 	// Set the actual cursor
 	if(!mCursorImageFinal.isNull())
@@ -438,7 +607,7 @@ void cOFED::setCursorTiles( sTiles& pTiles) {
 	CursorReset();
 
 	for ( const auto& Tile : pTiles.mTiles) {
-		g_Graphics.Map_Tile_Draw(mCursorSurface, Tile.mTileID, (Tile.mX), Tile.mY, 0);
+		g_Graphics.Map_Tile_Draw(mCursorSurface, Tile.mTileID, Tile.mX, Tile.mY, 0);
 	}
 	g_Graphics.PaletteSet(mCursorSurface);
 
@@ -449,7 +618,6 @@ void cOFED::setCursorTiles( sTiles& pTiles) {
 	mCursorImage = QImage(static_cast<uchar*>(Source->pixels), Source->w, Source->h, QImage::Format_RGB32);
 
 	mCursorRangeTiles = pTiles;
-	CursorUpdate();
 }
 
 void cOFED::SetupSprites() {
