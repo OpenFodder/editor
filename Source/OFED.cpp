@@ -495,7 +495,6 @@ void cOFED::AddHut_With_Soldier() {
 	}
 
 	setCursorTiles(Tiles);
-	CursorUpdate();
 }
 
 void cOFED::AddHut_With_Indigenous() {
@@ -524,7 +523,6 @@ void cOFED::AddHut_With_Indigenous() {
 	}
 
 	setCursorTiles(Tiles);
-	CursorUpdate();
 }
 
 void cOFED::AddHut_With_Indigenous_Spear() {
@@ -552,7 +550,6 @@ void cOFED::AddHut_With_Indigenous_Spear() {
 		Tiles.mSprites.push_back(sRangeSprite(3, 5, eSprite_Door_Indigenous_Spear));
 	}
 	setCursorTiles(Tiles);
-	CursorUpdate();
 }
 
 void cOFED::AddBarracks_With_Soldier() {
@@ -583,7 +580,6 @@ void cOFED::AddBarracks_With_Soldier() {
 	}
 
 	setCursorTiles(Tiles);
-	CursorUpdate();
 }
 
 void cOFED::AddBunker_With_Soldier() {
@@ -610,7 +606,6 @@ void cOFED::AddBunker_With_Soldier() {
 	}
 
 	setCursorTiles(Tiles);
-	CursorUpdate();
 }
 
 void cOFED::AddBunker_With_SoldierReinforced() {
@@ -637,7 +632,6 @@ void cOFED::AddBunker_With_SoldierReinforced() {
 	}
 
 	setCursorTiles(Tiles);
-	CursorUpdate();
 }
 
 void cOFED::AddCliff() {
@@ -805,8 +799,6 @@ void cOFED::AddCliff() {
 
 	if(Tiles.mTiles.size())
 		setCursorTiles(Tiles);
-
-	CursorUpdate();
 }
 
 /**
@@ -934,7 +926,7 @@ void cOFED::SetCursorTileID(const size_t pCursorTileID) {
 
 void cOFED::setCursorTiles( sTiles& pTiles) {
 
-	CursorReset();
+	mCursorSurface->clearBuffer();
 
 	for ( const auto& Tile : pTiles.mTiles) {
 		g_Graphics.Map_Tile_Draw(mCursorSurface, Tile.mTileID, Tile.mX, Tile.mY, 0);
@@ -948,6 +940,8 @@ void cOFED::setCursorTiles( sTiles& pTiles) {
 	mCursorImage = QImage(static_cast<uchar*>(Source->pixels), Source->w, Source->h, QImage::Format_RGB32);
 
 	mCursorRangeTiles = pTiles;
+
+	CursorUpdate();
 }
 
 void cOFED::SetupSprites() {
