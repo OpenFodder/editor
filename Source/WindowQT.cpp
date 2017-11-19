@@ -32,10 +32,6 @@ cWindowQT::cWindowQT(QWidget* pParent) : QWidget(pParent), cWindow() {
 	setAttribute(Qt::WA_Hover);
 	setMouseTracking(true);
 
-	// Number of tiles which are shown
-	mCameraTilesX = 0x15;
-	mCameraTilesY = 0x0F;
-
 	mScaleWidth = 0;
 	mScaleHeight = 0;
 
@@ -95,9 +91,22 @@ void cWindowQT::leaveEvent(QEvent *pEvent) {
 	mMouseInTimer.stop();
 }
 
+void cWindowQT::CameraSetTiles() {
+
+	if (g_Fodder.mVersion->isAmiga()) {
+		mCameraTilesX = 0x15;
+		mCameraTilesY = 0x0F;
+	}
+	else {
+		mCameraTilesX = 0x15;
+		mCameraTilesY = 0x0F;
+	}
+}
 void cWindowQT::CameraTilesUpdate() {
 	mScaleWidth = (static_cast<double>(size().width()) / static_cast<double>(mScreenSize.mWidth));
 	mScaleHeight = (static_cast<double>(size().height()) / static_cast<double>(mScreenSize.mHeight));
+	// Number of tiles which are shown
+	CameraSetTiles();
 
 	if (mCameraTilesX > g_Fodder.mMapWidth)
 		mCameraTilesX = g_Fodder.mMapWidth;
@@ -157,6 +166,23 @@ void cWindowQT::CameraUpdate() {
 		}
 	}
 
+	auto Start = 0x60 - (Fodder->mMapWidth * 2);
+
+	if (g_Fodder.mMapTilePtr < (0x60 - (Fodder->mMapWidth * 2)))
+		g_Fodder.mMapTilePtr = 0x60 - (Fodder->mMapWidth * 2);
+
+	// 
+	{
+		auto CameraWidth = (mCameraTilesX * 2);
+		auto CameraHeight = ((mCameraTilesY) * Fodder->mMapWidth) * 2;
+
+		auto Right = g_Fodder.mMap->begin() + CameraWidth;
+		auto MaxRight = (g_Fodder.mMap->begin() + g_Fodder.mMap->size()) - CameraHeight - CameraWidth;
+
+		if (Right > MaxRight) {
+			g_Fodder.mMapTilePtr = g_Fodder.mMap->begin() - MaxRight;
+		}
+	}
 	g_Graphics.MapTiles_Draw();
 	FrameEnd();
 }

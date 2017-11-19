@@ -56,6 +56,7 @@ public:
 	virtual void		RenderAt(cSurface* pImage, cPosition pSource = cPosition(0, 0));
 	virtual void		RenderShrunk(cSurface* pImage);
 
+	void				CameraSetTiles();
 	void				CameraTilesUpdate();
 	void				CameraUpdate();
 };

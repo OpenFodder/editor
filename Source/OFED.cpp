@@ -4,6 +4,8 @@
 #include <QDesktopWidget>
 #include <qpainter.h>
 
+#include <QFileDialog>
+
 int32 g_SpriteAnim[111] = {};
 std::string g_SpriteName[111] = {};
 
@@ -23,6 +25,8 @@ cOFED::cOFED(QWidget *parent)
 
 	// Menu Items
 	QObject::connect(ui.action_New_Map, &QAction::triggered, this, &cOFED::ShowDialog_NewMap);
+	QObject::connect(ui.action_Load_Map, &QAction::triggered, this, &cOFED::ShowDialog_LoadMap);
+	QObject::connect(ui.action_Save_Map, &QAction::triggered, this, &cOFED::ShowDialog_SaveMap);
 
 	// Prepare OpenFodder
 	cFodder* Fodder = new cFodder(g_Window.GetSingletonPtr());
@@ -162,6 +166,51 @@ void cOFED::ShowDialog_NewMap() {
 	cNewMapDialog* NewMap = new cNewMapDialog( this, 0);
 
 	NewMap->show();
+}
+
+/**
+* Show the Load Map Dialog
+*/
+void cOFED::ShowDialog_LoadMap() {
+
+	QString fileName = QFileDialog::getOpenFileName(this,
+		tr("Load Map"), "",
+		tr("Open Fodder (*.map);;All Files (*)"));
+
+	CursorReset();
+
+	if (!fileName.size())
+		return;
+
+	g_Fodder.mCampaign.LoadCustomFromPath(fileName.toStdString());
+
+	g_Fodder.Map_Load();
+	g_Fodder.Map_Load_Sprites();
+	g_Fodder.MapTiles_Draw();
+
+	g_Graphics.PaletteSet();
+	g_Fodder.mImage->surfaceSetToPaletteNew();
+
+	g_Window.FrameEnd();
+
+	mToolboxSprites->RenderSprites();
+	mToolboxTiles->RenderTiles();
+}
+
+
+/**
+ * Show the Save Map Dialog
+ */
+void cOFED::ShowDialog_SaveMap() {
+
+	QString fileName = QFileDialog::getSaveFileName(this,
+		tr("Save Map"), "",
+		tr("Open Fodder (*.map);;All Files (*)"));
+
+	if (!fileName.size())
+		return;
+
+	g_Fodder.Map_Save(fileName.toStdString());
 }
 
 /**

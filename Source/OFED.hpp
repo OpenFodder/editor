@@ -48,7 +48,11 @@ public:
 
 	void OpenFodder_Prepare();
 
+	void ShowDialog_LoadMap();
+	void ShowDialog_SaveMap();
+
 	void ShowDialog_NewMap();
+
 	void ShowDialog_ToolboxTiles();
 	void ShowDialog_ToolboxSprites();
 
