@@ -33,7 +33,13 @@ cOFED::cOFED(QWidget *parent)
 	QObject::connect(ui.action_Hut_Indigenous_With_Spear, &QAction::triggered, this, &cOFED::AddHut_With_Indigenous_Spear);
 
 	QObject::connect(ui.action_Barracks_Soldier, &QAction::triggered, this, &cOFED::AddBarracks_With_Soldier);
+	
+	QObject::connect(ui.action_Bunker_Soldier, &QAction::triggered, this, &cOFED::AddBunker_With_Soldier);
+	QObject::connect(ui.action_Bunker_Soldier_Reinforced, &QAction::triggered, this, &cOFED::AddBunker_With_SoldierReinforced);
+	
+	QObject::connect(ui.action_Cliff, &QAction::triggered, this, &cOFED::AddCliff);
 
+	
 	// Prepare OpenFodder
 	cFodder* Fodder = new cFodder(g_Window.GetSingletonPtr());
 	Fodder->Prepare();
@@ -174,7 +180,7 @@ void cOFED::ShowDialog_NewMap() {
 	NewMap->show();
 }
 
-sTiles cOFED::SetupHut(cSurface **pSurface) {
+sTiles cOFED::SetupHut() {
 	sTiles Tiles(true);
 
 	if (g_Fodder.mMap_TileSet  == eTileTypes_Jungle) {
@@ -190,7 +196,7 @@ sTiles cOFED::SetupHut(cSurface **pSurface) {
 		Tiles.mTiles.push_back(sRangeTile(1, 2, 296));
 		Tiles.mTiles.push_back(sRangeTile(2, 2, 297));
 
-		*pSurface = new cSurface(16 * 3, 16 * 3);
+		mCursorSurface= new cSurface(16 * 3, 16 * 3);
 	}
 
 	if (g_Fodder.mMap_TileSet  == eTileTypes_Desert) {
@@ -214,7 +220,7 @@ sTiles cOFED::SetupHut(cSurface **pSurface) {
 		Tiles.mTiles.push_back(sRangeTile(2, 3, 119));
 		Tiles.mTiles.push_back(sRangeTile(3, 3, 78));
 
-		*pSurface = new cSurface(16 * 4, 16 * 4);
+		mCursorSurface= new cSurface(16 * 4, 16 * 4);
 	}
 
 	if (g_Fodder.mMap_TileSet  == eTileTypes_Ice) {
@@ -233,7 +239,7 @@ sTiles cOFED::SetupHut(cSurface **pSurface) {
 		Tiles.mTiles.push_back(sRangeTile(2, 2, 282));
 		Tiles.mTiles.push_back(sRangeTile(3, 2, 283));
 
-		*pSurface = new cSurface(16 * 4, 16 * 3);
+		mCursorSurface= new cSurface(16 * 4, 16 * 3);
 	}
 
 	if (g_Fodder.mMap_TileSet  == eTileTypes_Moors) {
@@ -263,7 +269,7 @@ sTiles cOFED::SetupHut(cSurface **pSurface) {
 		Tiles.mTiles.push_back(sRangeTile(2, 4, 322));
 		Tiles.mTiles.push_back(sRangeTile(3, 4, 323));
 
-		*pSurface = new cSurface(16 * 4, 16 * 5);
+		mCursorSurface= new cSurface(16 * 4, 16 * 5);
 	}
 
 	if (g_Fodder.mMap_TileSet  == eTileTypes_Int) {
@@ -271,13 +277,13 @@ sTiles cOFED::SetupHut(cSurface **pSurface) {
 		Tiles.mTiles.push_back(sRangeTile(0, 1, 266));
 
 
-		*pSurface = new cSurface(16 * 1, 16 * 2);
+		mCursorSurface= new cSurface(16 * 1, 16 * 2);
 	}
 
 	return Tiles;
 }
 
-sTiles cOFED::SetupBarracks(cSurface **pSurface) {
+sTiles cOFED::SetupBarracks() {
 	sTiles Tiles(true);
 
 	if (g_Fodder.mMap_TileSet  == eTileTypes_Jungle) {
@@ -297,7 +303,7 @@ sTiles cOFED::SetupBarracks(cSurface **pSurface) {
 		Tiles.mTiles.push_back(sRangeTile(1, 3, 393));
 		Tiles.mTiles.push_back(sRangeTile(2, 3, 394));
 
-		*pSurface = new cSurface(16 * 4, 16 * 4);
+		mCursorSurface= new cSurface(16 * 4, 16 * 4);
 	}
 
 	if (g_Fodder.mMap_TileSet  == eTileTypes_Ice) {
@@ -315,7 +321,7 @@ sTiles cOFED::SetupBarracks(cSurface **pSurface) {
 		Tiles.mTiles.push_back(sRangeTile(2, 2, 286));
 		Tiles.mTiles.push_back(sRangeTile(3, 2, 287));
 
-		*pSurface = new cSurface(16 * 4, 16 * 3);
+		mCursorSurface= new cSurface(16 * 4, 16 * 3);
 	}
 
 	if (g_Fodder.mMap_TileSet  == eTileTypes_Desert) {
@@ -331,7 +337,7 @@ sTiles cOFED::SetupBarracks(cSurface **pSurface) {
 		Tiles.mTiles.push_back(sRangeTile(1, 2, 237));
 		Tiles.mTiles.push_back(sRangeTile(2, 2, 238));
 
-		*pSurface = new cSurface(16 * 3, 16 * 3);
+		mCursorSurface= new cSurface(16 * 3, 16 * 3);
 	}
 
 	if (g_Fodder.mMap_TileSet  == eTileTypes_Moors) {
@@ -350,14 +356,108 @@ sTiles cOFED::SetupBarracks(cSurface **pSurface) {
 		Tiles.mTiles.push_back(sRangeTile(1, 3, 395));
 		Tiles.mTiles.push_back(sRangeTile(2, 3, 396));
 
-		*pSurface = new cSurface(16 * 3, 16 * 4);
+		mCursorSurface= new cSurface(16 * 3, 16 * 4);
 	}
 
 	if (g_Fodder.mMap_TileSet  == eTileTypes_Int) {
 		Tiles.mTiles.push_back(sRangeTile(0, 0, 246));
 		Tiles.mTiles.push_back(sRangeTile(0, 1, 266));
 
-		*pSurface = new cSurface(16 * 1, 16 * 2);
+		mCursorSurface= new cSurface(16 * 1, 16 * 2);
+	}
+
+	return Tiles;
+}
+
+
+sTiles cOFED::SetupBunker() {
+	sTiles Tiles(true);
+	
+	if (g_Fodder.mMap_TileSet  == eTileTypes_Jungle && mMapSub == 0) {
+		Tiles.mTiles.push_back(sRangeTile(0, 0, 267));
+		Tiles.mTiles.push_back(sRangeTile(1, 0, 268));
+		Tiles.mTiles.push_back(sRangeTile(2, 0, 269));
+
+		Tiles.mTiles.push_back(sRangeTile(0, 1, 287));
+		Tiles.mTiles.push_back(sRangeTile(1, 1, 288));
+		Tiles.mTiles.push_back(sRangeTile(2, 1, 289));
+		Tiles.mTiles.push_back(sRangeTile(3, 1, 330));
+
+		Tiles.mTiles.push_back(sRangeTile(0, 2, 307));
+		Tiles.mTiles.push_back(sRangeTile(1, 2, 308));
+		Tiles.mTiles.push_back(sRangeTile(2, 2, 309));
+		Tiles.mTiles.push_back(sRangeTile(3, 2, 350));
+
+		Tiles.mTiles.push_back(sRangeTile(0, 3, 315));
+		Tiles.mTiles.push_back(sRangeTile(1, 3, 316));
+		Tiles.mTiles.push_back(sRangeTile(2, 3, 317));
+		Tiles.mTiles.push_back(sRangeTile(3, 3, 371));
+
+		mCursorSurface = new cSurface(16 * 4, 16 * 4);
+	}
+
+	if (g_Fodder.mMap_TileSet  == eTileTypes_Desert) {
+		Tiles.mTiles.push_back(sRangeTile(0, 0, 9));
+		Tiles.mTiles.push_back(sRangeTile(1, 0, 10));
+		Tiles.mTiles.push_back(sRangeTile(2, 0, 11));
+
+		Tiles.mTiles.push_back(sRangeTile(0, 1, 29));
+		Tiles.mTiles.push_back(sRangeTile(1, 1, 30));
+		Tiles.mTiles.push_back(sRangeTile(2, 1, 31));
+
+		Tiles.mTiles.push_back(sRangeTile(0, 2, 49));
+		Tiles.mTiles.push_back(sRangeTile(1, 2, 50));
+		Tiles.mTiles.push_back(sRangeTile(2, 2, 51));
+
+		mCursorSurface= new cSurface(16 * 3, 16 * 3);
+	}
+
+	if (g_Fodder.mMap_TileSet  == eTileTypes_Ice) {
+		Tiles.mTiles.push_back(sRangeTile(0, 0, 307));
+		Tiles.mTiles.push_back(sRangeTile(1, 0, 308));
+		Tiles.mTiles.push_back(sRangeTile(2, 0, 309));
+		Tiles.mTiles.push_back(sRangeTile(3, 0, 310));
+
+		Tiles.mTiles.push_back(sRangeTile(0, 1, 327));
+		Tiles.mTiles.push_back(sRangeTile(1, 1, 328));
+		Tiles.mTiles.push_back(sRangeTile(2, 1, 329));
+		Tiles.mTiles.push_back(sRangeTile(3, 1, 330));
+
+		Tiles.mTiles.push_back(sRangeTile(0, 2, 347));
+		Tiles.mTiles.push_back(sRangeTile(1, 2, 348));
+		Tiles.mTiles.push_back(sRangeTile(2, 2, 349));
+		Tiles.mTiles.push_back(sRangeTile(3, 2, 350));
+
+		Tiles.mTiles.push_back(sRangeTile(0, 3, 367));
+		Tiles.mTiles.push_back(sRangeTile(1, 3, 368));
+		Tiles.mTiles.push_back(sRangeTile(2, 3, 369));
+		Tiles.mTiles.push_back(sRangeTile(3, 3, 370));
+
+		mCursorSurface= new cSurface(16 * 4, 16 * 4);
+	}
+
+	if (g_Fodder.mMap_TileSet  == eTileTypes_Moors) {
+		Tiles.mTiles.push_back(sRangeTile(0, 0, 160));
+		Tiles.mTiles.push_back(sRangeTile(1, 0, 161));
+		Tiles.mTiles.push_back(sRangeTile(2, 0, 162));
+
+		Tiles.mTiles.push_back(sRangeTile(0, 1, 180));
+		Tiles.mTiles.push_back(sRangeTile(1, 1, 181));
+		Tiles.mTiles.push_back(sRangeTile(2, 1, 182));
+
+		Tiles.mTiles.push_back(sRangeTile(0, 2, 200));
+		Tiles.mTiles.push_back(sRangeTile(1, 2, 201));
+		Tiles.mTiles.push_back(sRangeTile(2, 2, 202));
+
+		mCursorSurface= new cSurface(16 * 3, 16 * 3);
+	}
+
+
+	if (g_Fodder.mMap_TileSet  == eTileTypes_Int) {
+		Tiles.mTiles.push_back(sRangeTile(0, 0, 331));
+		Tiles.mTiles.push_back(sRangeTile(0, 1, 351));
+
+		mCursorSurface= new cSurface(16 * 1, 16 * 2);
 	}
 
 	return Tiles;
@@ -365,7 +465,7 @@ sTiles cOFED::SetupBarracks(cSurface **pSurface) {
 
 void cOFED::AddHut_With_Soldier() {
 
-	sTiles Tiles = SetupHut(&mCursorSurface);
+	sTiles Tiles = SetupHut();
 
 	if (g_Fodder.mMap_TileSet == eTileTypes_Jungle) {
 		Tiles.mSprites.push_back(sRangeSprite(20, 27, eSprite_BuildingDoor2));
@@ -394,7 +494,7 @@ void cOFED::AddHut_With_Soldier() {
 }
 
 void cOFED::AddHut_With_Indigenous() {
-	sTiles Tiles = SetupHut(&mCursorSurface);
+	sTiles Tiles = SetupHut();
 
 	if (g_Fodder.mMap_TileSet  == eTileTypes_Jungle) {
 		Tiles.mSprites.push_back(sRangeSprite(20, 27, eSprite_Door_Indigenous));
@@ -423,7 +523,7 @@ void cOFED::AddHut_With_Indigenous() {
 }
 
 void cOFED::AddHut_With_Indigenous_Spear() {
-	sTiles Tiles = SetupHut(&mCursorSurface);
+	sTiles Tiles = SetupHut();
 
 	if (g_Fodder.mMap_TileSet  == eTileTypes_Jungle) {
 		Tiles.mSprites.push_back(sRangeSprite(20, 27, eSprite_Door_Indigenous_Spear));
@@ -451,7 +551,7 @@ void cOFED::AddHut_With_Indigenous_Spear() {
 }
 
 void cOFED::AddBarracks_With_Soldier() {
-	sTiles Tiles = SetupBarracks(&mCursorSurface);
+	sTiles Tiles = SetupBarracks();
 
 	if (g_Fodder.mMap_TileSet  == eTileTypes_Jungle) {
 		Tiles.mSprites.push_back(sRangeSprite(13, 2, eSprite_BuildingRoof));
@@ -478,6 +578,229 @@ void cOFED::AddBarracks_With_Soldier() {
 	}
 
 	setCursorTiles(Tiles);
+	CursorUpdate();
+}
+
+void cOFED::AddBunker_With_Soldier() {
+	sTiles Tiles = SetupBunker();
+
+	if (g_Fodder.mMap_TileSet == eTileTypes_Jungle) {
+		Tiles.mSprites.push_back(sRangeSprite(23, 32, eSprite_BuildingDoor3));
+	}
+
+	if (g_Fodder.mMap_TileSet == eTileTypes_Desert) {
+		Tiles.mSprites.push_back(sRangeSprite(23, 32, eSprite_BuildingDoor3));
+	}
+
+	if (g_Fodder.mMap_TileSet == eTileTypes_Ice) {
+		Tiles.mSprites.push_back(sRangeSprite(23, 32, eSprite_BuildingDoor3));
+	}
+
+	if (g_Fodder.mMap_TileSet == eTileTypes_Moors) {
+		Tiles.mSprites.push_back(sRangeSprite(23, 32, eSprite_BuildingDoor3));
+	}
+
+	if (g_Fodder.mMap_TileSet == eTileTypes_Int) {
+		Tiles.mSprites.push_back(sRangeSprite(3, 3, eSprite_BuildingDoor3));
+	}
+
+	setCursorTiles(Tiles);
+	CursorUpdate();
+}
+
+void cOFED::AddBunker_With_SoldierReinforced() {
+	sTiles Tiles = SetupBunker();
+
+	if (g_Fodder.mMap_TileSet == eTileTypes_Jungle) {
+		Tiles.mSprites.push_back(sRangeSprite(23, 32, eSprite_BuildingDoor_Reinforced));
+	}
+
+	if (g_Fodder.mMap_TileSet == eTileTypes_Desert) {
+		Tiles.mSprites.push_back(sRangeSprite(23, 32, eSprite_BuildingDoor_Reinforced));
+	}
+
+	if (g_Fodder.mMap_TileSet == eTileTypes_Ice) {
+		Tiles.mSprites.push_back(sRangeSprite(23, 32, eSprite_BuildingDoor_Reinforced));
+	}
+
+	if (g_Fodder.mMap_TileSet == eTileTypes_Moors) {
+		Tiles.mSprites.push_back(sRangeSprite(23, 32, eSprite_BuildingDoor_Reinforced));
+	}
+
+	if (g_Fodder.mMap_TileSet == eTileTypes_Int) {
+		Tiles.mSprites.push_back(sRangeSprite(3, 3, eSprite_BuildingDoor_Reinforced));
+	}
+
+	setCursorTiles(Tiles);
+	CursorUpdate();
+}
+
+void cOFED::AddCliff() {
+	sTiles Tiles(true);
+	CursorReset();
+
+	if (g_Fodder.mMap_TileSet== eTileTypes_Ice) {
+		Tiles.mTiles.push_back(sRangeTile(0, 0, 120));
+		Tiles.mTiles.push_back(sRangeTile(1, 0, 121));
+		Tiles.mTiles.push_back(sRangeTile(2, 0, 122));
+		Tiles.mTiles.push_back(sRangeTile(3, 0, 123));
+		Tiles.mTiles.push_back(sRangeTile(4, 0, 124));
+		Tiles.mTiles.push_back(sRangeTile(5, 0, 125));
+		Tiles.mTiles.push_back(sRangeTile(6, 0, 126));
+		Tiles.mTiles.push_back(sRangeTile(7, 0, 127));
+
+		Tiles.mTiles.push_back(sRangeTile(0, 1, 140));
+		Tiles.mTiles.push_back(sRangeTile(1, 1, 141));
+		Tiles.mTiles.push_back(sRangeTile(2, 1, 142));
+		Tiles.mTiles.push_back(sRangeTile(3, 1, 143));
+		Tiles.mTiles.push_back(sRangeTile(4, 1, 144));
+		Tiles.mTiles.push_back(sRangeTile(5, 1, 145));
+		Tiles.mTiles.push_back(sRangeTile(6, 1, 146));
+		Tiles.mTiles.push_back(sRangeTile(7, 1, 147));
+
+		Tiles.mTiles.push_back(sRangeTile(0, 2, 160));
+		Tiles.mTiles.push_back(sRangeTile(1, 2, 161));
+		Tiles.mTiles.push_back(sRangeTile(2, 2, 162));
+		Tiles.mTiles.push_back(sRangeTile(3, 2, 163));
+		Tiles.mTiles.push_back(sRangeTile(4, 2, 164));
+		Tiles.mTiles.push_back(sRangeTile(5, 2, 165));
+		Tiles.mTiles.push_back(sRangeTile(6, 2, 166));
+		Tiles.mTiles.push_back(sRangeTile(7, 2, 167));
+
+		Tiles.mTiles.push_back(sRangeTile(0, 3, 180));
+		Tiles.mTiles.push_back(sRangeTile(1, 3, 181));
+		Tiles.mTiles.push_back(sRangeTile(2, 3, 182));
+		Tiles.mTiles.push_back(sRangeTile(3, 3, 183));
+		Tiles.mTiles.push_back(sRangeTile(4, 3, 184));
+		Tiles.mTiles.push_back(sRangeTile(5, 3, 185));
+		Tiles.mTiles.push_back(sRangeTile(6, 3, 186));
+		Tiles.mTiles.push_back(sRangeTile(7, 3, 187));
+
+		Tiles.mTiles.push_back(sRangeTile(0, 4, 200));
+		Tiles.mTiles.push_back(sRangeTile(1, 4, 201));
+		Tiles.mTiles.push_back(sRangeTile(2, 4, 202));
+		Tiles.mTiles.push_back(sRangeTile(3, 4, 203));
+		Tiles.mTiles.push_back(sRangeTile(4, 4, 204));
+		Tiles.mTiles.push_back(sRangeTile(5, 4, 205));
+		Tiles.mTiles.push_back(sRangeTile(6, 4, 206));
+		Tiles.mTiles.push_back(sRangeTile(7, 4, 207));
+
+		mCursorSurface = new cSurface(16 * 8, 16 * 5);
+	}
+
+	if (g_Fodder.mMap_TileSet== eTileTypes_Jungle) {
+		Tiles.mTiles.push_back(sRangeTile(0, 0, 89));
+		Tiles.mTiles.push_back(sRangeTile(1, 0, 90));
+		Tiles.mTiles.push_back(sRangeTile(2, 0, 91));
+		Tiles.mTiles.push_back(sRangeTile(3, 0, 92));
+		Tiles.mTiles.push_back(sRangeTile(4, 0, 93));
+		Tiles.mTiles.push_back(sRangeTile(5, 0, 94));
+
+		Tiles.mTiles.push_back(sRangeTile(0, 1, 109));
+		Tiles.mTiles.push_back(sRangeTile(1, 1, 110));
+		Tiles.mTiles.push_back(sRangeTile(2, 1, 111));
+		Tiles.mTiles.push_back(sRangeTile(3, 1, 112));
+		Tiles.mTiles.push_back(sRangeTile(4, 1, 113));
+		Tiles.mTiles.push_back(sRangeTile(5, 1, 114));
+
+		Tiles.mTiles.push_back(sRangeTile(0, 2, 129));
+		Tiles.mTiles.push_back(sRangeTile(1, 2, 130));
+		Tiles.mTiles.push_back(sRangeTile(2, 2, 131));
+		Tiles.mTiles.push_back(sRangeTile(3, 2, 132));
+		Tiles.mTiles.push_back(sRangeTile(4, 2, 133));
+		Tiles.mTiles.push_back(sRangeTile(5, 2, 134));
+
+		Tiles.mTiles.push_back(sRangeTile(0, 3, 149));
+		Tiles.mTiles.push_back(sRangeTile(1, 3, 150));
+		Tiles.mTiles.push_back(sRangeTile(2, 3, 151));
+		Tiles.mTiles.push_back(sRangeTile(3, 3, 152));
+		Tiles.mTiles.push_back(sRangeTile(4, 3, 153));
+		Tiles.mTiles.push_back(sRangeTile(5, 3, 154));
+
+		Tiles.mTiles.push_back(sRangeTile(0, 4, 169));
+		Tiles.mTiles.push_back(sRangeTile(1, 4, 170));
+		Tiles.mTiles.push_back(sRangeTile(2, 4, 171));
+		Tiles.mTiles.push_back(sRangeTile(3, 4, 172));
+		Tiles.mTiles.push_back(sRangeTile(4, 4, 173));
+		Tiles.mTiles.push_back(sRangeTile(5, 4, 174));
+
+		Tiles.mTiles.push_back(sRangeTile(0, 5, 189));
+		Tiles.mTiles.push_back(sRangeTile(1, 5, 190));
+		Tiles.mTiles.push_back(sRangeTile(2, 5, 191));
+		Tiles.mTiles.push_back(sRangeTile(3, 5, 192));
+		Tiles.mTiles.push_back(sRangeTile(4, 5, 193));
+		Tiles.mTiles.push_back(sRangeTile(5, 5, 194));
+
+		Tiles.mTiles.push_back(sRangeTile(4, 6, 213));
+		Tiles.mTiles.push_back(sRangeTile(5, 6, 214));
+
+		mCursorSurface = new cSurface(16 * 6, 16 * 6);
+	}
+
+
+	if (g_Fodder.mMap_TileSet== eTileTypes_Desert) {
+		Tiles.mTiles.push_back(sRangeTile(0, 0, 80));
+		Tiles.mTiles.push_back(sRangeTile(1, 0, 81));
+		Tiles.mTiles.push_back(sRangeTile(2, 0, 82));
+		Tiles.mTiles.push_back(sRangeTile(3, 0, 83));
+		Tiles.mTiles.push_back(sRangeTile(4, 0, 84));
+		Tiles.mTiles.push_back(sRangeTile(5, 0, 85));
+
+		Tiles.mTiles.push_back(sRangeTile(0, 1, 100));
+		Tiles.mTiles.push_back(sRangeTile(1, 1, 101));
+		Tiles.mTiles.push_back(sRangeTile(2, 1, 102));
+		Tiles.mTiles.push_back(sRangeTile(3, 1, 103));
+		Tiles.mTiles.push_back(sRangeTile(4, 1, 104));
+		Tiles.mTiles.push_back(sRangeTile(5, 1, 105));
+
+		Tiles.mTiles.push_back(sRangeTile(0, 2, 120));
+		Tiles.mTiles.push_back(sRangeTile(1, 2, 121));
+		Tiles.mTiles.push_back(sRangeTile(2, 2, 122));
+		Tiles.mTiles.push_back(sRangeTile(3, 2, 123));
+		Tiles.mTiles.push_back(sRangeTile(4, 2, 124));
+		Tiles.mTiles.push_back(sRangeTile(5, 2, 125));
+
+		Tiles.mTiles.push_back(sRangeTile(0, 3, 140));
+		Tiles.mTiles.push_back(sRangeTile(1, 3, 141));
+		Tiles.mTiles.push_back(sRangeTile(2, 3, 142));
+		Tiles.mTiles.push_back(sRangeTile(3, 3, 143));
+		Tiles.mTiles.push_back(sRangeTile(4, 3, 144));
+		Tiles.mTiles.push_back(sRangeTile(5, 3, 145));
+
+		Tiles.mTiles.push_back(sRangeTile(0, 4, 160));
+		Tiles.mTiles.push_back(sRangeTile(1, 4, 161));
+		Tiles.mTiles.push_back(sRangeTile(2, 4, 162));
+		Tiles.mTiles.push_back(sRangeTile(3, 4, 163));
+		Tiles.mTiles.push_back(sRangeTile(4, 4, 164));
+		Tiles.mTiles.push_back(sRangeTile(5, 4, 165));
+
+		Tiles.mTiles.push_back(sRangeTile(0, 5, 180));
+		Tiles.mTiles.push_back(sRangeTile(1, 5, 181));
+		Tiles.mTiles.push_back(sRangeTile(2, 5, 182));
+		Tiles.mTiles.push_back(sRangeTile(3, 5, 183));
+		Tiles.mTiles.push_back(sRangeTile(4, 5, 184));
+		Tiles.mTiles.push_back(sRangeTile(5, 5, 185));
+
+		Tiles.mTiles.push_back(sRangeTile(0, 6, 200));
+		Tiles.mTiles.push_back(sRangeTile(1, 6, 201));
+		Tiles.mTiles.push_back(sRangeTile(2, 6, 202));
+		Tiles.mTiles.push_back(sRangeTile(3, 6, 203));
+		Tiles.mTiles.push_back(sRangeTile(4, 6, 204));
+		Tiles.mTiles.push_back(sRangeTile(5, 6, 205));
+
+		Tiles.mTiles.push_back(sRangeTile(0, 7, 220));
+		Tiles.mTiles.push_back(sRangeTile(1, 7, 221));
+		Tiles.mTiles.push_back(sRangeTile(2, 7, 222));
+		Tiles.mTiles.push_back(sRangeTile(3, 7, 223));
+		Tiles.mTiles.push_back(sRangeTile(4, 7, 224));
+		Tiles.mTiles.push_back(sRangeTile(5, 7, 225));
+
+		mCursorSurface = new cSurface(16 * 6, 16 * 8);
+	}
+
+	if(Tiles.mTiles.size())
+		setCursorTiles(Tiles);
+
 	CursorUpdate();
 }
 
@@ -535,14 +858,14 @@ void cOFED::Create_NewMap(const std::string& pTileSet, const std::string& pTileS
 	for (auto TileType : mTileTypes) {
 
 		if (pTileSet == TileType.mFullName) {
-			size_t Sub = 0;
+			mMapSub = 0;
 
 			if (pTileSub == "Sub1")
-				Sub = 1;
+				mMapSub = 1;
 
 			CursorReset();
 
-			g_Fodder.Map_Create(TileType, Sub, pWidth, pHeight);
+			g_Fodder.Map_Create(TileType, mMapSub, pWidth, pHeight);
 			g_Window.FrameEnd();
 
 			// Update the Toolboxes

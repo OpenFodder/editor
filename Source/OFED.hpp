@@ -52,14 +52,20 @@ public:
 
 	void OpenFodder_Prepare();
 
-	sTiles SetupHut(cSurface **pSurface);
-	sTiles SetupBarracks(cSurface **pSurface);
+	sTiles SetupHut();
+	sTiles SetupBarracks();
+	sTiles SetupBunker();
 
 	void AddHut_With_Soldier();
 	void AddHut_With_Indigenous();
 	void AddHut_With_Indigenous_Spear();
 
 	void AddBarracks_With_Soldier();
+
+	void AddBunker_With_Soldier();
+	void AddBunker_With_SoldierReinforced();
+
+	void AddCliff();
 
 	void ShowDialog_LoadMap();
 	void ShowDialog_SaveMap();
@@ -92,4 +98,6 @@ private:
 	cSurface		*mCursorSurface;
 	QImage			 mCursorImage;
 	QImage			 mCursorImageFinal;
+
+	size_t			 mMapSub;
 };
