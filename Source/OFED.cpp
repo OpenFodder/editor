@@ -35,6 +35,7 @@ cOFED::cOFED(QWidget *parent)
 	}
 
 	Fodder->VersionSelect_0();
+	Fodder->mVersionDefault = Fodder->mVersion;
 
 	Fodder->Mouse_Setup();
 	Fodder->Mouse_Inputs_Get();

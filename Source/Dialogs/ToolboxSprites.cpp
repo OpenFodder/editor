@@ -32,7 +32,7 @@ void cToolboxSprites::RenderSprites() {
 
 	mSpriteRanges.clear();
 
-	g_Graphics.SetActiveSpriteSheet(eSPRITE_IN_GAME);
+	g_Graphics.SetActiveSpriteSheet(eGFX_IN_GAME);
 
 	for (size_t SpriteID = 0; SpriteID < 111; ++SpriteID) {
 		sSprite Sprite;
