@@ -93,14 +93,8 @@ void cWindowQT::leaveEvent(QEvent *pEvent) {
 
 void cWindowQT::CameraSetTiles() {
 
-	if (g_Fodder.mVersion->isAmiga()) {
 		mCameraTilesX = 0x15;
 		mCameraTilesY = 0x0F;
-	}
-	else {
-		mCameraTilesX = 0x15;
-		mCameraTilesY = 0x0F;
-	}
 }
 void cWindowQT::CameraTilesUpdate() {
 	mScaleWidth = (static_cast<double>(size().width()) / static_cast<double>(mScreenSize.mWidth));
@@ -133,6 +127,10 @@ void cWindowQT::CameraUpdate() {
 			for (auto Tile : g_OFED->GetCursorRangeTiles().mTiles) {
 
 				g_Fodder.MapTile_Set(TileX + Tile.mX, TileY + Tile.mY, Tile.mTileID);
+			}
+
+			for (auto Sprite : g_OFED->GetCursorRangeTiles().mSprites) {
+				g_Fodder.Sprite_Add(Sprite.mSpriteID, Sprite.mX, Sprite.mY);
 			}
 
 			if (g_OFED->GetCursorRangeTiles().mOnce) {
@@ -168,29 +166,15 @@ void cWindowQT::CameraUpdate() {
 
 	// Right
 	if (Fodder->mMousePosition.mX > Width - mEdgeWidth) {
-		if (Fodder->mMapTile_MovedHorizontal < Fodder->mMapWidth - mCameraTilesX) {
+		if (Fodder->mMapTile_MovedHorizontal < (Fodder->mMapWidth  + 4) - mCameraTilesX) {
 			g_Fodder.MapTile_Move_Right(1);
 		}
 	}
 
-	auto Start = 0x60 - (Fodder->mMapWidth * 2);
 
-	if (g_Fodder.mMapTilePtr < (0x60 - (Fodder->mMapWidth * 2)))
-		g_Fodder.mMapTilePtr = 0x60 - (Fodder->mMapWidth * 2);
-
-	// 
-	{
-		auto CameraWidth = (mCameraTilesX * 2);
-		auto CameraHeight = ((mCameraTilesY) * Fodder->mMapWidth) * 2;
-
-		auto Right = g_Fodder.mMap->begin() + CameraWidth;
-		auto MaxRight = (g_Fodder.mMap->begin() + g_Fodder.mMap->size()) - CameraHeight - CameraWidth;
-
-		if (Right > MaxRight) {
-			g_Fodder.mMapTilePtr = g_Fodder.mMap->begin() - MaxRight;
-		}
-	}
 	g_Graphics.MapTiles_Draw();
+	Fodder->Mission_Sprites_Handle();
+
 	FrameEnd();
 }
 

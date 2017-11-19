@@ -98,6 +98,8 @@ void cOFED::OpenFodder_Prepare() {
 	Fodder->mMission_Aborted = 0;
 
 	Fodder->MapTiles_Draw();
+	Fodder->Sprite_Handle_Loop();
+
 	Fodder->Camera_Reset();
 
 	Fodder->Mouse_Inputs_Get();
@@ -133,8 +135,11 @@ void cOFED::OpenFodder_Prepare() {
 	//Fodder->Map_Tiles_Draw();
 
 	// Set the top left
-	Fodder->mMapTilePtr = 0x60 - Fodder->mMapWidth * 2;
+	Fodder->mMapTilePtr = (0x60 - 8) - (Fodder->mMapWidth * 2);
 	g_Graphics.MapTiles_Draw();
+
+	Fodder->Mission_Sprites_Handle();
+
 	g_Window.FrameEnd();
 }
 
@@ -822,7 +827,9 @@ void cOFED::ShowDialog_LoadMap() {
 
 	g_Fodder.Map_Load();
 	g_Fodder.Map_Load_Sprites();
+
 	g_Fodder.MapTiles_Draw();
+	g_Fodder.Sprite_Handle_Loop();
 
 	g_Graphics.PaletteSet();
 	g_Fodder.mImage->surfaceSetToPaletteNew();
