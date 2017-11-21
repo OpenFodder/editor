@@ -62,10 +62,23 @@
      <addaction name="action_Hut_Indeigenous"/>
      <addaction name="action_Hut_Indigenous_With_Spear"/>
     </widget>
+    <widget class="QMenu" name="menuBarracks">
+     <property name="title">
+      <string>Barracks</string>
+     </property>
+     <addaction name="action_Barracks_Soldier"/>
+    </widget>
+    <widget class="QMenu" name="menuBunker">
+     <property name="title">
+      <string>Bunker</string>
+     </property>
+     <addaction name="action_Bunker_Soldier"/>
+     <addaction name="action_Bunker_Soldier_Reinforced"/>
+    </widget>
     <addaction name="menuHut"/>
-    <addaction name="actionBraracks"/>
-    <addaction name="actionBunker"/>
-    <addaction name="actionCliff"/>
+    <addaction name="menuBarracks"/>
+    <addaction name="menuBunker"/>
+    <addaction name="action_Cliff"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menuInsert"/>
@@ -119,19 +132,24 @@
     <string>Indigenous With Spear</string>
    </property>
   </action>
-  <action name="actionBraracks">
-   <property name="text">
-    <string>Barracks</string>
-   </property>
-  </action>
-  <action name="actionBunker">
-   <property name="text">
-    <string>Bunker</string>
-   </property>
-  </action>
-  <action name="actionCliff">
+  <action name="action_Cliff">
    <property name="text">
     <string>Cliff</string>
+   </property>
+  </action>
+  <action name="action_Barracks_Soldier">
+   <property name="text">
+    <string>Soldier</string>
+   </property>
+  </action>
+  <action name="action_Bunker_Soldier">
+   <property name="text">
+    <string>Soldier</string>
+   </property>
+  </action>
+  <action name="action_Bunker_Soldier_Reinforced">
+   <property name="text">
+    <string>Soldier Reinforced</string>
    </property>
   </action>
  </widget>
