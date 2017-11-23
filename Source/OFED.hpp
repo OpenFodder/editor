@@ -75,7 +75,7 @@ public:
 	void ShowDialog_ToolboxTiles();
 	void ShowDialog_ToolboxSprites();
 
-	void Create_NewMap(const std::string& pTileSet, const std::string& pTileSub, size_t pWidth, size_t pHeight);
+	void Create_NewMap(const std::string& pTileSet, const std::string& pTileSub, size_t pWidth, size_t pHeight, const bool pRandom);
 
 	void SetCursorTileID(const size_t pCursorTile);
 	void setCursorTiles( sTiles& pTiles);

@@ -132,8 +132,6 @@ void cOFED::OpenFodder_Prepare() {
 
 	Fodder->mImage->surfaceSetToPaletteNew();
 
-	//Fodder->Map_Tiles_Draw();
-
 	// Set the top left
 	Fodder->mMapTilePtr = (0x60 - 8) - (Fodder->mMapWidth * 2);
 	g_Graphics.MapTiles_Draw();
@@ -851,7 +849,7 @@ void cOFED::ShowDialog_SaveMap() {
 /**
  * Create a new map
  */
-void cOFED::Create_NewMap(const std::string& pTileSet, const std::string& pTileSub, size_t pWidth, size_t pHeight) {
+void cOFED::Create_NewMap(const std::string& pTileSet, const std::string& pTileSub, size_t pWidth, size_t pHeight, bool pRandom) {
 	
 	// Loop each known tile type
 	for (auto TileType : mTileTypes) {
@@ -864,7 +862,7 @@ void cOFED::Create_NewMap(const std::string& pTileSet, const std::string& pTileS
 
 			CursorReset();
 
-			g_Fodder.Map_Create(TileType, mMapSub, pWidth, pHeight);
+			g_Fodder.Map_Create(TileType, mMapSub, pWidth, pHeight, pRandom);
 			g_Window.FrameEnd();
 
 			// Update the Toolboxes

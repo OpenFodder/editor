@@ -16,14 +16,18 @@ cNewMapDialog::cNewMapDialog(QWidget *parent, Qt::WindowFlags f) : QDialog(paren
 	mUi->mTileSub->addItem("Sub1");
 
 	// 19 x 15 Map Default
-	mUi->mWidth->setText("19");
-	mUi->mHeight->setText("15");
+	mUi->mWidth->setText("22");
+	mUi->mHeight->setText("22");
 }
 
 void cNewMapDialog::accept() {
 
 	size_t Width = mUi->mWidth->toPlainText().toUInt();
 	size_t Height = mUi->mHeight->toPlainText().toUInt();
+
+	bool Random = false;
+
+	Random = mUi->mRandomise->isChecked();
 
 	// Invalid Width/Height ?
 	if (!Width || !Height)
@@ -32,7 +36,7 @@ void cNewMapDialog::accept() {
 	g_OFED->Create_NewMap( 
 		mUi->mTerrainType->itemText(mUi->mTerrainType->currentIndex()).toStdString(), 
 		mUi->mTileSub->itemText(mUi->mTileSub->currentIndex()).toStdString(),
-		Width, Height);
+		Width, Height, Random);
 
 	QDialog::accept();
 }

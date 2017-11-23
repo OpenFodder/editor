@@ -96,6 +96,7 @@
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Sprites.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\SpriteSheet.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\stdafx.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Structures\Barracks.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Surface.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Tiles.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Versions.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Sprites.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\SpriteSheet.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\stdafx.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Structures\Barracks.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Surface.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Tiles.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Types.hpp" />

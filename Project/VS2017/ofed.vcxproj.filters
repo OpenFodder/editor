@@ -39,6 +39,9 @@
     <Filter Include="OpenFodder\Utils">
       <UniqueIdentifier>{54ebd8f1-b802-410f-8a6f-61086d1e2895}</UniqueIdentifier>
     </Filter>
+    <Filter Include="OpenFodder\Structures">
+      <UniqueIdentifier>{a2aeca45-f55d-42c0-9c1f-93d317321791}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\qrc_ofed.cpp">
@@ -157,6 +160,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Campaign.cpp">
       <Filter>OpenFodder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Structures\Barracks.cpp">
+      <Filter>OpenFodder\Structures</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -320,6 +326,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Campaign.hpp">
       <Filter>OpenFodder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Structures\Barracks.hpp">
+      <Filter>OpenFodder\Structures</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
