@@ -81,6 +81,7 @@
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Event.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Fodder.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\FontData.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\GameData.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Graphics.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\GUI_Element.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\md5.cpp" />
@@ -146,6 +147,7 @@
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Event.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Fodder.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\FontData.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\GameData.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Graphics.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\GUI_Element.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\IntroData.hpp" />

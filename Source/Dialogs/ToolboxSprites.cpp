@@ -27,8 +27,8 @@ void cToolboxSprites::RenderSprites() {
 
 	size_t X = 0, Y = 0;
 	size_t BigY = 0;
-	size_t MultiplierX = g_Fodder.mVersion->mPlatform == ePlatform::Amiga ? 8 : 1;
-	size_t MultiplierY = g_Fodder.mVersion->mPlatform == ePlatform::Amiga ? 1 : 1;
+	size_t MultiplierX = g_Fodder.mVersionCurrent->mPlatform == ePlatform::Amiga ? 8 : 1;
+	size_t MultiplierY = g_Fodder.mVersionCurrent->mPlatform == ePlatform::Amiga ? 1 : 1;
 
 	mSpriteRanges.clear();
 
@@ -41,10 +41,10 @@ void cToolboxSprites::RenderSprites() {
 		if (AnimID < 0)
 			continue;
 
-		size_t SpriteWidth = g_Fodder.mSpriteSheetPtr[AnimID][0].mColCount  ;
-		size_t SpriteHeight = g_Fodder.mSpriteSheetPtr[AnimID][0].mRowCount ;
+		size_t SpriteWidth = g_Fodder.mSprite_SheetPtr[AnimID][0].mColCount  ;
+		size_t SpriteHeight = g_Fodder.mSprite_SheetPtr[AnimID][0].mRowCount ;
 
-		if (g_Fodder.mVersion->mPlatform == ePlatform::Amiga) {
+		if (g_Fodder.mVersionCurrent->mPlatform == ePlatform::Amiga) {
 			SpriteWidth -= 1;
 			SpriteWidth <<= 1;
 			SpriteWidth *= MultiplierX;

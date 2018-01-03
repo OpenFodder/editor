@@ -50,8 +50,8 @@ cOFED::cOFED(QWidget *parent)
 		return;
 	}
 
-	Fodder->VersionSelect_0();
-	Fodder->mVersionDefault = Fodder->mVersion;
+	Fodder->VersionLoad(g_AvailableDataVersions[0]);
+	Fodder->mVersionDefault = Fodder->mVersionCurrent;
 
 	Fodder->Mouse_Setup();
 	Fodder->Mouse_Inputs_Get();
@@ -130,10 +130,10 @@ void cOFED::OpenFodder_Prepare() {
 	Fodder->mMission_Finished = 0;
 	Fodder->mMission_ShowMapOverview = 0;
 
-	Fodder->mImage->surfaceSetToPaletteNew();
+	Fodder->mSurface->surfaceSetToPaletteNew();
 
 	// Set the top left
-	Fodder->mMapTilePtr = (0x60 - 8) - (Fodder->mMapWidth * 2);
+	Fodder->mMapTile_Ptr = (0x60 - 8) - (Fodder->mMapWidth * 2);
 	g_Graphics.MapTiles_Draw();
 
 	Fodder->Mission_Sprites_Handle();
@@ -822,7 +822,7 @@ void cOFED::ShowDialog_LoadMap() {
 	g_Fodder.Sprite_Handle_Loop();
 
 	g_Graphics.PaletteSet();
-	g_Fodder.mImage->surfaceSetToPaletteNew();
+	g_Fodder.mSurface->surfaceSetToPaletteNew();
 
 	g_Window.FrameEnd();
 

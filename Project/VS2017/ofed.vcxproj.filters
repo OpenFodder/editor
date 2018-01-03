@@ -164,6 +164,9 @@
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Structures\Barracks.cpp">
       <Filter>OpenFodder\Structures</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\GameData.cpp">
+      <Filter>OpenFodder</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="ofed.ui">
@@ -329,6 +332,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Structures\Barracks.hpp">
       <Filter>OpenFodder\Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\GameData.hpp">
+      <Filter>OpenFodder</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

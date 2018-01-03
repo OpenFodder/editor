@@ -41,7 +41,7 @@ cWindowQT::cWindowQT(QWidget* pParent) : QWidget(pParent), cWindow() {
 
 void cWindowQT::FrameEnd() {
 
-	RenderAt(g_Fodder.mImage);
+	RenderAt(g_Fodder.mSurface);
 	this->repaint();
 }
 
