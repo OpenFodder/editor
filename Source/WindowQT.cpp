@@ -94,7 +94,7 @@ void cWindowQT::leaveEvent(QEvent *pEvent) {
 void cWindowQT::CameraSetTiles() {
 
 		mCameraTilesX = 0x15;
-		mCameraTilesY = 0x0F;
+		mCameraTilesY = VERSION_BASED(0x0c, 0x0E);
 }
 void cWindowQT::CameraTilesUpdate() {
 	mScaleWidth = (static_cast<double>(size().width()) / static_cast<double>(mScreenSize.mWidth));
