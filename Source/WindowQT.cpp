@@ -125,29 +125,38 @@ void cWindowQT::CameraUpdate() {
 			uint32 TileX = (g_Fodder->mMouse_EventLastPosition.mX ) / 16;
 			uint32 TileY = (g_Fodder->mMouse_EventLastPosition.mY ) / 16;
 
-			for (auto Tile : g_OFED->GetCursorRangeTiles().mTiles) {
+            // Adding tiles
+            if(g_OFED->GetCursorRangeTiles().mTiles.size()) {
+            
+                for (auto Tile : g_OFED->GetCursorRangeTiles().mTiles) {
 
-				g_Fodder->MapTile_Set(TileX + Tile.mX, TileY + Tile.mY, Tile.mTileID);
-			}
+                    g_Fodder->MapTile_Set(TileX + Tile.mX, TileY + Tile.mY, Tile.mTileID);
+                }
 
-			for (auto Sprite : g_OFED->GetCursorRangeTiles().mSprites) {
-                TileX += g_Fodder->mMapTile_MovedHorizontal;
-                TileY += g_Fodder->mMapTile_MovedVertical;
+                for (auto Sprite : g_OFED->GetCursorRangeTiles().mSprites) {
+                    TileX += g_Fodder->mMapTile_MovedHorizontal;
+                    TileY += g_Fodder->mMapTile_MovedVertical;
 
-				g_Fodder->Sprite_Add(Sprite.mSpriteID, 
-                    ((TileX) * 16) + Sprite.mX - 0x40 - 1,
-                    ((TileY) * 16) + Sprite.mY );
-			}
+                    g_Fodder->Sprite_Add(Sprite.mSpriteID,
+                        ((TileX) * 16) + Sprite.mX - 0x40 - 1,
+                        ((TileY) * 16) + Sprite.mY);
+                }
 
-            if (g_OFED->GetCursorSpriteID() != -1) {
-                TileX += g_Fodder->mMapTile_MovedHorizontal;
-                TileY += g_Fodder->mMapTile_MovedVertical;
+            } else {
+                // Adding a sprite?
+                if (g_OFED->GetCursorSpriteID() != -1) {
+                    TileX += g_Fodder->mMapTile_MovedHorizontal;
+                    TileY += g_Fodder->mMapTile_MovedVertical;
 
-                auto Sheet = g_Fodder->Sprite_Get_Sheet(g_OFED->GetCursorSpriteID(), 0);
+                    auto Sheet = g_Fodder->Sprite_Get_Sheet(g_OFED->GetCursorSpriteID(), 0);
 
-                g_Fodder->Sprite_Add(g_OFED->GetCursorSpriteID(), 
-                    ((TileX) * 16) - Sheet->mModX - 0x32,
-                    ((TileY) * 16) + Sheet->mModY);
+                    g_Fodder->Sprite_Add(g_OFED->GetCursorSpriteID(),
+                        ((TileX) * 16) - Sheet->mModX - 0x32,
+                        ((TileY) * 16) + Sheet->mModY);
+
+                    // Prevent adding a sprite more than once
+                    g_Fodder->mMouse_EventLastButtonsPressed &= ~1;
+                }
             } 
 
 			if (g_OFED->GetCursorRangeTiles().mOnce) {
@@ -155,7 +164,7 @@ void cWindowQT::CameraUpdate() {
 			}
 		}
 
-        g_Fodder->mMouse_EventLastButtonsPressed &= ~1;
+        
 	}
 
     if (g_Fodder->mMouse_EventLastButtonsPressed & 2) {
