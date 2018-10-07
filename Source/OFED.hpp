@@ -80,13 +80,15 @@ public:
 	void SetCursorTileID(const size_t pCursorTile);
 	void setCursorTiles( sTiles& pTiles);
 
+    void SetCursorSprite( const size_t pSpriteID );
+
 	void CursorUpdate();
 	void CursorReset();
 
 	void SetupSprites();
 
 	sTiles GetCursorRangeTiles() { return mCursorRangeTiles; }
-
+    int16 GetCursorSpriteID() { return mCursorSprite; }
 private:
 	Ui::mOFED ui;
 	cToolboxTiles*	mToolboxTiles;

@@ -33,7 +33,7 @@ void cToolboxTiles::RenderTiles() {
 	for (int16 TileNumber = 0; TileNumber < 480; ++TileNumber) {
 
 		// Draw tile
-		g_Graphics.Map_Tile_Draw(mTileSurface, TileNumber, X, Y, 2);
+		g_Fodder->mGraphics->Map_Tile_Draw(mTileSurface, TileNumber, X, Y, 2);
 
 		// Next tile position
 		++X;
@@ -46,7 +46,7 @@ void cToolboxTiles::RenderTiles() {
 	}
 
 	// Load the tileset palette to the surface
-	g_Graphics.PaletteSet(mTileSurface);
+	g_Fodder->mGraphics->PaletteSet(mTileSurface);
 	mTileSurface->surfaceSetToPaletteNew();
 
 	// Draw the final image

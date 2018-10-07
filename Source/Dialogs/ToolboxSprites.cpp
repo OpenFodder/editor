@@ -27,12 +27,12 @@ void cToolboxSprites::RenderSprites() {
 
 	size_t X = 0, Y = 0;
 	size_t BigY = 0;
-	size_t MultiplierX = g_Fodder.mVersionCurrent->mPlatform == ePlatform::Amiga ? 8 : 1;
-	size_t MultiplierY = g_Fodder.mVersionCurrent->mPlatform == ePlatform::Amiga ? 1 : 1;
+	size_t MultiplierX = g_Fodder->mVersionCurrent->mPlatform == ePlatform::Amiga ? 8 : 1;
+	size_t MultiplierY = g_Fodder->mVersionCurrent->mPlatform == ePlatform::Amiga ? 1 : 1;
 
 	mSpriteRanges.clear();
 
-	g_Graphics.SetActiveSpriteSheet(eGFX_IN_GAME);
+	g_Fodder->mGraphics->SetActiveSpriteSheet(eGFX_IN_GAME);
 
 	for (size_t SpriteID = 0; SpriteID < 111; ++SpriteID) {
 		sSprite Sprite;
@@ -41,10 +41,10 @@ void cToolboxSprites::RenderSprites() {
 		if (AnimID < 0)
 			continue;
 
-		size_t SpriteWidth = g_Fodder.mSprite_SheetPtr[AnimID][0].mColCount  ;
-		size_t SpriteHeight = g_Fodder.mSprite_SheetPtr[AnimID][0].mRowCount ;
+		size_t SpriteWidth = g_Fodder->mSprite_SheetPtr[AnimID][0].mColCount  ;
+		size_t SpriteHeight = g_Fodder->mSprite_SheetPtr[AnimID][0].mRowCount ;
 
-		if (g_Fodder.mVersionCurrent->mPlatform == ePlatform::Amiga) {
+		if (g_Fodder->mVersionCurrent->mPlatform == ePlatform::Amiga) {
 			SpriteWidth -= 1;
 			SpriteWidth <<= 1;
 			SpriteWidth *= MultiplierX;
@@ -56,8 +56,8 @@ void cToolboxSprites::RenderSprites() {
 
 		cSurface *Surface = new cSurface(SpriteWidth , SpriteHeight );
 
-		g_Graphics.PaletteSet(Surface);
-		g_Fodder.Sprite_Draw_Frame(&Sprite, AnimID, 0, Surface);
+		g_Fodder->mGraphics->PaletteSet(Surface);
+		g_Fodder->Sprite_Draw_Frame(&Sprite, AnimID, 0, Surface);
 
 		if (X + SpriteWidth > (20 * 17)) {
 			X = 0;
@@ -79,7 +79,7 @@ void cToolboxSprites::RenderSprites() {
 		DstRect.w = SpriteWidth ;
 		DstRect.h = SpriteHeight ;
 
-		g_Graphics.PaletteSet(Surface);
+		g_Fodder->mGraphics->PaletteSet(Surface);
 		Surface->surfaceSetToPaletteNew();
 		Surface->draw();
 
@@ -131,6 +131,15 @@ void cToolboxSprites::mousePressEvent(QMouseEvent *eventPress) {
 
 	if (eventPress->button() == Qt::MouseButton::LeftButton) {
 
-		g_OFED->SetCursorTileID(TileID);
+        for( auto& Range : mSpriteRanges ) {
+
+            if (MouseX >= Range.mX && MouseX <= Range.mX + Range.mWidth) {
+                if (MouseY >= Range.mY && MouseY <= Range.mY + Range.mHeight) {
+
+                    g_OFED->SetCursorSprite(Range.mSpriteID);
+                    return;
+                }
+            }
+        }
 	}
 }
