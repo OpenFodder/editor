@@ -43,8 +43,18 @@
     <property name="title">
      <string>&amp;File</string>
     </property>
-    <addaction name="action_New_Map"/>
+    <widget class="QMenu" name="menuCampaign_New">
+     <property name="title">
+      <string>Campaign</string>
+     </property>
+     <addaction name="actionCampaign_New"/>
+     <addaction name="separator"/>
+     <addaction name="actionCampaign_Load"/>
+     <addaction name="actionCampaign_Save"/>
+    </widget>
+    <addaction name="menuCampaign_New"/>
     <addaction name="separator"/>
+    <addaction name="action_New_Map"/>
     <addaction name="action_Load_Map"/>
     <addaction name="action_Save_Map"/>
     <addaction name="separator"/>
@@ -150,6 +160,41 @@
   <action name="action_Bunker_Soldier_Reinforced">
    <property name="text">
     <string>Soldier Reinforced</string>
+   </property>
+  </action>
+  <action name="actionNew_Campaign">
+   <property name="text">
+    <string>New Campaign</string>
+   </property>
+  </action>
+  <action name="actionLoad_Campaign">
+   <property name="text">
+    <string>Load Campaign</string>
+   </property>
+  </action>
+  <action name="actionSave_Campaign">
+   <property name="text">
+    <string>Save Campaign</string>
+   </property>
+  </action>
+  <action name="actionNew">
+   <property name="text">
+    <string>New</string>
+   </property>
+  </action>
+  <action name="actionCampaign_New">
+   <property name="text">
+    <string>New</string>
+   </property>
+  </action>
+  <action name="actionCampaign_Save">
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </action>
+  <action name="actionCampaign_Load">
+   <property name="text">
+    <string>Load</string>
    </property>
   </action>
  </widget>

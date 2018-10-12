@@ -49,6 +49,7 @@ protected:
 
 public:
 	cOFED(QWidget *parent = Q_NULLPTR);
+    ~cOFED();
 
 	void OpenFodder_Prepare();
 
@@ -66,6 +67,10 @@ public:
 	void AddBunker_With_SoldierReinforced();
 
 	void AddCliff();
+
+    void ShowDialog_NewCampaign();
+    void ShowDialog_LoadCampaign();
+    void ShowDialog_SaveCampaign();
 
 	void ShowDialog_LoadMap();
 	void ShowDialog_SaveMap();
@@ -97,7 +102,7 @@ private:
 	int16	mCursorSprite;
 	sTiles	mCursorRangeTiles;
 
-	cSurface		*mCursorSurface;
+	std::shared_ptr<cSurface> mCursorSurface;
 	QImage			 mCursorImage;
 	QImage			 mCursorImageFinal;
 

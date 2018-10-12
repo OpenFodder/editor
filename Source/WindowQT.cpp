@@ -167,6 +167,7 @@ void cWindowQT::CameraUpdate() {
         
 	}
 
+    // Tick the engine on right click
     if (g_Fodder->mMouse_EventLastButtonsPressed & 2) {
         g_Fodder->Sprite_Handle_Loop();
     }

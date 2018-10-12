@@ -102,6 +102,7 @@
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Tiles.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Versions.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Window.cpp" />
+    <ClCompile Include="..\..\Source\Dialogs\CampaignDialog.cpp" />
     <ClCompile Include="..\..\Source\Dialogs\NewMapDialog.cpp" />
     <ClCompile Include="..\..\Source\Dialogs\ToolboxSprites.cpp" />
     <ClCompile Include="..\..\Source\Dialogs\ToolboxTiles.cpp" />
@@ -172,11 +173,14 @@
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Surface.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Tiles.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Types.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Utils\json.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Versions.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Window.hpp" />
+    <ClInclude Include="..\..\Source\Dialogs\CampaignDialog.hpp" />
     <ClInclude Include="..\..\Source\Dialogs\NewMapDialog.hpp" />
     <ClInclude Include="..\..\Source\Dialogs\ToolboxSprites.hpp" />
     <ClInclude Include="..\..\Source\Dialogs\ToolboxTiles.hpp" />
+    <ClInclude Include="GeneratedFiles\ui_CampaignDialog.h" />
     <ClInclude Include="GeneratedFiles\ui_ToolboxSprites.h" />
     <ClInclude Include="GeneratedFiles\ui_ToolboxTiles.h" />
     <CustomBuild Include="..\..\Source\ofed.hpp">
@@ -228,6 +232,16 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
     </CustomBuild>
     <CustomBuild Include="..\..\Source\Dialogs\ToolboxSprites.ui">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Uic%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Uic%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
+    </CustomBuild>
+    <CustomBuild Include="..\..\Source\Dialogs\CampaignDialog.ui">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Uic%27ing %(Identity)...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>

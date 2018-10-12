@@ -9,6 +9,8 @@
 
 #include "stdafx.hpp"
 #include "WindowQT.hpp"
+
+#include "Dialogs//CampaignDialog.hpp"
 #include "Dialogs//NewMapDialog.hpp"
 #include "Dialogs//ToolboxTiles.hpp"
 #include "Dialogs//ToolboxSprites.hpp"

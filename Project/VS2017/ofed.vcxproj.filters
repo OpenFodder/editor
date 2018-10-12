@@ -167,6 +167,9 @@
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\GameData.cpp">
       <Filter>OpenFodder</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Dialogs\CampaignDialog.cpp">
+      <Filter>Source Files\Dialog</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="ofed.ui">
@@ -185,6 +188,9 @@
       <Filter>Source Files\Dialog</Filter>
     </CustomBuild>
     <CustomBuild Include="..\..\Source\Dialogs\ToolboxSprites.ui">
+      <Filter>Source Files\Dialog</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\Source\Dialogs\CampaignDialog.ui">
       <Filter>Source Files\Dialog</Filter>
     </CustomBuild>
   </ItemGroup>
@@ -335,6 +341,15 @@
     </ClInclude>
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\GameData.hpp">
       <Filter>OpenFodder</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_CampaignDialog.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Dialogs\CampaignDialog.hpp">
+      <Filter>Source Files\Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Utils\json.hpp">
+      <Filter>OpenFodder\Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

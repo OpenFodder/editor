@@ -9,6 +9,11 @@
 int32 g_SpriteAnim[111] = {};
 std::string g_SpriteName[111] = {};
 
+cOFED::~cOFED() {
+
+    ui.verticalLayout->removeWidget(ui.mSurface);
+    ui.mSurface = 0;
+}
 
 cOFED::cOFED(QWidget *parent)
 	: QMainWindow(parent)
@@ -20,15 +25,19 @@ cOFED::cOFED(QWidget *parent)
     mMapSub = 0;
 
     delete ui.mSurface;
-    g_Window = std::make_unique<cWindowQT>(ui.centralWidget);
+    g_Window = std::make_shared<cWindowQT> (ui.centralWidget);
     ui.mSurface = (cWindowQT*) &(*g_Window);
     ui.verticalLayout->addWidget(ui.mSurface);
 
-	mCursorSurface = new cSurface(16, 16);
+	mCursorSurface = std::make_shared<cSurface>(16, 16);
 
 	SetupSprites();
 
 	// Menu Items
+    QObject::connect(ui.actionCampaign_New, &QAction::triggered, this, &cOFED::ShowDialog_NewCampaign);
+    QObject::connect(ui.actionCampaign_Load, &QAction::triggered, this, &cOFED::ShowDialog_LoadCampaign);
+    QObject::connect(ui.actionCampaign_Save, &QAction::triggered, this, &cOFED::ShowDialog_SaveCampaign);
+
 	QObject::connect(ui.action_New_Map, &QAction::triggered, this, &cOFED::ShowDialog_NewMap);
 	QObject::connect(ui.action_Load_Map, &QAction::triggered, this, &cOFED::ShowDialog_LoadMap);
 	QObject::connect(ui.action_Save_Map, &QAction::triggered, this, &cOFED::ShowDialog_SaveMap);
@@ -80,8 +89,12 @@ cOFED::cOFED(QWidget *parent)
 }
 
 void cOFED::OpenFodder_Prepare() {
-	g_Fodder->Game_Setup(0);
-	g_Fodder->Campaign_Load("Cannon Fodder");
+
+    if (!g_Fodder->Campaign_Load("Cannon Fodder")) {
+        // TODO: Fail
+        exit(1);
+    }
+    g_Fodder->Game_Setup(1);
 
 	g_Fodder->Mission_Memory_Clear();
 	g_Fodder->Mission_Prepare_Squads();
@@ -205,7 +218,7 @@ sTiles cOFED::SetupHut() {
 		Tiles.mTiles.push_back(sRangeTile(1, 2, 296));
 		Tiles.mTiles.push_back(sRangeTile(2, 2, 297));
 
-		mCursorSurface= new cSurface(16 * 3, 16 * 3);
+		 mCursorSurface = std::make_shared<cSurface>(16 * 3, 16 * 3);
 	}
 
 	if (g_Fodder->mMap_TileSet  == eTileTypes_Desert) {
@@ -229,7 +242,7 @@ sTiles cOFED::SetupHut() {
 		Tiles.mTiles.push_back(sRangeTile(2, 3, 119));
 		Tiles.mTiles.push_back(sRangeTile(3, 3, 78));
 
-		mCursorSurface= new cSurface(16 * 4, 16 * 4);
+		 mCursorSurface = std::make_shared<cSurface>(16 * 4, 16 * 4);
 	}
 
 	if (g_Fodder->mMap_TileSet  == eTileTypes_Ice) {
@@ -248,7 +261,7 @@ sTiles cOFED::SetupHut() {
 		Tiles.mTiles.push_back(sRangeTile(2, 2, 282));
 		Tiles.mTiles.push_back(sRangeTile(3, 2, 283));
 
-		mCursorSurface= new cSurface(16 * 4, 16 * 3);
+		 mCursorSurface = std::make_shared<cSurface>(16 * 4, 16 * 3);
 	}
 
 	if (g_Fodder->mMap_TileSet  == eTileTypes_Moors) {
@@ -278,7 +291,7 @@ sTiles cOFED::SetupHut() {
 		Tiles.mTiles.push_back(sRangeTile(2, 4, 322));
 		Tiles.mTiles.push_back(sRangeTile(3, 4, 323));
 
-		mCursorSurface= new cSurface(16 * 4, 16 * 5);
+		 mCursorSurface = std::make_shared<cSurface>(16 * 4, 16 * 5);
 	}
 
 	if (g_Fodder->mMap_TileSet  == eTileTypes_Int) {
@@ -286,7 +299,7 @@ sTiles cOFED::SetupHut() {
 		Tiles.mTiles.push_back(sRangeTile(0, 1, 266));
 
 
-		mCursorSurface= new cSurface(16 * 1, 16 * 2);
+		 mCursorSurface = std::make_shared<cSurface>(16 * 1, 16 * 2);
 	}
 
 	return Tiles;
@@ -312,7 +325,7 @@ sTiles cOFED::SetupBarracks() {
 		Tiles.mTiles.push_back(sRangeTile(1, 3, 393));
 		Tiles.mTiles.push_back(sRangeTile(2, 3, 394));
 
-		mCursorSurface= new cSurface(16 * 4, 16 * 4);
+		 mCursorSurface = std::make_shared<cSurface>(16 * 4, 16 * 4);
 	}
 
 	if (g_Fodder->mMap_TileSet  == eTileTypes_Ice) {
@@ -330,7 +343,7 @@ sTiles cOFED::SetupBarracks() {
 		Tiles.mTiles.push_back(sRangeTile(2, 2, 286));
 		Tiles.mTiles.push_back(sRangeTile(3, 2, 287));
 
-		mCursorSurface= new cSurface(16 * 4, 16 * 3);
+		 mCursorSurface = std::make_shared<cSurface>(16 * 4, 16 * 3);
 	}
 
 	if (g_Fodder->mMap_TileSet  == eTileTypes_Desert) {
@@ -346,7 +359,7 @@ sTiles cOFED::SetupBarracks() {
 		Tiles.mTiles.push_back(sRangeTile(1, 2, 237));
 		Tiles.mTiles.push_back(sRangeTile(2, 2, 238));
 
-		mCursorSurface= new cSurface(16 * 3, 16 * 3);
+		 mCursorSurface = std::make_shared<cSurface>(16 * 3, 16 * 3);
 	}
 
 	if (g_Fodder->mMap_TileSet  == eTileTypes_Moors) {
@@ -365,14 +378,14 @@ sTiles cOFED::SetupBarracks() {
 		Tiles.mTiles.push_back(sRangeTile(1, 3, 395));
 		Tiles.mTiles.push_back(sRangeTile(2, 3, 396));
 
-		mCursorSurface= new cSurface(16 * 3, 16 * 4);
+		 mCursorSurface = std::make_shared<cSurface>(16 * 3, 16 * 4);
 	}
 
 	if (g_Fodder->mMap_TileSet  == eTileTypes_Int) {
 		Tiles.mTiles.push_back(sRangeTile(0, 0, 246));
 		Tiles.mTiles.push_back(sRangeTile(0, 1, 266));
 
-		mCursorSurface= new cSurface(16 * 1, 16 * 2);
+		 mCursorSurface = std::make_shared<cSurface>(16 * 1, 16 * 2);
 	}
 
 	return Tiles;
@@ -402,7 +415,7 @@ sTiles cOFED::SetupBunker() {
 		Tiles.mTiles.push_back(sRangeTile(2, 3, 317));
 		Tiles.mTiles.push_back(sRangeTile(3, 3, 371));
 
-		mCursorSurface = new cSurface(16 * 4, 16 * 4);
+		 mCursorSurface = std::make_shared<cSurface>(16 * 4, 16 * 4);
 	}
 
 	if (g_Fodder->mMap_TileSet  == eTileTypes_Desert) {
@@ -418,7 +431,7 @@ sTiles cOFED::SetupBunker() {
 		Tiles.mTiles.push_back(sRangeTile(1, 2, 50));
 		Tiles.mTiles.push_back(sRangeTile(2, 2, 51));
 
-		mCursorSurface= new cSurface(16 * 3, 16 * 3);
+		 mCursorSurface = std::make_shared<cSurface>(16 * 3, 16 * 3);
 	}
 
 	if (g_Fodder->mMap_TileSet  == eTileTypes_Ice) {
@@ -442,7 +455,7 @@ sTiles cOFED::SetupBunker() {
 		Tiles.mTiles.push_back(sRangeTile(2, 3, 369));
 		Tiles.mTiles.push_back(sRangeTile(3, 3, 370));
 
-		mCursorSurface= new cSurface(16 * 4, 16 * 4);
+		 mCursorSurface = std::make_shared<cSurface>(16 * 4, 16 * 4);
 	}
 
 	if (g_Fodder->mMap_TileSet  == eTileTypes_Moors) {
@@ -458,7 +471,7 @@ sTiles cOFED::SetupBunker() {
 		Tiles.mTiles.push_back(sRangeTile(1, 2, 201));
 		Tiles.mTiles.push_back(sRangeTile(2, 2, 202));
 
-		mCursorSurface= new cSurface(16 * 3, 16 * 3);
+		 mCursorSurface = std::make_shared<cSurface>(16 * 3, 16 * 3);
 	}
 
 
@@ -466,7 +479,7 @@ sTiles cOFED::SetupBunker() {
 		Tiles.mTiles.push_back(sRangeTile(0, 0, 331));
 		Tiles.mTiles.push_back(sRangeTile(0, 1, 351));
 
-		mCursorSurface= new cSurface(16 * 1, 16 * 2);
+		 mCursorSurface = std::make_shared<cSurface>(16 * 1, 16 * 2);
 	}
 
 	return Tiles;
@@ -688,7 +701,7 @@ void cOFED::AddCliff() {
 		Tiles.mTiles.push_back(sRangeTile(6, 4, 206));
 		Tiles.mTiles.push_back(sRangeTile(7, 4, 207));
 
-		mCursorSurface = new cSurface(16 * 8, 16 * 5);
+		 mCursorSurface = std::make_shared<cSurface>(16 * 8, 16 * 5);
 	}
 
 	if (g_Fodder->mMap_TileSet== eTileTypes_Jungle) {
@@ -737,7 +750,7 @@ void cOFED::AddCliff() {
 		Tiles.mTiles.push_back(sRangeTile(4, 6, 213));
 		Tiles.mTiles.push_back(sRangeTile(5, 6, 214));
 
-		mCursorSurface = new cSurface(16 * 6, 16 * 6);
+		 mCursorSurface = std::make_shared<cSurface>(16 * 6, 16 * 6);
 	}
 
 
@@ -798,11 +811,28 @@ void cOFED::AddCliff() {
 		Tiles.mTiles.push_back(sRangeTile(4, 7, 224));
 		Tiles.mTiles.push_back(sRangeTile(5, 7, 225));
 
-		mCursorSurface = new cSurface(16 * 6, 16 * 8);
+		 mCursorSurface = std::make_shared<cSurface>(16 * 6, 16 * 8);
 	}
 
 	if(Tiles.mTiles.size())
 		setCursorTiles(Tiles);
+}
+
+void cOFED::ShowDialog_NewCampaign() {
+
+}
+
+void cOFED::ShowDialog_LoadCampaign() {
+
+    QString fileName = QFileDialog::getOpenFileName(this,
+        tr("Load Campaign"), "",
+        tr("Open Fodder Campaign (*.ofc);;All Files (*)"));
+
+    g_Fodder->mGame_Data.mCampaign.LoadCampaign(fileName.toStdString(), true, true);
+}
+
+void cOFED::ShowDialog_SaveCampaign() {
+
 }
 
 /**
@@ -819,7 +849,7 @@ void cOFED::ShowDialog_LoadMap() {
 	if (!fileName.size())
 		return;
 
-	g_Fodder->mCampaign.LoadCustomFromPath(fileName.toStdString());
+	g_Fodder->mGame_Data.mCampaign.LoadCustomMapFromPath(fileName.toStdString());
 
 	g_Fodder->Map_Load();
 	g_Fodder->Map_Load_Sprites();
@@ -934,9 +964,9 @@ void cOFED::setCursorTiles( sTiles& pTiles) {
 	mCursorSurface->clearBuffer();
 
 	for ( const auto& Tile : pTiles.mTiles) {
-        g_Fodder->mGraphics->Map_Tile_Draw(mCursorSurface, Tile.mTileID, Tile.mX, Tile.mY, 0);
+        g_Fodder->mGraphics->Map_Tile_Draw(&*mCursorSurface, Tile.mTileID, Tile.mX, Tile.mY, 0);
 	}
-	g_Fodder->mGraphics->PaletteSet(mCursorSurface);
+	g_Fodder->mGraphics->PaletteSet(&*mCursorSurface);
 
 	mCursorSurface->surfaceSetToPaletteNew();
 	mCursorSurface->draw();
@@ -951,11 +981,13 @@ void cOFED::setCursorTiles( sTiles& pTiles) {
 }
 
 void cOFED::SetCursorSprite(const size_t pSpriteID) {
-    
+    mCursorSurface->clearBuffer();
+
     int32 AnimID = g_SpriteAnim[pSpriteID];
     if (AnimID < 0)
         return;
 
+    size_t SpriteWidth = g_Fodder->mSprite_SheetPtr[AnimID][0].mColCount;
     size_t SpriteHeight = g_Fodder->mSprite_SheetPtr[AnimID][0].mRowCount;
 
     sSprite Sprite;
@@ -964,18 +996,21 @@ void cOFED::SetCursorSprite(const size_t pSpriteID) {
     Sprite.field_52 = 0;
     Sprite.field_20 = 0;
 
-    g_Fodder->mGraphics->PaletteSet(mCursorSurface);
-    g_Fodder->Sprite_Draw_Frame(&Sprite, AnimID, 0, mCursorSurface);
+    std::shared_ptr<cSurface> NewCursor = std::make_shared<cSurface>(SpriteWidth * 10, SpriteHeight);
+    g_Fodder->mGraphics->PaletteSet(&*NewCursor);
+    g_Fodder->Sprite_Draw_Frame(&Sprite, AnimID, 0, &*NewCursor);
 
-    mCursorSurface->surfaceSetToPaletteNew();
-    mCursorSurface->draw();
+    NewCursor->surfaceSetToPaletteNew();
+    NewCursor->draw();
 
-    SDL_Surface* Source = mCursorSurface->GetSurface();
+    SDL_Surface* Source = NewCursor->GetSurface();
     mCursorImage = QImage(static_cast<uchar*>(Source->pixels), Source->w, Source->h, QImage::Format_RGB32);
 
     mCursorRangeTiles = sTiles();
     mCursorSprite = pSpriteID;
     CursorUpdate();
+
+    mCursorSurface = NewCursor;
 }
 
 void cOFED::SetupSprites() {
