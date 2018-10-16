@@ -840,9 +840,15 @@ void cOFED::ShowDialog_LoadCampaign() {
 
     QString fileName = QFileDialog::getOpenFileName(this,
         tr("Load Campaign"), "",
-        tr("Open Fodder Campaign (*.ofc);;All Files (*)"));
+        tr("Open Fodder Campaign (*.ofc);"));
+    
+    std::string filename = fileName.toStdString();
 
-    g_Fodder->mGame_Data.mCampaign.LoadCampaign(fileName.toStdString(), true, true);
+    auto a = filename.find_last_of(".ofc");
+    filename.erase(filename.begin() + a - 3, filename.end());
+
+
+    g_Fodder->mGame_Data.mCampaign.LoadCampaign(filename, true, true);
 
     mToolboxCampaigns->LoadCampaign(&g_Fodder->mGame_Data.mCampaign);
 }
