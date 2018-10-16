@@ -1,6 +1,8 @@
 #include "ofed.hpp"
 #include "ui_NewMapDialog.h"
 #include "ui_ToolboxTiles.h"
+#include "ui_CampaignDialog.h"
+
 #include <QDesktopWidget>
 #include <qpainter.h>
 
@@ -20,6 +22,7 @@ cOFED::cOFED(QWidget *parent)
 {
 	ui.setupUi(this);
 
+    mToolboxCampaigns = 0;
 	mToolboxTiles = 0;
 	mToolboxSprites = 0;
     mMapSub = 0;
@@ -86,6 +89,7 @@ cOFED::cOFED(QWidget *parent)
 
 	ShowDialog_ToolboxTiles();
 	ShowDialog_ToolboxSprites();
+    ShowDialog_ToolboxCampaigns();
 }
 
 void cOFED::OpenFodder_Prepare() {
@@ -167,6 +171,9 @@ void cOFED::moveEvent(QMoveEvent *event) {
 
 	if(mToolboxSprites)
 		mToolboxSprites->move(x(), y() + height());
+
+    if(mToolboxCampaigns)
+        mToolboxCampaigns->move(x() - mToolboxCampaigns->width(), y());
 }
 
 /**
@@ -192,6 +199,13 @@ void cOFED::ShowDialog_ToolboxSprites() {
 	mToolboxSprites->show();
 }
 
+void cOFED::ShowDialog_ToolboxCampaigns() {
+    mToolboxCampaigns = new cCampaignDialog(this, 0);
+
+    mToolboxCampaigns->move(x() - mToolboxCampaigns->width(), y());
+
+    mToolboxCampaigns->show();
+}
 /**
  * Launch the New Map dialog
  */
@@ -829,6 +843,8 @@ void cOFED::ShowDialog_LoadCampaign() {
         tr("Open Fodder Campaign (*.ofc);;All Files (*)"));
 
     g_Fodder->mGame_Data.mCampaign.LoadCampaign(fileName.toStdString(), true, true);
+
+    mToolboxCampaigns->LoadCampaign(&g_Fodder->mGame_Data.mCampaign);
 }
 
 void cOFED::ShowDialog_SaveCampaign() {
@@ -851,19 +867,11 @@ void cOFED::ShowDialog_LoadMap() {
 
 	g_Fodder->mGame_Data.mCampaign.LoadCustomMapFromPath(fileName.toStdString());
 
-	g_Fodder->Map_Load();
-	g_Fodder->Map_Load_Sprites();
-
-	g_Fodder->MapTiles_Draw();
-	g_Fodder->Sprite_Handle_Loop();
-
-	g_Fodder->mGraphics->PaletteSet();
-	g_Fodder->mSurface->surfaceSetToPaletteNew();
-
-	g_Fodder->mWindow->FrameEnd();
+    LoadMap();
 
 	mToolboxSprites->RenderSprites();
 	mToolboxTiles->RenderTiles();
+    mToolboxCampaigns->LoadCampaign(&g_Fodder->mGame_Data.mCampaign);
 }
 
 
@@ -908,6 +916,19 @@ void cOFED::Create_NewMap(const std::string& pTileSet, const std::string& pTileS
 			return;
 		}
 	}
+}
+
+void cOFED::LoadMap() {
+    g_Fodder->Map_Load();
+    g_Fodder->Map_Load_Sprites();
+
+    g_Fodder->MapTiles_Draw();
+    g_Fodder->Sprite_Handle_Loop();
+
+    g_Fodder->mGraphics->PaletteSet();
+    g_Fodder->mSurface->surfaceSetToPaletteNew();
+
+    g_Fodder->mWindow->FrameEnd();
 }
 
 /**

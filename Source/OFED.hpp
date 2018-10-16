@@ -79,6 +79,9 @@ public:
 
 	void ShowDialog_ToolboxTiles();
 	void ShowDialog_ToolboxSprites();
+    void ShowDialog_ToolboxCampaigns();
+
+    void LoadMap();
 
 	void Create_NewMap(const std::string& pTileSet, const std::string& pTileSub, size_t pWidth, size_t pHeight, const bool pRandom);
 
@@ -94,8 +97,10 @@ public:
 
 	sTiles GetCursorRangeTiles() { return mCursorRangeTiles; }
     int16 GetCursorSpriteID() { return mCursorSprite; }
+
 private:
 	Ui::mOFED ui;
+    cCampaignDialog* mToolboxCampaigns;
 	cToolboxTiles*	mToolboxTiles;
 	cToolboxSprites* mToolboxSprites;
 

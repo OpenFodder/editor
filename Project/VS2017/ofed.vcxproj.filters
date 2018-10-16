@@ -42,6 +42,9 @@
     <Filter Include="OpenFodder\Structures">
       <UniqueIdentifier>{a2aeca45-f55d-42c0-9c1f-93d317321791}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Models">
+      <UniqueIdentifier>{24688922-079c-41ab-a6f8-8afc10e54dcd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\qrc_ofed.cpp">
@@ -169,6 +172,12 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Dialogs\CampaignDialog.cpp">
       <Filter>Source Files\Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Models\CampaignModel.cpp">
+      <Filter>Source Files\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Models\MissionModel.cpp">
+      <Filter>Source Files\Models</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -350,6 +359,12 @@
     </ClInclude>
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Utils\json.hpp">
       <Filter>OpenFodder\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Models\CampaignModel.hpp">
+      <Filter>Source Files\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Models\MissionModel.hpp">
+      <Filter>Source Files\Models</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
