@@ -14,7 +14,7 @@ std::string g_SpriteName[111] = {};
 cOFED::~cOFED() {
 
     ui.verticalLayout->removeWidget(ui.mSurface);
-    ui.mSurface = 0;
+    
 }
 
 cOFED::cOFED(QWidget *parent)

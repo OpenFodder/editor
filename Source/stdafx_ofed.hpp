@@ -21,5 +21,5 @@
 
 class cOFED;
 
-extern std::shared_ptr<cOFED> g_OFED;
+extern cOFED* g_OFED;
 #endif
