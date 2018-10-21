@@ -517,20 +517,22 @@ void cOFED::Phase_AddNew() {
     auto now = std::chrono::system_clock::now();
     auto in_time_t = std::chrono::system_clock::to_time_t(now);
 
-
     auto NewPhase = std::make_shared<cPhase>();
 
     NewPhase->mName = "New Phase";
     NewPhase->mMapFilename = "m" + std::to_string(in_time_t);
 
     g_Fodder->mGame_Data.mMission_Current->mPhases.push_back(NewPhase);
-    mToolboxCampaigns->Refresh();
 
     cNewMapDialog* NewMap = new cNewMapDialog(this, 0);
 
     if (NewMap->exec()) {
         Save_Map(NewPhase);
+        g_Fodder->mGame_Data.mPhase_Current = NewPhase;
+    } else {
+        g_Fodder->mGame_Data.mMission_Current->mPhases.pop_back();
     }
+    mToolboxCampaigns->Refresh();
 }
 
 void cOFED::Save_Map(std::shared_ptr<cPhase> pPhase) {
