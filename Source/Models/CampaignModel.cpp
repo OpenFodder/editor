@@ -21,17 +21,16 @@ cCampaignModel::~cCampaignModel() {
 
 QVariant cCampaignModel::data(const QModelIndex& index, int role) const
 {
-
-    if (!index.isValid() || role != Qt::DisplayRole)
+    if (!index.isValid() || (role != Qt::DisplayRole && role != Qt::EditRole))
         return QVariant();
 
     int Row = index.row();
     int Column = index.column();
 
-    if (Row >= mMissions.size())
+    if (Row >= mCampaign->getMissions().size())
         return "";
 
-    auto Mission = mMissions.at(Row);
+    auto Mission = mCampaign->getMissions().at(Row);
 
     switch (Column) {
     case 0:		// Mission Name
@@ -41,14 +40,35 @@ QVariant cCampaignModel::data(const QModelIndex& index, int role) const
     return "";
 }
 
+bool cCampaignModel::setData(const QModelIndex &index, const QVariant &value, int role) {
+
+    if (!index.isValid() || role != Qt::EditRole)
+        return false;
+
+    int Row = index.row();
+    int Column = index.column();
+
+    if (Row >= mCampaign->getMissions().size())
+        return "";
+
+    auto Mission = mCampaign->getMissions().at(Row);
+
+    switch (Column) {
+    case 0:		// Mission Name
+        Mission->mName = value.toString().toStdString();
+        return true;
+
+    }
+
+    return false;
+}
 void cCampaignModel::DataUpdated() {
-    if (!mMissions.size())
+    if (!mCampaign->getMissions().size())
         return;
 
-    QModelIndex topLeft = createIndex(0, 0);
-    QModelIndex topRight = createIndex(mMissions.size(), 1);
-
-    emit dataChanged(topLeft, topRight);
+    //emit QAbstractTableModel::dataChanged(index(0,0), index(0,0));
+    beginResetModel();
+    endResetModel();
 }
 
 QVariant cCampaignModel::headerData(int section, Qt::Orientation orientation, int role) const {
@@ -72,11 +92,17 @@ void cCampaignModel::SetCampaign(cCampaign* pCampaign) {
     if (!pCampaign)
         return;
 
-    mMissions = pCampaign->getMissions();
     mCampaign = pCampaign;
 
-    if (mMissions.size()) {
-        beginInsertRows(QModelIndex(), 0, mMissions.size() - 1);
+    if (mCampaign->getMissions().size()) {
+        beginInsertRows(QModelIndex(), 0, mCampaign->getMissions().size() - 1);
         endInsertRows();
     }
+}
+
+Qt::ItemFlags cCampaignModel::flags(const QModelIndex &index) const {
+    if (!index.isValid())
+        return 0;
+
+    return Qt::ItemIsEditable | QAbstractItemModel::flags(index);
 }

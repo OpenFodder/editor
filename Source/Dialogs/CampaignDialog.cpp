@@ -1,10 +1,12 @@
 #include "stdafx_ofed.hpp"
 #include "ofed.hpp"
+#include<qlineedit.h>
 
 #include "ui_CampaignDialog.h"
 
 cCampaignDialog::cCampaignDialog(QWidget *parent, Qt::WindowFlags f) : QDialog(parent, f) {
 
+    mLoadingMission = false;
     mUi = new Ui_CampaignDialog();
     mUi->setupUi(this);
 
@@ -14,8 +16,11 @@ cCampaignDialog::cCampaignDialog(QWidget *parent, Qt::WindowFlags f) : QDialog(p
     mUi->mPhaseTable->setModel(&mMissionModel);
     mUi->mPhaseTable->setColumnWidth(0, 300);
 
-    connect(mUi->mMissionTable, &QTableView::clicked, this, &cCampaignDialog::MissionClicked);
+    connect(mUi->mAuthorsName, &QLineEdit::textChanged, this, &cCampaignDialog::AuthorsNameChange);
+
+    connect(mUi->mMissionTable, &QTableView::doubleClicked, this, &cCampaignDialog::MissionClicked);
     connect(mUi->mPhaseTable, &QTableView::doubleClicked, this, &cCampaignDialog::PhaseClicked);
+
     connect(mUi->aggression_min, &QSlider::valueChanged, this, &cCampaignDialog::AggressMinChange);
     connect(mUi->aggression_max, &QSlider::valueChanged, this, &cCampaignDialog::AggressMaxChange);
 
@@ -58,6 +63,19 @@ void cCampaignDialog::LoadCampaign(cCampaign* pCampaign) {
     mMissionModel.SetMission(pCampaign->getMission(0));
 }
 
+void cCampaignDialog::Refresh() {
+    mCampaignModel.DataUpdated();
+
+    if (!mMissionModel.GetMission())
+        mMissionModel.SetMission(g_Fodder->mGame_Data.mMission_Current);
+
+    mMissionModel.DataUpdated();
+}
+void cCampaignDialog::AuthorsNameChange(const QString &pNewName) {
+
+    g_Fodder->mGame_Data.mCampaign.setAuthor(pNewName.toStdString());
+}
+
 void cCampaignDialog::MissionClicked(QModelIndex pIndex) {
 
     g_Fodder->mGame_Data.mMission_Number = pIndex.row() + 1;
@@ -77,10 +95,15 @@ void cCampaignDialog::PhaseClicked(QModelIndex pIndex) {
 }
 
 void cCampaignDialog::LoadPhase(const size_t pNumber) {
+
+    if (!mMissionModel.GetMission())
+        return;
+
     g_Fodder->mGame_Data.mPhase_Current = mMissionModel.GetMission()->GetPhase(pNumber);
     if (!g_Fodder->mGame_Data.mPhase_Current)
         return;
 
+    mLoadingMission = true;
     g_OFED->LoadMap();
 
     Goal_ResetCheckboxes();
@@ -125,10 +148,10 @@ void cCampaignDialog::LoadPhase(const size_t pNumber) {
 
     mUi->aggression_min->setSliderPosition(g_Fodder->mGame_Data.mPhase_Current->mAggression.mMin);
     mUi->aggression_max->setSliderPosition(g_Fodder->mGame_Data.mPhase_Current->mAggression.mMax);
+    mLoadingMission = false;
 }
 
 void cCampaignDialog::AggressMinChange(int pValue) {
-
     g_Fodder->mGame_Data.mPhase_Current->mAggression.mMin = pValue;
 }
 
@@ -150,42 +173,61 @@ void cCampaignDialog::Goal_ResetCheckboxes() {
 }
 
 void cCampaignDialog::Goal_KillAllEnemy(int pValue) {
-    mUi->checkBox_KillAllEnemy->setChecked(pValue);
+    if (mLoadingMission)
+        return;
+    g_Fodder->mGame_Data.mPhase_Current->SetGoal(eGoal_Kill_All_Enemy, pValue);
 }
 
 void cCampaignDialog::Goal_DestroyEnemyBuildings(int pValue) {
-
-    mUi->checkBox_DestroyEnemyBuildings->setChecked(pValue);
+    if (mLoadingMission)
+        return;
+    g_Fodder->mGame_Data.mPhase_Current->SetGoal(eGoal_Destroy_Enemy_Buildings, pValue);
 }
 
 void cCampaignDialog::Goal_RescueHostages(int pValue) {
-    mUi->checkBox_RescueHostages->setChecked(pValue);
+    if (mLoadingMission)
+        return;
+    g_Fodder->mGame_Data.mPhase_Current->SetGoal(eGoal_Rescue_Hostages, pValue);
 }
 
 void cCampaignDialog::Goal_ProtectCivilians(int pValue) {
-    mUi->checkBox_ProtectCivilians->setChecked(pValue);
+    if (mLoadingMission)
+        return;
+    g_Fodder->mGame_Data.mPhase_Current->SetGoal(eGoal_Protect_Civilians, pValue);
 }
 
 void cCampaignDialog::Goal_Kidnap_Leader(int pValue) {
-    mUi->checkBox_KidnapLeader->setChecked(pValue);
+    if (mLoadingMission)
+        return;
+    g_Fodder->mGame_Data.mPhase_Current->SetGoal(eGoal_Kidnap_Leader, pValue);
 }
 
 void cCampaignDialog::Goal_Destroy_Factory(int pValue) {
-    mUi->checkBox_DestroyFactory->setChecked(pValue);
+    if (mLoadingMission)
+        return;
+    g_Fodder->mGame_Data.mPhase_Current->SetGoal(eGoal_Destroy_Factory, pValue);
 }
 
 void cCampaignDialog::Goal_Destroy_Computer(int pValue) {
-    mUi->checkBox_DestroyComputer->setChecked(pValue);
+    if (mLoadingMission)
+        return;
+    g_Fodder->mGame_Data.mPhase_Current->SetGoal(eGoal_Destroy_Computer, pValue);
 }
 
 void cCampaignDialog::Goal_Get_Civilian_Home(int pValue) {
-    mUi->checkBox_GetCivilianHome->setChecked(pValue);
+    if (mLoadingMission)
+        return;
+    g_Fodder->mGame_Data.mPhase_Current->SetGoal(eGoal_Get_Civilian_Home, pValue);
 }
 
 void cCampaignDialog::Goal_Activate_All_Switches(int pValue) {
-    mUi->checkBox_ActivateAllSwitches->setChecked(pValue);
+    if (mLoadingMission)
+        return;
+    g_Fodder->mGame_Data.mPhase_Current->SetGoal(eGoal_Activate_All_Switches, pValue);
 }
 
 void cCampaignDialog::Goal_Rescue_Hostage(int pValue) {
-    mUi->checkBox_RescueHostage->setChecked(pValue);
+    if (mLoadingMission)
+        return;
+    g_Fodder->mGame_Data.mPhase_Current->SetGoal(eGoal_Rescue_Hostage, pValue);
 }

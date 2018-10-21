@@ -90,8 +90,16 @@
     <addaction name="menuBunker"/>
     <addaction name="action_Cliff"/>
    </widget>
+   <widget class="QMenu" name="menuCampaign">
+    <property name="title">
+     <string>Campaign</string>
+    </property>
+    <addaction name="actionNew_Mission"/>
+    <addaction name="actionNew_Phase"/>
+   </widget>
    <addaction name="menu_File"/>
    <addaction name="menuInsert"/>
+   <addaction name="menuCampaign"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -195,6 +203,16 @@
   <action name="actionCampaign_Load">
    <property name="text">
     <string>Load</string>
+   </property>
+  </action>
+  <action name="actionNew_Mission">
+   <property name="text">
+    <string>New Mission</string>
+   </property>
+  </action>
+  <action name="actionNew_Phase">
+   <property name="text">
+    <string>New Phase</string>
    </property>
   </action>
  </widget>

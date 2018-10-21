@@ -4,6 +4,7 @@ class cCampaignDialog : public QDialog {
     Ui_CampaignDialog *mUi;
     cCampaignModel mCampaignModel;
     cMissionModel mMissionModel;
+    bool mLoadingMission;
 
 protected:
     void LoadMissions();
@@ -13,6 +14,8 @@ public:
 
     void accept();
     void reject();
+
+    void AuthorsNameChange(const QString &pNewName);
 
     void MissionClicked(QModelIndex pIndex);
     void PhaseClicked(QModelIndex pIndex);
@@ -36,6 +39,7 @@ public:
     void Goal_Rescue_Hostage(int pValue);
 
     void LoadCampaign(cCampaign* pCampaign);
+    void Refresh();
 
 };
 #pragma once

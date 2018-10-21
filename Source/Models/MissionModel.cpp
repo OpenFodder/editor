@@ -21,8 +21,7 @@ cMissionModel::~cMissionModel() {
 
 QVariant cMissionModel::data(const QModelIndex& index, int role) const
 {
-
-    if (!index.isValid() || role != Qt::DisplayRole || !mMission)
+    if (!index.isValid() || (role != Qt::DisplayRole && role != Qt::EditRole) || !mMission)
         return QVariant();
 
     int Row = index.row();
@@ -45,6 +44,32 @@ QVariant cMissionModel::data(const QModelIndex& index, int role) const
     return "";
 }
 
+bool cMissionModel::setData(const QModelIndex &index, const QVariant &value, int role) {
+    
+    if (!index.isValid() || role != Qt::EditRole || !mMission)
+        return false;
+
+    int Row = index.row();
+    int Column = index.column();
+
+    if (Row >= mMission->mPhases.size())
+        return false;
+
+    auto Phase = mMission->mPhases.at(Row);
+
+    switch (Column) {
+    case 0:		// Phase Name
+        Phase->mName = value.toString().toStdString();
+        return true;
+    case 1:
+        Phase->mMapFilename = value.toString().toStdString();
+        return true;
+
+    }
+
+    return false;
+}
+
 void cMissionModel::DataUpdated() {
     if (!mMission)
         return;
@@ -52,7 +77,9 @@ void cMissionModel::DataUpdated() {
     QModelIndex topLeft = createIndex(0, 0);
     QModelIndex topRight = createIndex(mMission->mPhases.size(), 1);
 
-    emit dataChanged(topLeft, topRight);
+    //emit dataChanged(topLeft, topRight);
+    beginResetModel();
+    endResetModel();
 }
 
 QVariant cMissionModel::headerData(int section, Qt::Orientation orientation, int role) const {
@@ -77,6 +104,8 @@ void cMissionModel::SetMission(std::shared_ptr<cMission> pMission) {
     beginRemoveRows(QModelIndex(), 0, rowCount());
     endRemoveRows();
 
+    mMission = 0;
+
     if (pMission && pMission->mPhases.size()) {
         beginInsertRows(QModelIndex(), 0, pMission->mPhases.size() - 1);
         mMission = pMission;
@@ -86,4 +115,11 @@ void cMissionModel::SetMission(std::shared_ptr<cMission> pMission) {
 
 std::shared_ptr<cMission> cMissionModel::GetMission() {
     return mMission; 
+}
+
+Qt::ItemFlags cMissionModel::flags(const QModelIndex &index) const {
+    if (!index.isValid())
+        return 0;
+
+    return Qt::ItemIsEditable | QAbstractItemModel::flags(index);
 }

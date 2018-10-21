@@ -56,6 +56,10 @@ cOFED::cOFED(QWidget *parent)
 	
 	QObject::connect(ui.action_Cliff, &QAction::triggered, this, &cOFED::AddCliff);
 
+    QObject::connect(ui.actionNew_Mission, &QAction::triggered, this, &cOFED::Mission_AddNew);
+    QObject::connect(ui.actionNew_Phase, &QAction::triggered, this, &cOFED::Phase_AddNew);
+
+
     g_Fodder = std::make_shared<cFodder>(g_Window);
 
 	// Prepare OpenFodder
@@ -499,6 +503,35 @@ sTiles cOFED::SetupBunker() {
 	return Tiles;
 }
 
+void cOFED::Mission_AddNew() {
+    auto NewMission = std::make_shared<cMission>();
+
+    NewMission->mName = "New Mission";
+    g_Fodder->mGame_Data.mCampaign.getMissions().push_back(NewMission);
+
+    mToolboxCampaigns->Refresh();
+}
+
+void cOFED::Phase_AddNew() {
+    auto now = std::chrono::system_clock::now();
+    auto in_time_t = std::chrono::system_clock::to_time_t(now);
+
+
+    auto NewPhase = std::make_shared<cPhase>();
+
+    NewPhase->mName = "New Phase";
+    NewPhase->mMapFilename = "m" + std::to_string(in_time_t);
+
+    g_Fodder->mGame_Data.mMission_Current->mPhases.push_back(NewPhase);
+    mToolboxCampaigns->Refresh();
+
+    cNewMapDialog* NewMap = new cNewMapDialog(this, 0);
+
+    NewMap->exec();
+
+    g_Fodder->Map_Save(g_Fodder->mGame_Data.mCampaign.GetPath(g_Fodder->mGame_Data.mCampaign.getName()) + gPathSeperator + NewPhase->mMapFilename + ".map");
+}
+
 void cOFED::AddHut_With_Soldier() {
 
 	sTiles Tiles = SetupHut();
@@ -834,6 +867,18 @@ void cOFED::AddCliff() {
 
 void cOFED::ShowDialog_NewCampaign() {
 
+    QString fileName = QFileDialog::getSaveFileName(this,
+        tr("Create Campaign"), "",
+        tr("Open Fodder Campaign (*.ofc);"));
+
+    std::string filename = fileName.toStdString();
+
+    auto a = filename.find_last_of(".ofc");
+    filename.erase(filename.begin() + a - 3, filename.end());
+
+    g_Fodder->mGame_Data.mCampaign.Clear(filename, true);
+
+    ShowDialog_SaveCampaign();
 }
 
 void cOFED::ShowDialog_LoadCampaign() {
@@ -855,6 +900,7 @@ void cOFED::ShowDialog_LoadCampaign() {
 
 void cOFED::ShowDialog_SaveCampaign() {
 
+    g_Fodder->mGame_Data.mCampaign.SaveCampaign();
 }
 
 /**

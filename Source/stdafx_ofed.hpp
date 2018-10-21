@@ -1,6 +1,7 @@
 #ifndef _STDAFX_OFED
 #define _STDAFX_OFED
 
+
 #include <qimage.h>
 #include <qwidget.h>
 #include <qtimer.h>

@@ -57,6 +57,9 @@ public:
 	sTiles SetupBarracks();
 	sTiles SetupBunker();
 
+    void Mission_AddNew();
+    void Phase_AddNew();
+
 	void AddHut_With_Soldier();
 	void AddHut_With_Indigenous();
 	void AddHut_With_Indigenous_Spear();
