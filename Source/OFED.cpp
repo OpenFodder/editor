@@ -511,6 +511,7 @@ void cOFED::Mission_AddNew() {
 
     mToolboxCampaigns->Refresh();
 }
+//#include <experimental/filesystem>
 
 void cOFED::Phase_AddNew() {
     auto now = std::chrono::system_clock::now();
@@ -527,9 +528,21 @@ void cOFED::Phase_AddNew() {
 
     cNewMapDialog* NewMap = new cNewMapDialog(this, 0);
 
-    NewMap->exec();
+    if (NewMap->exec()) {
+        Save_Map(NewPhase);
+    }
+}
 
-    g_Fodder->Map_Save(g_Fodder->mGame_Data.mCampaign.GetPath(g_Fodder->mGame_Data.mCampaign.getName()) + gPathSeperator + NewPhase->mMapFilename + ".map");
+void cOFED::Save_Map(std::shared_ptr<cPhase> pPhase) {
+    // TODO: Filesystem C++17
+    std::string CreateFolder = "mkdir \"" + g_Fodder->mGame_Data.mCampaign.GetPath() + "\"";
+
+    // We are lazy, we dont care if it already exists
+    system(CreateFolder.c_str());
+
+    //std::experimental::filesystem::create_directory(g_Fodder->mGame_Data.mCampaign.GetPath());
+
+    g_Fodder->Map_Save(g_Fodder->mGame_Data.mCampaign.GetPathToFile(pPhase->mMapFilename + ".map"));
 }
 
 void cOFED::AddHut_With_Soldier() {
@@ -919,6 +932,11 @@ void cOFED::ShowDialog_LoadMap() {
 
 	g_Fodder->mGame_Data.mCampaign.LoadCustomMapFromPath(fileName.toStdString());
 
+    g_Fodder->mGame_Data.mMission_Phases_Remaining = 1;
+    g_Fodder->mGame_Data.mMission_Number = 0;
+    g_Fodder->mGame_Data.mMission_Phase = 0;
+    g_Fodder->mGame_Data.Phase_Next();
+
     LoadMap();
 
 	mToolboxSprites->RenderSprites();
@@ -932,14 +950,22 @@ void cOFED::ShowDialog_LoadMap() {
  */
 void cOFED::ShowDialog_SaveMap() {
 
-	QString fileName = QFileDialog::getSaveFileName(this,
-		tr("Save Map"), "",
-		tr("Open Fodder (*.map);;All Files (*)"));
+    // Custom maps can be saved as anything
+    if (g_Fodder->mGame_Data.mCampaign.isCustomMap()) {
 
-	if (!fileName.size())
-		return;
+        QString fileName = QFileDialog::getSaveFileName(this,
+            tr("Save Map"), tr(g_Fodder->mGame_Data.mPhase_Current->mMapFilename.c_str()),
+            tr("Open Fodder (*.map);;All Files (*)"));
 
-	g_Fodder->Map_Save(fileName.toStdString());
+        if (!fileName.size())
+            return;
+
+        g_Fodder->Map_Save(fileName.toStdString());
+    }
+    else {
+        // Campaign maps have to keep the filename
+        Save_Map(g_Fodder->mGame_Data.mPhase_Current);
+    }
 }
 
 /**

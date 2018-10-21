@@ -87,6 +87,7 @@ public:
     void LoadMap();
 
 	void Create_NewMap(const std::string& pTileSet, const std::string& pTileSub, size_t pWidth, size_t pHeight, const bool pRandom);
+    void Save_Map(std::shared_ptr<cPhase> pPhase);
 
 	void SetCursorTileID(const size_t pCursorTile);
 	void setCursorTiles( sTiles& pTiles);

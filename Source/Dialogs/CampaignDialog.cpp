@@ -50,6 +50,8 @@ void cCampaignDialog::reject() {
 }
 
 void cCampaignDialog::LoadMissions() {
+    mUi->mCampaignName->setText(QString::fromStdString(g_Fodder->mGame_Data.mCampaign.getName()));
+    mUi->mAuthorsName->setText( QString::fromStdString(g_Fodder->mGame_Data.mCampaign.getAuthor()) );
 
     mCampaignModel.SetCampaign(&g_Fodder->mGame_Data.mCampaign);
     mMissionModel.SetMission(g_Fodder->mGame_Data.mCampaign.getMission(0));
