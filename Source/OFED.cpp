@@ -7,6 +7,7 @@
 #include <qpainter.h>
 
 #include <QFileDialog>
+#include <chrono>
 
 int32 g_SpriteAnim[111] = {};
 std::string g_SpriteName[111] = {};
