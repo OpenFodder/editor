@@ -50,4 +50,5 @@ install:
 before_script: mkdir obj
 script: 
   - qmake editor2.pro
+  - qmake
   - make
