@@ -11,10 +11,10 @@ cCampaignDialog::cCampaignDialog(QWidget *parent, Qt::WindowFlags f) : QDialog(p
     mUi->setupUi(this);
 
     mUi->mMissionTable->setModel(&mCampaignModel);
-    mUi->mMissionTable->setColumnWidth(0, 400);
+   // mUi->mMissionTable->setColumnWidth(0, 400);
 
     mUi->mPhaseTable->setModel(&mMissionModel);
-    mUi->mPhaseTable->setColumnWidth(0, 300);
+    //mUi->mPhaseTable->setColumnWidth(0, 300);
 
     connect(mUi->mAuthorsName, &QLineEdit::textChanged, this, &cCampaignDialog::AuthorsNameChange);
 
@@ -106,7 +106,9 @@ void cCampaignDialog::LoadPhase(const size_t pNumber) {
         return;
 
     mLoadingMission = true;
-    g_OFED->LoadMap();
+
+    if(g_OFED)
+        g_OFED->LoadMap();
 
     Goal_ResetCheckboxes();
 

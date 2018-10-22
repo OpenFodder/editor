@@ -96,17 +96,13 @@ QVariant cMissionModel::headerData(int section, Qt::Orientation orientation, int
 }
 
 void cMissionModel::SetMission(std::shared_ptr<cMission> pMission) {
-
-    beginRemoveRows(QModelIndex(), 0, rowCount());
-    endRemoveRows();
-
     mMission = 0;
 
     if (pMission && pMission->mPhases.size()) {
-        beginInsertRows(QModelIndex(), 0, pMission->mPhases.size() - 1);
         mMission = pMission;
-        endInsertRows();
     }
+
+    DataUpdated();
 }
 
 std::shared_ptr<cMission> cMissionModel::GetMission() {

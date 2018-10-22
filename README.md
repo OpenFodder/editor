@@ -5,12 +5,13 @@
 
 Open Fodder Editor is a campaign and map editor for [Open Fodder](https://github.com/OpenFodder/openfodder) and Cannon Fodder
 
-##### To Compile
+#### To Compile
 
 * SDL2
 * SDL2-Mixer
 * QT5
 
-##### Requirements
+#### Requirements
 
-* Data compatible with Open Fodder
+* Installed/Working Open Fodder
+* Works with any data supported by Open Fodder

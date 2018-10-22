@@ -14,7 +14,7 @@ public:
     }
 
     int columnCount(const QModelIndex& parent = QModelIndex()) const {
-        return 2;
+        return 1;
     }
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;

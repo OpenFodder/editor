@@ -884,10 +884,12 @@ void cOFED::AddCliff() {
 void cOFED::ShowDialog_NewCampaign() {
 
     QString fileName = QFileDialog::getSaveFileName(this,
-        tr("Create Campaign"), "",
+        tr("Create Campaign"), tr(local_PathGenerate("", "", eDataType::eCampaign).c_str()),
         tr("Open Fodder Campaign (*.ofc);"));
 
     std::string filename = fileName.toStdString();
+    if (!filename.size())
+        return;
 
     auto a = filename.find_last_of(".ofc");
     filename.erase(filename.begin() + a - 3, filename.end());
@@ -900,16 +902,30 @@ void cOFED::ShowDialog_NewCampaign() {
 void cOFED::ShowDialog_LoadCampaign() {
 
     QString fileName = QFileDialog::getOpenFileName(this,
-        tr("Load Campaign"), "",
+        tr("Load Campaign"), tr(local_PathGenerate("", "", eDataType::eCampaign).c_str()),
         tr("Open Fodder Campaign (*.ofc);"));
-    
+
     std::string filename = fileName.toStdString();
+    if (!filename.size())
+        return;
 
     auto a = filename.find_last_of(".ofc");
     filename.erase(filename.begin() + a - 3, filename.end());
 
-
     g_Fodder->mGame_Data.mCampaign.LoadCampaign(filename, true, true);
+    g_Fodder->mGame_Data.mMission_Current = 0;
+    g_Fodder->mGame_Data.mPhase_Current = 0;
+    g_Fodder->mGame_Data.mMission_Phases_Remaining = 1;
+    g_Fodder->mGame_Data.mMission_Number = 0;
+    g_Fodder->mGame_Data.mMission_Phase = 0;
+    g_Fodder->mGame_Data.Phase_Next();
+
+    // Disable this, otherwise it reloads the current version because of the current map
+    g_Fodder->mMission_In_Progress = false;
+    g_Fodder->VersionSwitch(g_Fodder->mVersions->GetForCampaign(g_Fodder->mGame_Data.mCampaign.getName()));
+    g_Fodder->mMission_In_Progress = true;
+
+    LoadMap();
 
     mToolboxCampaigns->LoadCampaign(&g_Fodder->mGame_Data.mCampaign);
 }
@@ -925,7 +941,7 @@ void cOFED::ShowDialog_SaveCampaign() {
 void cOFED::ShowDialog_LoadMap() {
 
 	QString fileName = QFileDialog::getOpenFileName(this,
-		tr("Load Map"), "",
+		tr("Load Map"), tr(local_PathGenerate("", "Custom/Maps", eDataType::eData).c_str()),
 		tr("Open Fodder (*.map);;All Files (*)"));
 
 	CursorReset();
@@ -934,6 +950,8 @@ void cOFED::ShowDialog_LoadMap() {
 		return;
 
 	g_Fodder->mGame_Data.mCampaign.LoadCustomMapFromPath(fileName.toStdString());
+    g_Fodder->mGame_Data.mMission_Current = 0;
+    g_Fodder->mGame_Data.mPhase_Current = 0;
 
     g_Fodder->mGame_Data.mMission_Phases_Remaining = 1;
     g_Fodder->mGame_Data.mMission_Number = 0;
@@ -942,8 +960,6 @@ void cOFED::ShowDialog_LoadMap() {
 
     LoadMap();
 
-	mToolboxSprites->RenderSprites();
-	mToolboxTiles->RenderTiles();
     mToolboxCampaigns->LoadCampaign(&g_Fodder->mGame_Data.mCampaign);
 }
 
@@ -1010,6 +1026,12 @@ void cOFED::LoadMap() {
     g_Fodder->mSurface->surfaceSetToPaletteNew();
 
     g_Fodder->mWindow->FrameEnd();
+
+    if(mToolboxSprites)
+        mToolboxSprites->RenderSprites();
+
+    if(mToolboxTiles)
+        mToolboxTiles->RenderTiles();
 }
 
 /**

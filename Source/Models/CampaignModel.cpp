@@ -85,18 +85,13 @@ QVariant cCampaignModel::headerData(int section, Qt::Orientation orientation, in
 }
 
 void cCampaignModel::SetCampaign(cCampaign* pCampaign) {
-    beginRemoveRows(QModelIndex(), 0, rowCount());
-    endRemoveRows();
 
     if (!pCampaign)
         return;
 
     mCampaign = pCampaign;
 
-    if (mCampaign->getMissions().size()) {
-        beginInsertRows(QModelIndex(), 0, mCampaign->getMissions().size() - 1);
-        endInsertRows();
-    }
+    DataUpdated();
 }
 
 Qt::ItemFlags cCampaignModel::flags(const QModelIndex &index) const {
