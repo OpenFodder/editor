@@ -66,7 +66,6 @@ void cCampaignModel::DataUpdated() {
     if (!mCampaign->getMissions().size())
         return;
 
-    //emit QAbstractTableModel::dataChanged(index(0,0), index(0,0));
     beginResetModel();
     endResetModel();
 }

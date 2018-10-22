@@ -74,10 +74,6 @@ void cMissionModel::DataUpdated() {
     if (!mMission)
         return;
     
-    QModelIndex topLeft = createIndex(0, 0);
-    QModelIndex topRight = createIndex(mMission->mPhases.size(), 1);
-
-    //emit dataChanged(topLeft, topRight);
     beginResetModel();
     endResetModel();
 }
