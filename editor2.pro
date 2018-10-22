@@ -15,7 +15,7 @@ INCLUDEPATH += /usr/include/SDL2
 
 LIBS += -lSDL2 -lSDL2_mixer
 QT += widgets
-QMAKE_CXXFLAGS += -g
+QMAKE_CXXFLAGS += -g -std=c++14
 
 # The following define makes your compiler warn you if you use any
 # feature of Qt which has been marked as deprecated (the exact warnings
