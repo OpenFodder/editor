@@ -169,7 +169,7 @@ void cOFED::moveEvent(QMoveEvent *event) {
 		mToolboxTiles->move(x() + width(), y());
 
 	if(mToolboxSprites)
-		mToolboxSprites->move(x(), y() + height() + 30);
+		mToolboxSprites->move(x() - 90, y() + height() + 35);
 
     if(mToolboxCampaigns)
         mToolboxCampaigns->move(x() - mToolboxCampaigns->width(), y());
