@@ -38,6 +38,7 @@ HEADERS += Source/OFED.hpp \
            Source/Dialogs/ToolboxTiles.hpp \
            Source/Models/CampaignModel.hpp \
            Source/Models/MissionModel.hpp \
+		   Source/Models/SpriteModel.hpp \
            Dependencies/OpenFodder/Source/Campaign.hpp \
            Dependencies/OpenFodder/Source/CopyProtection.hpp \
            Dependencies/OpenFodder/Source/Dimension.hpp \
@@ -95,6 +96,7 @@ SOURCES += Source/main.cpp \
            Source/Dialogs/ToolboxTiles.cpp \
            Source/Models/CampaignModel.cpp \
            Source/Models/MissionModel.cpp \
+		   Source/Models/SpriteModel.cpp \
            Dependencies/OpenFodder/Source/Campaign.cpp \
            Dependencies/OpenFodder/Source/CopyProtection.cpp \
            Dependencies/OpenFodder/Source/Event.cpp \
