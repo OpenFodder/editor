@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>496</width>
+    <width>495</width>
     <height>613</height>
    </rect>
   </property>
@@ -53,7 +53,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -70,6 +70,9 @@
            <widget class="QTableView" name="mMissionTable">
             <property name="editTriggers">
              <set>QAbstractItemView::AnyKeyPressed|QAbstractItemView::EditKeyPressed</set>
+            </property>
+            <property name="alternatingRowColors">
+             <bool>true</bool>
             </property>
             <property name="selectionMode">
              <enum>QAbstractItemView::SingleSelection</enum>
@@ -114,6 +117,9 @@
             <property name="editTriggers">
              <set>QAbstractItemView::AnyKeyPressed|QAbstractItemView::EditKeyPressed</set>
             </property>
+            <property name="alternatingRowColors">
+             <bool>true</bool>
+            </property>
             <property name="selectionMode">
              <enum>QAbstractItemView::SingleSelection</enum>
             </property>
@@ -155,6 +161,15 @@
          <layout class="QVBoxLayout" name="verticalLayout_11">
           <item>
            <widget class="QTableView" name="mSpritesTable">
+            <property name="alternatingRowColors">
+             <bool>true</bool>
+            </property>
+            <property name="selectionMode">
+             <enum>QAbstractItemView::ExtendedSelection</enum>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectRows</enum>
+            </property>
             <attribute name="horizontalHeaderStretchLastSection">
              <bool>true</bool>
             </attribute>
