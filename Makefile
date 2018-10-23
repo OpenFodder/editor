@@ -14,7 +14,7 @@ CC            = gcc
 CXX           = g++
 DEFINES       = -D_OFED -DQT_DEPRECATED_WARNINGS -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -O2 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-CXXFLAGS      = -pipe -g -O2 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
+CXXFLAGS      = -pipe -g -std=c++14 -O2 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 INCPATH       = -I. -I. -ISource -IDependencies/OpenFodder/Source -isystem /usr/include/SDL2 -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -isystem /usr/include/libdrm -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++
 QMAKE         = /usr/lib/qt5/bin/qmake
 DEL_FILE      = rm -f
@@ -59,6 +59,7 @@ SOURCES       = Source/main.cpp \
 		Source/Dialogs/ToolboxTiles.cpp \
 		Source/Models/CampaignModel.cpp \
 		Source/Models/MissionModel.cpp \
+		Source/Models/SpriteModel.cpp \
 		Dependencies/OpenFodder/Source/Campaign.cpp \
 		Dependencies/OpenFodder/Source/CopyProtection.cpp \
 		Dependencies/OpenFodder/Source/Event.cpp \
@@ -101,6 +102,7 @@ OBJECTS       = main.o \
 		ToolboxTiles.o \
 		CampaignModel.o \
 		MissionModel.o \
+		SpriteModel.o \
 		Campaign.o \
 		CopyProtection.o \
 		Event.o \
@@ -217,6 +219,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		Source/Dialogs/ToolboxTiles.hpp \
 		Source/Models/CampaignModel.hpp \
 		Source/Models/MissionModel.hpp \
+		Source/Models/SpriteModel.hpp \
 		Dependencies/OpenFodder/Source/Campaign.hpp \
 		Dependencies/OpenFodder/Source/CopyProtection.hpp \
 		Dependencies/OpenFodder/Source/Dimension.hpp \
@@ -268,6 +271,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		Source/Dialogs/ToolboxTiles.cpp \
 		Source/Models/CampaignModel.cpp \
 		Source/Models/MissionModel.cpp \
+		Source/Models/SpriteModel.cpp \
 		Dependencies/OpenFodder/Source/Campaign.cpp \
 		Dependencies/OpenFodder/Source/CopyProtection.cpp \
 		Dependencies/OpenFodder/Source/Event.cpp \
@@ -484,8 +488,8 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents Project/VS2017/ofed.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents Source/ofed.hpp Source/stdafx_ofed.hpp Source/WindowQT.hpp Source/Dialogs/CampaignDialog.hpp Source/Dialogs/NewMapDialog.hpp Source/Dialogs/ToolboxSprites.hpp Source/Dialogs/ToolboxTiles.hpp Source/Models/CampaignModel.hpp Source/Models/MissionModel.hpp Dependencies/OpenFodder/Source/Campaign.hpp Dependencies/OpenFodder/Source/CopyProtection.hpp Dependencies/OpenFodder/Source/Dimension.hpp Dependencies/OpenFodder/Source/Event.hpp Dependencies/OpenFodder/Source/Fodder.hpp Dependencies/OpenFodder/Source/FontData.hpp Dependencies/OpenFodder/Source/GameData.hpp Dependencies/OpenFodder/Source/Graphics.hpp Dependencies/OpenFodder/Source/GUI_Element.hpp Dependencies/OpenFodder/Source/IntroData.hpp Dependencies/OpenFodder/Source/Map.hpp Dependencies/OpenFodder/Source/md5.hpp Dependencies/OpenFodder/Source/Position.hpp Dependencies/OpenFodder/Source/Recruits.hpp Dependencies/OpenFodder/Source/Resources.hpp Dependencies/OpenFodder/Source/Singleton.hpp Dependencies/OpenFodder/Source/Sound.hpp Dependencies/OpenFodder/Source/Sprites.hpp Dependencies/OpenFodder/Source/SpriteSheet.hpp Dependencies/OpenFodder/Source/stdafx.hpp Dependencies/OpenFodder/Source/Surface.hpp Dependencies/OpenFodder/Source/Tiles.hpp Dependencies/OpenFodder/Source/Types.hpp Dependencies/OpenFodder/Source/Versions.hpp Dependencies/OpenFodder/Source/Window.hpp Dependencies/OpenFodder/Projects/VS2017/resource.h Dependencies/OpenFodder/Source/Amiga/audiostream.hpp Dependencies/OpenFodder/Source/Amiga/dernc.hpp Dependencies/OpenFodder/Source/Amiga/Graphics_Amiga.hpp Dependencies/OpenFodder/Source/Amiga/paula.hpp Dependencies/OpenFodder/Source/Amiga/Resource_Amiga_File.hpp Dependencies/OpenFodder/Source/Amiga/rjp1.hpp Dependencies/OpenFodder/Source/Amiga/Sound_Amiga.hpp Dependencies/OpenFodder/Source/Amiga/SpriteData_Amiga.hpp Dependencies/OpenFodder/Source/PC/Graphics_PC.hpp Dependencies/OpenFodder/Source/PC/Resource_PC_CD.hpp Dependencies/OpenFodder/Source/PC/Sound_PC.hpp Dependencies/OpenFodder/Source/PC/Sound_PC2.hpp Dependencies/OpenFodder/Source/PC/SpriteData_PC.hpp Dependencies/OpenFodder/Source/PC/VocTable.hpp Dependencies/OpenFodder/Source/Structures/Barracks.hpp Dependencies/OpenFodder/Source/Utils/diamondsquare.hpp Dependencies/OpenFodder/Source/Utils/json.hpp $(DISTDIR)/
-	$(COPY_FILE) --parents Source/main.cpp Source/OFED.cpp Source/WindowQT.cpp Source/Dialogs/CampaignDialog.cpp Source/Dialogs/NewMapDialog.cpp Source/Dialogs/ToolboxSprites.cpp Source/Dialogs/ToolboxTiles.cpp Source/Models/CampaignModel.cpp Source/Models/MissionModel.cpp Dependencies/OpenFodder/Source/Campaign.cpp Dependencies/OpenFodder/Source/CopyProtection.cpp Dependencies/OpenFodder/Source/Event.cpp Dependencies/OpenFodder/Source/Fodder.cpp Dependencies/OpenFodder/Source/FontData.cpp Dependencies/OpenFodder/Source/GameData.cpp Dependencies/OpenFodder/Source/Graphics.cpp Dependencies/OpenFodder/Source/GUI_Element.cpp Dependencies/OpenFodder/Source/md5.cpp Dependencies/OpenFodder/Source/Recruits.cpp Dependencies/OpenFodder/Source/Resources.cpp Dependencies/OpenFodder/Source/Sound.cpp Dependencies/OpenFodder/Source/Sprites.cpp Dependencies/OpenFodder/Source/SpriteSheet.cpp Dependencies/OpenFodder/Source/stdafx.cpp Dependencies/OpenFodder/Source/Surface.cpp Dependencies/OpenFodder/Source/Tiles.cpp Dependencies/OpenFodder/Source/Versions.cpp Dependencies/OpenFodder/Source/Window.cpp Dependencies/OpenFodder/Source/Amiga/dernc.cpp Dependencies/OpenFodder/Source/Amiga/Graphics_Amiga.cpp Dependencies/OpenFodder/Source/Amiga/IntroData_Amiga.cpp Dependencies/OpenFodder/Source/Amiga/paula.cpp Dependencies/OpenFodder/Source/Amiga/Resource_Amiga_File.cpp Dependencies/OpenFodder/Source/Amiga/rjp1.cpp Dependencies/OpenFodder/Source/Amiga/Sound_Amiga.cpp Dependencies/OpenFodder/Source/PC/Graphics_PC.cpp Dependencies/OpenFodder/Source/PC/IntroData_PC.cpp Dependencies/OpenFodder/Source/PC/Resource_PC_CD.cpp Dependencies/OpenFodder/Source/PC/Sound_PC.cpp Dependencies/OpenFodder/Source/PC/Sound_PC2.cpp Dependencies/OpenFodder/Source/Structures/Barracks.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents Source/ofed.hpp Source/stdafx_ofed.hpp Source/WindowQT.hpp Source/Dialogs/CampaignDialog.hpp Source/Dialogs/NewMapDialog.hpp Source/Dialogs/ToolboxSprites.hpp Source/Dialogs/ToolboxTiles.hpp Source/Models/CampaignModel.hpp Source/Models/MissionModel.hpp Source/Models/SpriteModel.hpp Dependencies/OpenFodder/Source/Campaign.hpp Dependencies/OpenFodder/Source/CopyProtection.hpp Dependencies/OpenFodder/Source/Dimension.hpp Dependencies/OpenFodder/Source/Event.hpp Dependencies/OpenFodder/Source/Fodder.hpp Dependencies/OpenFodder/Source/FontData.hpp Dependencies/OpenFodder/Source/GameData.hpp Dependencies/OpenFodder/Source/Graphics.hpp Dependencies/OpenFodder/Source/GUI_Element.hpp Dependencies/OpenFodder/Source/IntroData.hpp Dependencies/OpenFodder/Source/Map.hpp Dependencies/OpenFodder/Source/md5.hpp Dependencies/OpenFodder/Source/Position.hpp Dependencies/OpenFodder/Source/Recruits.hpp Dependencies/OpenFodder/Source/Resources.hpp Dependencies/OpenFodder/Source/Singleton.hpp Dependencies/OpenFodder/Source/Sound.hpp Dependencies/OpenFodder/Source/Sprites.hpp Dependencies/OpenFodder/Source/SpriteSheet.hpp Dependencies/OpenFodder/Source/stdafx.hpp Dependencies/OpenFodder/Source/Surface.hpp Dependencies/OpenFodder/Source/Tiles.hpp Dependencies/OpenFodder/Source/Types.hpp Dependencies/OpenFodder/Source/Versions.hpp Dependencies/OpenFodder/Source/Window.hpp Dependencies/OpenFodder/Projects/VS2017/resource.h Dependencies/OpenFodder/Source/Amiga/audiostream.hpp Dependencies/OpenFodder/Source/Amiga/dernc.hpp Dependencies/OpenFodder/Source/Amiga/Graphics_Amiga.hpp Dependencies/OpenFodder/Source/Amiga/paula.hpp Dependencies/OpenFodder/Source/Amiga/Resource_Amiga_File.hpp Dependencies/OpenFodder/Source/Amiga/rjp1.hpp Dependencies/OpenFodder/Source/Amiga/Sound_Amiga.hpp Dependencies/OpenFodder/Source/Amiga/SpriteData_Amiga.hpp Dependencies/OpenFodder/Source/PC/Graphics_PC.hpp Dependencies/OpenFodder/Source/PC/Resource_PC_CD.hpp Dependencies/OpenFodder/Source/PC/Sound_PC.hpp Dependencies/OpenFodder/Source/PC/Sound_PC2.hpp Dependencies/OpenFodder/Source/PC/SpriteData_PC.hpp Dependencies/OpenFodder/Source/PC/VocTable.hpp Dependencies/OpenFodder/Source/Structures/Barracks.hpp Dependencies/OpenFodder/Source/Utils/diamondsquare.hpp Dependencies/OpenFodder/Source/Utils/json.hpp $(DISTDIR)/
+	$(COPY_FILE) --parents Source/main.cpp Source/OFED.cpp Source/WindowQT.cpp Source/Dialogs/CampaignDialog.cpp Source/Dialogs/NewMapDialog.cpp Source/Dialogs/ToolboxSprites.cpp Source/Dialogs/ToolboxTiles.cpp Source/Models/CampaignModel.cpp Source/Models/MissionModel.cpp Source/Models/SpriteModel.cpp Dependencies/OpenFodder/Source/Campaign.cpp Dependencies/OpenFodder/Source/CopyProtection.cpp Dependencies/OpenFodder/Source/Event.cpp Dependencies/OpenFodder/Source/Fodder.cpp Dependencies/OpenFodder/Source/FontData.cpp Dependencies/OpenFodder/Source/GameData.cpp Dependencies/OpenFodder/Source/Graphics.cpp Dependencies/OpenFodder/Source/GUI_Element.cpp Dependencies/OpenFodder/Source/md5.cpp Dependencies/OpenFodder/Source/Recruits.cpp Dependencies/OpenFodder/Source/Resources.cpp Dependencies/OpenFodder/Source/Sound.cpp Dependencies/OpenFodder/Source/Sprites.cpp Dependencies/OpenFodder/Source/SpriteSheet.cpp Dependencies/OpenFodder/Source/stdafx.cpp Dependencies/OpenFodder/Source/Surface.cpp Dependencies/OpenFodder/Source/Tiles.cpp Dependencies/OpenFodder/Source/Versions.cpp Dependencies/OpenFodder/Source/Window.cpp Dependencies/OpenFodder/Source/Amiga/dernc.cpp Dependencies/OpenFodder/Source/Amiga/Graphics_Amiga.cpp Dependencies/OpenFodder/Source/Amiga/IntroData_Amiga.cpp Dependencies/OpenFodder/Source/Amiga/paula.cpp Dependencies/OpenFodder/Source/Amiga/Resource_Amiga_File.cpp Dependencies/OpenFodder/Source/Amiga/rjp1.cpp Dependencies/OpenFodder/Source/Amiga/Sound_Amiga.cpp Dependencies/OpenFodder/Source/PC/Graphics_PC.cpp Dependencies/OpenFodder/Source/PC/IntroData_PC.cpp Dependencies/OpenFodder/Source/PC/Resource_PC_CD.cpp Dependencies/OpenFodder/Source/PC/Sound_PC.cpp Dependencies/OpenFodder/Source/PC/Sound_PC2.cpp Dependencies/OpenFodder/Source/Structures/Barracks.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents Project/VS2017/ofed.ui Source/Dialogs/CampaignDialog.ui Source/Dialogs/NewMapDialog.ui Source/Dialogs/ToolboxSprites.ui Source/Dialogs/ToolboxTiles.ui $(DISTDIR)/
 
 
@@ -521,7 +525,7 @@ compiler_moc_predefs_make_all: moc_predefs.h
 compiler_moc_predefs_clean:
 	-$(DEL_FILE) moc_predefs.h
 moc_predefs.h: /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
-	g++ -pipe -g -O2 -Wall -W -dM -E -o moc_predefs.h /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
+	g++ -pipe -g -std=c++14 -O2 -Wall -W -dM -E -o moc_predefs.h /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 
 compiler_moc_header_make_all: moc_ofed.cpp
 compiler_moc_header_clean:
@@ -566,6 +570,7 @@ moc_ofed.cpp: ui_ofed.h \
 		Source/WindowQT.hpp \
 		Source/Models/CampaignModel.hpp \
 		Source/Models/MissionModel.hpp \
+		Source/Models/SpriteModel.hpp \
 		Source/Dialogs/CampaignDialog.hpp \
 		Source/Dialogs/NewMapDialog.hpp \
 		Source/Dialogs/ToolboxTiles.hpp \
@@ -621,6 +626,7 @@ ui_ofed.h: Project/VS2017/ofed.ui \
 		Source/WindowQT.hpp \
 		Source/Models/CampaignModel.hpp \
 		Source/Models/MissionModel.hpp \
+		Source/Models/SpriteModel.hpp \
 		Source/Dialogs/CampaignDialog.hpp \
 		Source/Dialogs/NewMapDialog.hpp \
 		Source/Dialogs/ToolboxTiles.hpp \
@@ -694,6 +700,7 @@ main.o: Source/main.cpp Source/ofed.hpp \
 		Source/WindowQT.hpp \
 		Source/Models/CampaignModel.hpp \
 		Source/Models/MissionModel.hpp \
+		Source/Models/SpriteModel.hpp \
 		Source/Dialogs/CampaignDialog.hpp \
 		Source/Dialogs/NewMapDialog.hpp \
 		Source/Dialogs/ToolboxTiles.hpp \
@@ -741,6 +748,7 @@ OFED.o: Source/OFED.cpp Source/ofed.hpp \
 		Source/WindowQT.hpp \
 		Source/Models/CampaignModel.hpp \
 		Source/Models/MissionModel.hpp \
+		Source/Models/SpriteModel.hpp \
 		Source/Dialogs/CampaignDialog.hpp \
 		Source/Dialogs/NewMapDialog.hpp \
 		Source/Dialogs/ToolboxTiles.hpp \
@@ -789,6 +797,7 @@ WindowQT.o: Source/WindowQT.cpp Source/stdafx_ofed.hpp \
 		Source/WindowQT.hpp \
 		Source/Models/CampaignModel.hpp \
 		Source/Models/MissionModel.hpp \
+		Source/Models/SpriteModel.hpp \
 		Source/Dialogs/CampaignDialog.hpp \
 		Source/Dialogs/NewMapDialog.hpp \
 		Source/Dialogs/ToolboxTiles.hpp \
@@ -836,6 +845,7 @@ CampaignDialog.o: Source/Dialogs/CampaignDialog.cpp Source/stdafx_ofed.hpp \
 		Source/WindowQT.hpp \
 		Source/Models/CampaignModel.hpp \
 		Source/Models/MissionModel.hpp \
+		Source/Models/SpriteModel.hpp \
 		Source/Dialogs/CampaignDialog.hpp \
 		Source/Dialogs/NewMapDialog.hpp \
 		Source/Dialogs/ToolboxTiles.hpp \
@@ -884,6 +894,7 @@ NewMapDialog.o: Source/Dialogs/NewMapDialog.cpp Source/stdafx_ofed.hpp \
 		Source/WindowQT.hpp \
 		Source/Models/CampaignModel.hpp \
 		Source/Models/MissionModel.hpp \
+		Source/Models/SpriteModel.hpp \
 		Source/Dialogs/CampaignDialog.hpp \
 		Source/Dialogs/NewMapDialog.hpp \
 		Source/Dialogs/ToolboxTiles.hpp \
@@ -932,6 +943,7 @@ ToolboxSprites.o: Source/Dialogs/ToolboxSprites.cpp Source/stdafx_ofed.hpp \
 		Source/WindowQT.hpp \
 		Source/Models/CampaignModel.hpp \
 		Source/Models/MissionModel.hpp \
+		Source/Models/SpriteModel.hpp \
 		Source/Dialogs/CampaignDialog.hpp \
 		Source/Dialogs/NewMapDialog.hpp \
 		Source/Dialogs/ToolboxTiles.hpp \
@@ -980,6 +992,7 @@ ToolboxTiles.o: Source/Dialogs/ToolboxTiles.cpp Source/stdafx_ofed.hpp \
 		Source/WindowQT.hpp \
 		Source/Models/CampaignModel.hpp \
 		Source/Models/MissionModel.hpp \
+		Source/Models/SpriteModel.hpp \
 		Source/Dialogs/CampaignDialog.hpp \
 		Source/Dialogs/NewMapDialog.hpp \
 		Source/Dialogs/ToolboxTiles.hpp \
@@ -1028,6 +1041,7 @@ CampaignModel.o: Source/Models/CampaignModel.cpp Source/stdafx_ofed.hpp \
 		Source/WindowQT.hpp \
 		Source/Models/CampaignModel.hpp \
 		Source/Models/MissionModel.hpp \
+		Source/Models/SpriteModel.hpp \
 		Source/Dialogs/CampaignDialog.hpp \
 		Source/Dialogs/NewMapDialog.hpp \
 		Source/Dialogs/ToolboxTiles.hpp \
@@ -1073,11 +1087,60 @@ MissionModel.o: Source/Models/MissionModel.cpp Source/stdafx_ofed.hpp \
 		Source/WindowQT.hpp \
 		Source/Models/CampaignModel.hpp \
 		Source/Models/MissionModel.hpp \
+		Source/Models/SpriteModel.hpp \
 		Source/Dialogs/CampaignDialog.hpp \
 		Source/Dialogs/NewMapDialog.hpp \
 		Source/Dialogs/ToolboxTiles.hpp \
 		Source/Dialogs/ToolboxSprites.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o MissionModel.o Source/Models/MissionModel.cpp
+
+SpriteModel.o: Source/Models/SpriteModel.cpp Source/stdafx_ofed.hpp \
+		Dependencies/OpenFodder/Source/stdafx.hpp \
+		Dependencies/OpenFodder/Source/Types.hpp \
+		Dependencies/OpenFodder/Source/Singleton.hpp \
+		Dependencies/OpenFodder/Source/Position.hpp \
+		Dependencies/OpenFodder/Source/Dimension.hpp \
+		Dependencies/OpenFodder/Source/Event.hpp \
+		Dependencies/OpenFodder/Source/Surface.hpp \
+		Dependencies/OpenFodder/Source/Resources.hpp \
+		Dependencies/OpenFodder/Source/PC/Resource_PC_CD.hpp \
+		Dependencies/OpenFodder/Source/Amiga/Resource_Amiga_File.hpp \
+		Dependencies/OpenFodder/Source/CopyProtection.hpp \
+		Dependencies/OpenFodder/Source/IntroData.hpp \
+		Dependencies/OpenFodder/Source/Campaign.hpp \
+		Dependencies/OpenFodder/Source/Map.hpp \
+		Dependencies/OpenFodder/Source/Tiles.hpp \
+		Dependencies/OpenFodder/Source/FontData.hpp \
+		Dependencies/OpenFodder/Source/Graphics.hpp \
+		Dependencies/OpenFodder/Source/Recruits.hpp \
+		Dependencies/OpenFodder/Source/Versions.hpp \
+		Dependencies/OpenFodder/Source/Window.hpp \
+		Dependencies/OpenFodder/Source/Sound.hpp \
+		Dependencies/OpenFodder/Source/GUI_Element.hpp \
+		Dependencies/OpenFodder/Source/SpriteSheet.hpp \
+		Dependencies/OpenFodder/Source/Fodder.hpp \
+		Dependencies/OpenFodder/Source/Sprites.hpp \
+		Dependencies/OpenFodder/Source/GameData.hpp \
+		Dependencies/OpenFodder/Source/Structures/Barracks.hpp \
+		Dependencies/OpenFodder/Source/PC/Graphics_PC.hpp \
+		Dependencies/OpenFodder/Source/PC/Sound_PC.hpp \
+		Dependencies/OpenFodder/Source/PC/Sound_PC2.hpp \
+		Dependencies/OpenFodder/Source/Amiga/paula.hpp \
+		Dependencies/OpenFodder/Source/Amiga/audiostream.hpp \
+		Dependencies/OpenFodder/Source/Amiga/rjp1.hpp \
+		Dependencies/OpenFodder/Source/Amiga/Sound_Amiga.hpp \
+		Dependencies/OpenFodder/Source/Amiga/Graphics_Amiga.hpp \
+		Source/WindowQT.hpp \
+		Source/Models/CampaignModel.hpp \
+		Source/Models/MissionModel.hpp \
+		Source/Models/SpriteModel.hpp \
+		Source/Dialogs/CampaignDialog.hpp \
+		Source/Dialogs/NewMapDialog.hpp \
+		Source/Dialogs/ToolboxTiles.hpp \
+		Source/Dialogs/ToolboxSprites.hpp \
+		Source/ofed.hpp \
+		ui_ofed.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o SpriteModel.o Source/Models/SpriteModel.cpp
 
 Campaign.o: Dependencies/OpenFodder/Source/Campaign.cpp Dependencies/OpenFodder/Source/stdafx.hpp \
 		Dependencies/OpenFodder/Source/Types.hpp \
