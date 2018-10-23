@@ -3,7 +3,7 @@
 class cSpriteModel : public QAbstractTableModel {
 
 public:
-    cSpriteModel(std::shared_ptr<cMission> pMission = 0);
+    cSpriteModel();
     virtual ~cSpriteModel();
 
     int rowCount(const QModelIndex& parent = QModelIndex()) const {

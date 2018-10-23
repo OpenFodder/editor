@@ -5,7 +5,7 @@
 #include <QStandardItem>
 #include <QAbstractTableModel>
 
-cSpriteModel::cSpriteModel(std::shared_ptr<cMission> pMission) : QAbstractTableModel(0) {
+cSpriteModel::cSpriteModel() : QAbstractTableModel(0) {
 
     connect(this, &cSpriteModel::dataChanged, this, &cSpriteModel::dataChanged);
 }
