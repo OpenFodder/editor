@@ -936,7 +936,7 @@ void cOFED::ShowDialog_LoadCampaign() {
 
     LoadMap();
 
-    mToolboxCampaigns->LoadCampaign(&g_Fodder->mGame_Data.mCampaign);
+    mToolboxCampaigns->LoadMissions();
 }
 
 void cOFED::ShowDialog_SaveCampaign() {

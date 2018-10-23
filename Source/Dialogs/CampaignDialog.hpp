@@ -9,7 +9,7 @@ class cCampaignDialog : public QDialog {
     bool mLoadingMission;
 
 protected:
-    void LoadMissions();
+
 
 public:
     cCampaignDialog(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
@@ -26,6 +26,7 @@ public:
     void PhaseClicked(QModelIndex pIndex);
 
     void LoadPhase(const size_t pNumber);
+    void LoadMissions();
 
     void AggressMinChange(int pValue);
     void AggressMaxChange(int pValue);
