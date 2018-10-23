@@ -22,9 +22,6 @@ cToolboxSprites::~cToolboxSprites() {
 }
 
 void cToolboxSprites::RenderSprites() {
-	size_t width = this->width();
-	size_t height = this->height();
-
 	size_t X = 0, Y = 0;
 	size_t BigY = 0;
 	size_t MultiplierX = g_Fodder->mVersionCurrent->mPlatform == ePlatform::Amiga ? 8 : 1;
@@ -104,16 +101,16 @@ void cToolboxSprites::RenderSprites() {
 	SDL_Surface* Source = mSpriteSurface->GetSurface();
 	mImage = QImage(static_cast<uchar*>(Source->pixels), Source->w, Source->h, QImage::Format_RGB32);
 
-	mScaleWidth = (static_cast<double>(size().width()) / static_cast<double>(mImage.width()));
-	mScaleHeight = (static_cast<double>(size().height()) / static_cast<double>(mImage.height()));
-
 	this->repaint();
 }
 
 void cToolboxSprites::paintEvent(QPaintEvent* e) {
 
+    mScaleWidth = (static_cast<double>(size().width()) / static_cast<double>(mImage.width()));
+    mScaleHeight = (static_cast<double>(size().height()) / static_cast<double>(mImage.height()));
+
 	QPainter painter(this);
-	QRectF Dest(0, 0, size().width(), size().height());
+	QRectF Dest(0, 0, size().width(), size().height() - 20);
 	QRectF Src(0, 0, mImage.width(), mImage.height());
 
 	painter.drawImage(Dest, mImage, Src);
@@ -123,12 +120,6 @@ void cToolboxSprites::mousePressEvent(QMouseEvent *eventPress) {
 	size_t MouseX = eventPress->x() / mScaleWidth;
 	size_t MouseY = eventPress->y() / mScaleHeight;
 
-	uint32 TileX = MouseX / 18;
-	uint32 TileY = MouseY / 18;
-
-	// 20 Tiles per row
-	uint32 TileID = (20 * TileY) + TileX;
-
 	if (eventPress->button() == Qt::MouseButton::LeftButton) {
 
         for( auto& Range : mSpriteRanges ) {
@@ -137,9 +128,28 @@ void cToolboxSprites::mousePressEvent(QMouseEvent *eventPress) {
                 if (MouseY >= Range.mY && MouseY <= Range.mY + Range.mHeight) {
 
                     g_OFED->SetCursorSprite(Range.mSpriteID);
+                    this->repaint();
                     return;
                 }
             }
         }
 	}
+}
+void cToolboxSprites::mouseMoveEvent(QMouseEvent *eventMove) {
+
+    size_t MouseX = eventMove->x() / mScaleWidth;
+    size_t MouseY = eventMove->y() / mScaleHeight;
+
+    for (auto& Range : mSpriteRanges) {
+
+        if (MouseX >= Range.mX && MouseX <= Range.mX + Range.mWidth) {
+            if (MouseY >= Range.mY && MouseY <= Range.mY + Range.mHeight) {
+
+                mUi->mCurrentSprite->setText(QString::fromStdString(g_SpriteName[Range.mSpriteID]));
+                return;
+            }
+        }
+    }
+
+    mUi->mCurrentSprite->setText("");
 }

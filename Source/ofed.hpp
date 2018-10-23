@@ -36,6 +36,7 @@ struct sTiles {
 	sTiles( bool pOnce = false ) { mOnce = pOnce;  }
 };
 
+
 extern int32 g_SpriteAnim[111];
 extern std::string g_SpriteName[111];
 
@@ -59,6 +60,7 @@ public:
 
     void Mission_AddNew();
     void Phase_AddNew();
+    void Sprite_AddNew();
 
 	void AddHut_With_Soldier();
 	void AddHut_With_Indigenous();
@@ -84,6 +86,8 @@ public:
 	void ShowDialog_ToolboxSprites();
     void ShowDialog_ToolboxCampaigns();
 
+    void CloseDialog_ToolboxCampaigns();
+
     void LoadMap();
 
 	void Create_NewMap(const std::string& pTileSet, const std::string& pTileSub, size_t pWidth, size_t pHeight, const bool pRandom);
@@ -107,6 +111,9 @@ private:
     cCampaignDialog* mToolboxCampaigns;
 	cToolboxTiles*	mToolboxTiles;
 	cToolboxSprites* mToolboxSprites;
+
+    QLabel* mMissionLabel;
+    QLabel* mPhaseLabel;
 
 	int16	mCursorSprite;
 	sTiles	mCursorRangeTiles;

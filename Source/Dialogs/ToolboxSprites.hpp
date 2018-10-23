@@ -27,7 +27,8 @@ class cToolboxSprites : public QDialog {
 protected:
 
 	void paintEvent(QPaintEvent* e);
-	void mousePressEvent(QMouseEvent *eventPress);
+	void mousePressEvent(QMouseEvent *eventPress) override;
+    void mouseMoveEvent(QMouseEvent *eventMove) override;
 
 public:
 	cToolboxSprites(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());

@@ -168,6 +168,7 @@
     <ClCompile Include="..\..\Source\main.cpp" />
     <ClCompile Include="..\..\Source\Models\CampaignModel.cpp" />
     <ClCompile Include="..\..\Source\Models\MissionModel.cpp" />
+    <ClCompile Include="..\..\Source\Models\SpriteModel.cpp" />
     <ClCompile Include="..\..\Source\ofed.cpp" />
     <ClCompile Include="..\..\Source\WindowQT.cpp" />
   </ItemGroup>
@@ -223,6 +224,7 @@
     <ClInclude Include="..\..\Source\Dialogs\ToolboxTiles.hpp" />
     <ClInclude Include="..\..\Source\Models\CampaignModel.hpp" />
     <ClInclude Include="..\..\Source\Models\MissionModel.hpp" />
+    <ClInclude Include="..\..\Source\Models\SpriteModel.hpp" />
     <ClInclude Include="GeneratedFiles\ui_CampaignDialog.h" />
     <ClInclude Include="GeneratedFiles\ui_ToolboxSprites.h" />
     <ClInclude Include="GeneratedFiles\ui_ToolboxTiles.h" />

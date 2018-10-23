@@ -18,9 +18,7 @@ cOFED::~cOFED() {
     
 }
 
-cOFED::cOFED(QWidget *parent)
-	: QMainWindow(parent)
-{
+cOFED::cOFED(QWidget *parent) : QMainWindow(parent) {
 	ui.setupUi(this);
 
     mToolboxCampaigns = 0;
@@ -36,6 +34,12 @@ cOFED::cOFED(QWidget *parent)
 	mCursorSurface = std::make_shared<cSurface>(16, 16);
 
 	SetupSprites();
+
+    mMissionLabel = new QLabel();
+    mPhaseLabel = new QLabel();
+
+    statusBar()->addWidget(mMissionLabel);
+    statusBar()->addWidget(mPhaseLabel);
 
 	// Menu Items
     QObject::connect(ui.actionCampaign_New, &QAction::triggered, this, &cOFED::ShowDialog_NewCampaign);
@@ -112,11 +116,9 @@ void cOFED::OpenFodder_Prepare() {
 	g_Fodder->Squad_Set_Squad_Leader();
 	g_Fodder->Sprite_Clear_All();
 
+    LoadMap();
 
-	g_Fodder->Phase_Goals_Set();
-
-	g_Fodder->Map_Load();
-	g_Fodder->Map_Load_Sprites();
+    g_Fodder->Phase_Goals_Set();
 
 	g_Fodder->Phase_Soldiers_Count();
     g_Fodder->mGame_Data.Soldier_Sort();
@@ -144,8 +146,6 @@ void cOFED::OpenFodder_Prepare() {
 	g_Fodder->mGUI_Mouse_Modifier_Y = 4;
 	g_Fodder->mCamera_Start_Adjust = 1;
 
-	g_Fodder->mGraphics->PaletteSet();
-
 	g_Fodder->GUI_Sidebar_Prepare_Squads();
 	g_Fodder->Squad_Select_Grenades();
 	g_Fodder->mMap_Destroy_Tiles.clear();
@@ -158,12 +158,6 @@ void cOFED::OpenFodder_Prepare() {
 	g_Fodder->mMission_Finished = 0;
 	g_Fodder->mMission_ShowMapOverview = 0;
 
-	g_Fodder->mSurface->surfaceSetToPaletteNew();
-
-	// Set the top left
-	g_Fodder->mMapTile_Ptr = (0x60 - 8) - (g_Fodder->mMapWidth * 2);
-	g_Fodder->mGraphics->MapTiles_Draw();
-
 	g_Fodder->Mission_Sprites_Handle();
 
     g_Fodder->mWindow->FrameEnd();
@@ -175,7 +169,7 @@ void cOFED::moveEvent(QMoveEvent *event) {
 		mToolboxTiles->move(x() + width(), y());
 
 	if(mToolboxSprites)
-		mToolboxSprites->move(x(), y() + height());
+		mToolboxSprites->move(x(), y() + height() + 30);
 
     if(mToolboxCampaigns)
         mToolboxCampaigns->move(x() - mToolboxCampaigns->width(), y());
@@ -199,18 +193,28 @@ void cOFED::ShowDialog_ToolboxSprites() {
 	mToolboxSprites = new cToolboxSprites(this, 0);
 
 	// Position to the bottom of map editor
-	mToolboxSprites->move(x(), y() + height());
+	mToolboxSprites->move(x(), y() + height() + 30);
 
 	mToolboxSprites->show();
 }
 
 void cOFED::ShowDialog_ToolboxCampaigns() {
-    mToolboxCampaigns = new cCampaignDialog(this, 0);
+    if (!mToolboxCampaigns) {
+        mToolboxCampaigns = new cCampaignDialog(this, 0);
 
-    mToolboxCampaigns->move(x() - mToolboxCampaigns->width(), y());
+        mToolboxCampaigns->move(x() - mToolboxCampaigns->width(), y());
+        mToolboxCampaigns->show();
+    }
+    else
+        mToolboxCampaigns->show();
 
-    mToolboxCampaigns->show();
 }
+
+void cOFED::CloseDialog_ToolboxCampaigns() {
+
+    mToolboxCampaigns->close();
+}
+
 /**
  * Launch the New Map dialog
  */
@@ -533,6 +537,11 @@ void cOFED::Phase_AddNew() {
     } else {
         g_Fodder->mGame_Data.mMission_Current->mPhases.pop_back();
     }
+    mToolboxCampaigns->Refresh();
+}
+
+void cOFED::Sprite_AddNew() {
+
     mToolboxCampaigns->Refresh();
 }
 
@@ -1009,13 +1018,23 @@ void cOFED::Create_NewMap(const std::string& pTileSet, const std::string& pTileS
 			// Update the Toolboxes
 			mToolboxSprites->RenderSprites();
 			mToolboxTiles->RenderTiles();
-
 			return;
 		}
 	}
 }
 
 void cOFED::LoadMap() {
+
+    if (g_Fodder->mGame_Data.mMission_Current) {
+        auto MissionName = "Mission: " + g_Fodder->mGame_Data.mMission_Current->mName;
+        mMissionLabel->setText(QString::fromStdString(MissionName));
+    }
+
+    if (g_Fodder->mGame_Data.mPhase_Current) {
+        auto PhaseName = "Phase: " + g_Fodder->mGame_Data.mPhase_Current->mName;
+        mPhaseLabel->setText(QString::fromStdString(PhaseName));
+    }
+
     g_Fodder->Map_Load();
     g_Fodder->Map_Load_Sprites();
 
@@ -1051,6 +1070,7 @@ void cOFED::CursorReset() {
 void cOFED::CursorUpdate() {
 
     auto Window = std::dynamic_pointer_cast<cWindowQT>(g_Window);
+    Window->CameraTilesUpdate();
 	double ScaleWidth = Window->mScaleWidth;
 	double ScaleHeight = Window->mScaleHeight;
 

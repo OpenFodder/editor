@@ -15,6 +15,8 @@ cCampaignDialog::cCampaignDialog(QWidget *parent, Qt::WindowFlags f) : QDialog(p
 
     mUi->mPhaseTable->setModel(&mMissionModel);
     //mUi->mPhaseTable->setColumnWidth(0, 300);
+    
+    mUi->mSpritesTable->setModel(&mPhaseSpriteModel);
 
     connect(mUi->mAuthorsName, &QLineEdit::textChanged, this, &cCampaignDialog::AuthorsNameChange);
 
@@ -39,6 +41,10 @@ cCampaignDialog::cCampaignDialog(QWidget *parent, Qt::WindowFlags f) : QDialog(p
     LoadMissions();
 }
 
+cCampaignDialog::~cCampaignDialog() {
+    g_OFED->CloseDialog_ToolboxCampaigns();
+}
+
 void cCampaignDialog::accept() {
 
     QDialog::accept();
@@ -47,6 +53,11 @@ void cCampaignDialog::accept() {
 void cCampaignDialog::reject() {
 
     QDialog::reject();
+}
+
+void cCampaignDialog::closeEvent(QCloseEvent *) {
+
+    g_OFED->CloseDialog_ToolboxCampaigns();
 }
 
 void cCampaignDialog::LoadMissions() {
@@ -72,6 +83,7 @@ void cCampaignDialog::Refresh() {
         mMissionModel.SetMission(g_Fodder->mGame_Data.mMission_Current);
 
     mMissionModel.DataUpdated();
+    mPhaseSpriteModel.DataUpdated();
 }
 void cCampaignDialog::AuthorsNameChange(const QString &pNewName) {
 

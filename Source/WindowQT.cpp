@@ -159,12 +159,12 @@ void cWindowQT::CameraUpdate() {
                 }
             } 
 
+            g_OFED->Sprite_AddNew();
+
 			if (g_OFED->GetCursorRangeTiles().mOnce) {
 				g_OFED->CursorReset();
 			}
 		}
-
-        
 	}
 
     // Tick the engine on right click

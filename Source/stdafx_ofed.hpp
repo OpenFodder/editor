@@ -8,12 +8,14 @@
 #include <qdialog.h>
 #include <QtWidgets/QMainWindow>
 #include <QAbstractTableModel>
+#include <qlabel.h>
 
 #include "stdafx.hpp"
 #include "WindowQT.hpp"
 
 #include "Models/CampaignModel.hpp"
 #include "Models/MissionModel.hpp"
+#include "Models/SpriteModel.hpp"
 
 #include "Dialogs/CampaignDialog.hpp"
 #include "Dialogs/NewMapDialog.hpp"

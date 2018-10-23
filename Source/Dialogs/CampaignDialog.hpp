@@ -4,6 +4,8 @@ class cCampaignDialog : public QDialog {
     Ui_CampaignDialog *mUi;
     cCampaignModel mCampaignModel;
     cMissionModel mMissionModel;
+    cSpriteModel mPhaseSpriteModel;
+
     bool mLoadingMission;
 
 protected:
@@ -11,9 +13,12 @@ protected:
 
 public:
     cCampaignDialog(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
+    ~cCampaignDialog();
 
     void accept();
     void reject();
+
+    void closeEvent(QCloseEvent *) override;
 
     void AuthorsNameChange(const QString &pNewName);
 

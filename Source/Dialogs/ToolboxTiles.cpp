@@ -84,5 +84,6 @@ void cToolboxTiles::mousePressEvent(QMouseEvent *eventPress) {
 	if (eventPress->button() == Qt::MouseButton::LeftButton) {
 
 		g_OFED->SetCursorTileID(TileID);
+        this->repaint();
 	}
 }
