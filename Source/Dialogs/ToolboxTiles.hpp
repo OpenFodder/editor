@@ -13,6 +13,7 @@ protected:
 
 	void paintEvent(QPaintEvent* e);
 	void mousePressEvent(QMouseEvent *eventPress);
+    void mouseMoveEvent(QMouseEvent *eventMove) override;
 
 public:
 	cToolboxTiles( QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());

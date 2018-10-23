@@ -56,16 +56,17 @@ void cToolboxTiles::RenderTiles() {
 	SDL_Surface* Source = mTileSurface->GetSurface();
 	mImage = QImage(static_cast<uchar*>(Source->pixels), Source->w, Source->h, QImage::Format_RGB32);
 
-	mScaleWidth = (static_cast<double>(size().width()) / static_cast<double>(mImage.width()));
-	mScaleHeight = (static_cast<double>(size().height()) / static_cast<double>(mImage.height()));
-
 	this->repaint();
 }
 
 void cToolboxTiles::paintEvent(QPaintEvent* e) {
 
+
+    mScaleWidth = (static_cast<double>(size().width()) / static_cast<double>(mImage.width()));
+    mScaleHeight = (static_cast<double>(size().height()) / static_cast<double>(mImage.height()));
+
 	QPainter painter(this);
-	QRectF Dest(0, 0, size().width(), size().height());
+	QRectF Dest(0, 0, size().width(), size().height() - 20);
 	QRectF Src(0, 0, mImage.width(), mImage.height());
 
 	painter.drawImage(Dest, mImage, Src);
@@ -86,4 +87,18 @@ void cToolboxTiles::mousePressEvent(QMouseEvent *eventPress) {
 		g_OFED->SetCursorTileID(TileID);
         this->repaint();
 	}
+}
+
+void cToolboxTiles::mouseMoveEvent(QMouseEvent *eventMove) {
+
+    size_t MouseX = eventMove->x() / mScaleWidth;
+    size_t MouseY = eventMove->y() / mScaleHeight;
+
+    uint32 TileX = MouseX / 18;
+    uint32 TileY = MouseY / 18;
+
+    // 20 Tiles per row
+    uint32 TileID = (20 * TileY) + TileX;
+
+    mUi->mCurrentTile->setText(QString::fromStdString(std::to_string(TileID)));
 }
