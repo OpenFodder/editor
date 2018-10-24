@@ -40,6 +40,8 @@ cWindowQT::cWindowQT(QWidget* pParent) : QWidget(pParent), cWindow() {
 
 	// Mouse inside widget callback
 	connect(&mMouseInTimer, &QTimer::timeout, this, &cWindowQT::CameraUpdate);
+
+    
 }
 
 void cWindowQT::FrameEnd() {
@@ -97,7 +99,7 @@ void cWindowQT::leaveEvent(QEvent *pEvent) {
 void cWindowQT::CameraSetTiles() {
 
 		mCameraTilesX = 0x15;
-		mCameraTilesY = PLATFORM_BASED(0x0c, 0x0E);
+		mCameraTilesY = PLATFORM_BASED(0x0C, 0x0D);
 }
 void cWindowQT::CameraTilesUpdate() {
 	mScaleWidth = (static_cast<double>(size().width()) / static_cast<double>(mScreenSize.mWidth));
@@ -121,9 +123,10 @@ void cWindowQT::CameraUpdate() {
 	// Button Pressed?
 	if (g_Fodder->mMouse_EventLastButtonsPressed & 1) {
 		if (g_Fodder->mMouse_EventLastPosition.mX >= 0 || g_Fodder->mMouse_EventLastPosition.mY >= 0) {
+            
+            uint32 TileX = (double)((g_Fodder->mMouse_EventLastPosition.mX) / 17) + 1;
+            uint32 TileY = (double)((g_Fodder->mMouse_EventLastPosition.mY) / 17);
 
-			uint32 TileX = (g_Fodder->mMouse_EventLastPosition.mX ) / 16;
-			uint32 TileY = (g_Fodder->mMouse_EventLastPosition.mY ) / 16;
 
             // Adding tiles
             if(g_OFED->GetCursorRangeTiles().mTiles.size()) {
@@ -134,25 +137,22 @@ void cWindowQT::CameraUpdate() {
                 }
 
                 for (auto Sprite : g_OFED->GetCursorRangeTiles().mSprites) {
-                    TileX += g_Fodder->mMapTile_MovedHorizontal;
-                    TileY += g_Fodder->mMapTile_MovedVertical;
+
 
                     g_Fodder->Sprite_Add(Sprite.mSpriteID,
-                        ((TileX) * 16) + Sprite.mX - 0x40 - 1,
-                        ((TileY) * 16) + Sprite.mY);
+                        ((TileX) * 16) + Sprite.mX - 1,
+                        ((TileY+1) * 16) + Sprite.mY);
                 }
 
             } else {
                 // Adding a sprite?
                 if (g_OFED->GetCursorSpriteID() != -1) {
-                    TileX += g_Fodder->mMapTile_MovedHorizontal;
-                    TileY += g_Fodder->mMapTile_MovedVertical;
 
                     auto Sheet = g_Fodder->Sprite_Get_Sheet(g_OFED->GetCursorSpriteID(), 0);
 
                     g_Fodder->Sprite_Add(g_OFED->GetCursorSpriteID(),
-                        ((TileX) * 16) - Sheet->mModX - 0x32,
-                        ((TileY) * 16) + Sheet->mModY);
+                        (g_Fodder->mMouse_EventLastPosition.mX) - Sheet->mModX + (g_Fodder->mMapTile_MovedHorizontal * 16),
+                        (g_Fodder->mMouse_EventLastPosition.mY) + Sheet->mModY + (g_Fodder->mMapTile_MovedVertical * 16));
 
                     // Prevent adding a sprite more than once
                     g_Fodder->mMouse_EventLastButtonsPressed &= ~1;
@@ -199,7 +199,7 @@ void cWindowQT::CameraUpdate() {
 
 	// Right
 	if (g_Fodder->mMouse_EventLastPosition.mX > Width - mEdgeWidth) {
-		if (g_Fodder->mMapTile_MovedHorizontal < (g_Fodder->mMapWidth  + 4) - mCameraTilesX) {
+		if (g_Fodder->mMapTile_MovedHorizontal < (g_Fodder->mMapWidth ) - mCameraTilesX) {
 			g_Fodder->MapTile_Move_Right(1);
 		}
 	}

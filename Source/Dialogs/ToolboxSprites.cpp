@@ -46,7 +46,7 @@ void cToolboxSprites::RenderSprites() {
 			SpriteWidth <<= 1;
 			SpriteWidth *= MultiplierX;
 		}
-		Sprite.field_0 = -0x40;
+		Sprite.field_0 = 0;
 		Sprite.field_4 = SpriteHeight - 0x10;
 		Sprite.field_52 = 0;
 		Sprite.field_20 = 0;
@@ -107,7 +107,7 @@ void cToolboxSprites::RenderSprites() {
 void cToolboxSprites::paintEvent(QPaintEvent* e) {
 
     mScaleWidth = (static_cast<double>(size().width()) / static_cast<double>(mImage.width()));
-    mScaleHeight = (static_cast<double>(size().height()) / static_cast<double>(mImage.height()));
+    mScaleHeight = (static_cast<double>(size().height() - 20) / static_cast<double>(mImage.height()));
 
 	QPainter painter(this);
 	QRectF Dest(0, 0, size().width(), size().height() - 20);

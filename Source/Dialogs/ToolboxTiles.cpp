@@ -63,7 +63,7 @@ void cToolboxTiles::paintEvent(QPaintEvent* e) {
 
 
     mScaleWidth = (static_cast<double>(size().width()) / static_cast<double>(mImage.width()));
-    mScaleHeight = (static_cast<double>(size().height()) / static_cast<double>(mImage.height()));
+    mScaleHeight = (static_cast<double>(size().height() - 20) / static_cast<double>(mImage.height()));
 
 	QPainter painter(this);
 	QRectF Dest(0, 0, size().width(), size().height() - 20);

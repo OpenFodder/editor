@@ -1104,7 +1104,7 @@ void cOFED::SetCursorTileID(const size_t pCursorTileID) {
 }
 
 void cOFED::setCursorTiles( sTiles& pTiles) {
-
+    /*
 	mCursorSurface->clearBuffer();
 
 	for ( const auto& Tile : pTiles.mTiles) {
@@ -1117,11 +1117,11 @@ void cOFED::setCursorTiles( sTiles& pTiles) {
 
 	SDL_Surface* Source = mCursorSurface->GetSurface();
 	mCursorImage = QImage(static_cast<uchar*>(Source->pixels), Source->w, Source->h, QImage::Format_RGB32);
-
+    */
 	mCursorRangeTiles = pTiles;
     mCursorSprite = -1;
 
-	CursorUpdate();
+	//CursorUpdate();
 }
 
 void cOFED::SetCursorSprite(const size_t pSpriteID) {
@@ -1130,7 +1130,7 @@ void cOFED::SetCursorSprite(const size_t pSpriteID) {
     int32 AnimID = g_SpriteAnim[pSpriteID];
     if (AnimID < 0)
         return;
-
+    /*
     size_t SpriteWidth = g_Fodder->mSprite_SheetPtr[AnimID][0].mColCount;
     size_t SpriteHeight = g_Fodder->mSprite_SheetPtr[AnimID][0].mRowCount;
 
@@ -1149,12 +1149,12 @@ void cOFED::SetCursorSprite(const size_t pSpriteID) {
 
     SDL_Surface* Source = NewCursor->GetSurface();
     mCursorImage = QImage(static_cast<uchar*>(Source->pixels), Source->w, Source->h, QImage::Format_RGB32);
-
+    */
     mCursorRangeTiles = sTiles();
     mCursorSprite = pSpriteID;
-    CursorUpdate();
+   // CursorUpdate();
 
-    mCursorSurface = NewCursor;
+    //mCursorSurface = NewCursor;
 }
 
 void cOFED::SetupSprites() {
