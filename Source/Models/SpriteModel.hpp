@@ -6,7 +6,7 @@ public:
     cSpriteModel();
     virtual ~cSpriteModel();
 
-    int rowCount(const QModelIndex& parent = QModelIndex()) const {
+    int rowCount(const QModelIndex& parent) const override {
         int Count = 0;
 
         for (auto& Sprite : g_Fodder->mSprites) {
@@ -17,12 +17,12 @@ public:
         return Count;
     }
 
-    int columnCount(const QModelIndex& parent = QModelIndex()) const {
+    int columnCount(const QModelIndex& parent) const override {
         return 3;
     }
 
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 
     void DataUpdated();
 

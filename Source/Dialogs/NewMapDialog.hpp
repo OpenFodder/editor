@@ -6,6 +6,6 @@ class cNewMapDialog : public QDialog {
 public:
 	cNewMapDialog(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
 
-	void accept();
-	void reject();
+	void accept() override;
+	void reject() override;
 };

@@ -11,8 +11,8 @@ class cToolboxTiles : public QDialog {
 
 protected:
 
-	void paintEvent(QPaintEvent* e);
-	void mousePressEvent(QMouseEvent *eventPress);
+	void paintEvent(QPaintEvent* e) override;
+	void mousePressEvent(QMouseEvent *eventPress) override;
     void mouseMoveEvent(QMouseEvent *eventMove) override;
 
 public:

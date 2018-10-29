@@ -17,6 +17,7 @@ cCampaignDialog::cCampaignDialog(QWidget *parent, Qt::WindowFlags f) : QDialog(p
     //mUi->mPhaseTable->setColumnWidth(0, 300);
     
     mUi->mSpritesTable->setModel(&mPhaseSpriteModel);
+    mUi->mSpritesTable->setColumnWidth(0, 200);
 
     connect(mUi->mAuthorsName, &QLineEdit::textChanged, this, &cCampaignDialog::AuthorsNameChange);
 
