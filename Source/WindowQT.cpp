@@ -69,7 +69,7 @@ void cWindowQT::RenderAt(cSurface* pImage, cPosition ) {
 	mSurface = QImage(static_cast<uchar*>(Surface->pixels), Surface->w, Surface->h, QImage::Format_RGB32);
 }
 
-void cWindowQT::RenderShrunk(cSurface* pImage) {
+void cWindowQT::RenderShrunk(cSurface*) {
 	//pImage->draw();
 	// Copy to surface
 }
@@ -78,7 +78,7 @@ void cWindowQT::EventCheck() {
 	
 }
 
-void cWindowQT::paintEvent(QPaintEvent* e) {
+void cWindowQT::paintEvent(QPaintEvent*) {
 	QPainter painter(this);
 	QRectF Dest(0,0, size().width(), size().height());
 	QRectF Src(16, 16, mScreenSize.mWidth - 16, mScreenSize.mHeight - 16);
@@ -86,12 +86,12 @@ void cWindowQT::paintEvent(QPaintEvent* e) {
 	painter.drawImage( Dest, mSurface, Src);
 }
 
-void cWindowQT::enterEvent(QEvent *pEvent) {
+void cWindowQT::enterEvent(QEvent *) {
 
 	mMouseInTimer.start(4);
 }
 
-void cWindowQT::leaveEvent(QEvent *pEvent) {
+void cWindowQT::leaveEvent(QEvent *) {
 
 	mMouseInTimer.stop();
 }
@@ -115,7 +115,7 @@ void cWindowQT::CameraTilesUpdate() {
 }
 
 void cWindowQT::CameraUpdate() {
-	size_t mEdgeWidth = 40;
+	int32 mEdgeWidth = 40;
 
 	CameraTilesUpdate();
 	g_Fodder->MapTile_UpdateFromCamera();
@@ -173,8 +173,8 @@ void cWindowQT::CameraUpdate() {
     }
 
 	// Calculate the width/height of the playfield, adjusted to the window scale
-	size_t Height = height() / mScaleHeight;
-	size_t Width = width() / mScaleWidth;
+	int32 Height = height() / mScaleHeight;
+	int32 Width = width() / mScaleWidth;
 
 	// Up
 	if (g_Fodder->mMouse_EventLastPosition.mY < mEdgeWidth) {
