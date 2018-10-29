@@ -6,14 +6,14 @@ public:
     cCampaignModel(cCampaign* pCampaign = 0);
     virtual ~cCampaignModel();
 
-    int rowCount(const QModelIndex& parent) const override {
+    int rowCount(const QModelIndex&) const override {
         if (!mCampaign)
             return 0;
 
         return mCampaign->getMissions().size();
     }
 
-    int columnCount(const QModelIndex& parent) const override {
+    int columnCount(const QModelIndex&) const override {
         return 1;
     }
 

@@ -6,14 +6,14 @@ public:
     cMissionModel(std::shared_ptr<cMission> pMission = 0);
     virtual ~cMissionModel();
 
-    int rowCount(const QModelIndex& parent) const override {
+    int rowCount(const QModelIndex&) const override {
         if(mMission)
             return mMission->mPhases.size();
 
         return 0;
     }
 
-    int columnCount(const QModelIndex& parent) const override {
+    int columnCount(const QModelIndex&) const override {
         return 1;
     }
 

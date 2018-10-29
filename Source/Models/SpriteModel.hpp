@@ -6,7 +6,7 @@ public:
     cSpriteModel();
     virtual ~cSpriteModel();
 
-    int rowCount(const QModelIndex& parent) const override {
+    int rowCount(const QModelIndex&) const override {
         int Count = 0;
 
         for (auto& Sprite : g_Fodder->mSprites) {
@@ -17,7 +17,7 @@ public:
         return Count;
     }
 
-    int columnCount(const QModelIndex& parent) const override {
+    int columnCount(const QModelIndex&) const override {
         return 3;
     }
 
