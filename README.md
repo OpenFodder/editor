@@ -1,5 +1,5 @@
 # Open Fodder Editor
-[![Build Status](https://api.travis-ci.com/OpenFodder/editor.svg?branch=master)](https://travis-ci.com/OpenFodder/editor)
+[![Build Status](https://travis-ci.com/OpenFodder/editor.svg?branch=master)](https://travis-ci.com/OpenFodder/editor)
 
 ![ofed](https://user-images.githubusercontent.com/1327406/47386538-9dd6e400-d758-11e8-90ab-127d81909407.png)
 
