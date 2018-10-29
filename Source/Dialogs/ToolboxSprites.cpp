@@ -25,7 +25,7 @@ void cToolboxSprites::RenderSprites() {
 	size_t X = 0, Y = 0;
 	size_t BigY = 0;
 	size_t MultiplierX = g_Fodder->mVersionCurrent->mPlatform == ePlatform::Amiga ? 8 : 1;
-	size_t MultiplierY = g_Fodder->mVersionCurrent->mPlatform == ePlatform::Amiga ? 1 : 1;
+	//size_t MultiplierY = g_Fodder->mVersionCurrent->mPlatform == ePlatform::Amiga ? 1 : 1;
 
 	mSpriteRanges.clear();
 
@@ -104,7 +104,7 @@ void cToolboxSprites::RenderSprites() {
 	this->repaint();
 }
 
-void cToolboxSprites::paintEvent(QPaintEvent* e) {
+void cToolboxSprites::paintEvent(QPaintEvent*) {
 
     mScaleWidth = (static_cast<double>(size().width()) / static_cast<double>(mImage.width()));
     mScaleHeight = (static_cast<double>(size().height() - 20) / static_cast<double>(mImage.height()));

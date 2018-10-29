@@ -24,7 +24,7 @@ QVariant cMissionModel::data(const QModelIndex& index, int role) const
     if (!index.isValid() || (role != Qt::DisplayRole && role != Qt::EditRole) || !mMission)
         return QVariant();
 
-    int Row = index.row();
+    size_t Row = (size_t)index.row();
     int Column = index.column();
 
     if (Row >= mMission->mPhases.size())
@@ -49,7 +49,7 @@ bool cMissionModel::setData(const QModelIndex &index, const QVariant &value, int
     if (!index.isValid() || role != Qt::EditRole || !mMission)
         return false;
 
-    int Row = index.row();
+    size_t Row = (size_t)index.row();
     int Column = index.column();
 
     if (Row >= mMission->mPhases.size())

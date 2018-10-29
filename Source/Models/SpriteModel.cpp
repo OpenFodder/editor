@@ -19,7 +19,7 @@ QVariant cSpriteModel::data(const QModelIndex& index, int role) const
     if (!index.isValid() || (role != Qt::DisplayRole && role != Qt::EditRole))
         return QVariant();
 
-    int Row = index.row();
+    size_t Row = (size_t)index.row();
     int Column = index.column();
 
     if (Row >= sizeof(g_Fodder->mSprites))

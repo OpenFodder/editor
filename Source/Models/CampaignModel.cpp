@@ -24,7 +24,7 @@ QVariant cCampaignModel::data(const QModelIndex& index, int role) const
     if (!index.isValid() || (role != Qt::DisplayRole && role != Qt::EditRole))
         return QVariant();
 
-    int Row = index.row();
+    size_t Row = (size_t)index.row();
     int Column = index.column();
 
     if (Row >= mCampaign->getMissions().size())
@@ -45,7 +45,7 @@ bool cCampaignModel::setData(const QModelIndex &index, const QVariant &value, in
     if (!index.isValid() || role != Qt::EditRole)
         return false;
 
-    int Row = index.row();
+    size_t Row = (size_t) index.row();
     int Column = index.column();
 
     if (Row >= mCampaign->getMissions().size())

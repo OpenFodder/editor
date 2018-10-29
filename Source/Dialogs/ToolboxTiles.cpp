@@ -22,9 +22,6 @@ cToolboxTiles::~cToolboxTiles() {
 }
 
 void cToolboxTiles::RenderTiles() {
-	size_t width = this->width();
-	size_t height = this->height();
-
 	int32 X = 0, Y = 0;
 	
 	mTileSurface->clearBuffer();
@@ -59,7 +56,7 @@ void cToolboxTiles::RenderTiles() {
 	this->repaint();
 }
 
-void cToolboxTiles::paintEvent(QPaintEvent* e) {
+void cToolboxTiles::paintEvent(QPaintEvent*) {
 
 
     mScaleWidth = (static_cast<double>(size().width()) / static_cast<double>(mImage.width()));
