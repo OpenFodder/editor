@@ -50,7 +50,7 @@ void cWindowQT::FrameEnd() {
 	this->repaint();
 }
 
-bool cWindowQT::InitWindow(const std::string& pWindowTitle) {
+bool cWindowQT::InitWindow(const std::string&) {
 
 	return true;
 }
@@ -59,7 +59,7 @@ void cWindowQT::PositionWindow() {
 
 }
 
-void cWindowQT::RenderAt(cSurface* pImage, cPosition pSource ) {
+void cWindowQT::RenderAt(cSurface* pImage, cPosition ) {
 
 	pImage->draw();
 

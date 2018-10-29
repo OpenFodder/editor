@@ -163,7 +163,7 @@ void cOFED::OpenFodder_Prepare() {
     g_Fodder->mWindow->FrameEnd();
 }
 
-void cOFED::moveEvent(QMoveEvent *event) {
+void cOFED::moveEvent(QMoveEvent *) {
 	
 	if(mToolboxTiles)
 		mToolboxTiles->move(x() + width(), y());
