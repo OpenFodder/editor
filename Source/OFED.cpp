@@ -12,6 +12,8 @@
 int32 g_SpriteAnim[111] = {};
 std::string g_SpriteName[111] = {};
 
+sFodderParameters Parms;
+
 cOFED::~cOFED() {
 
     ui.verticalLayout->removeWidget(ui.mSurface);
@@ -68,7 +70,7 @@ cOFED::cOFED(QWidget *parent) : QMainWindow(parent) {
     g_Fodder = std::make_shared<cFodder>(g_Window);
 
 	// Prepare OpenFodder
-    g_Fodder->Prepare();
+    g_Fodder->Prepare(Parms);
 
 	if (!g_Fodder->mVersions->isDataAvailable()) {
 
@@ -107,7 +109,7 @@ void cOFED::OpenFodder_Prepare() {
         // TODO: Fail
         exit(1);
     }
-    g_Fodder->Game_Setup(1);
+    g_Fodder->Game_Setup();
 
 	g_Fodder->Mission_Memory_Clear();
 	g_Fodder->Mission_Prepare_Squads();
