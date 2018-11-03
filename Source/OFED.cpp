@@ -222,9 +222,38 @@ void cOFED::CloseDialog_ToolboxCampaigns() {
  */
 void cOFED::ShowDialog_NewMap() {
 
-	cNewMapDialog* NewMap = new cNewMapDialog( this, 0);
 
-	NewMap->show();
+    cNewMapDialog* NewMap = new cNewMapDialog(this, 0);
+
+    if (NewMap->exec()) {
+        g_Fodder->mGame_Data.mCampaign.SetSingleMapCampaign();
+        g_Fodder->mGame_Data.mCampaign.setCustomMap();
+        g_Fodder->mGame_Data.Phase_Start();
+
+        g_Fodder->mGame_Data.mMission_Current->mName = "Single Mission";
+
+        auto NewPhase = g_Fodder->mGame_Data.mMission_Current->mPhases.back();
+
+        NewPhase->mName = "Single Phase";
+
+        auto path = local_PathGenerate(g_Fodder->mGame_Data.mPhase_Current->mMapFilename, "Custom/Maps", eData);
+
+        QString fileName = QFileDialog::getSaveFileName(this,
+            tr("Save Map"), tr(path.c_str()),
+            tr("Open Fodder (*.map);;All Files (*)"));
+
+        if (!fileName.size())
+            return;
+
+        NewPhase->mMapFilename = fileName.toStdString().substr(0, fileName.size() - 4);
+
+        g_Fodder->Map_Save(fileName.toStdString());
+        mToolboxCampaigns->LoadCampaign(&g_Fodder->mGame_Data.mCampaign);
+    }
+    else {
+
+    }
+    mToolboxCampaigns->Refresh();
 }
 
 sTiles cOFED::SetupHut() {

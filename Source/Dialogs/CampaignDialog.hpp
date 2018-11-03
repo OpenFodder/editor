@@ -25,6 +25,8 @@ public:
     void MissionClicked(QModelIndex pIndex);
     void PhaseClicked(QModelIndex pIndex);
 
+    void SpriteDelete();
+
     void LoadPhase(const size_t pNumber);
     void LoadMissions();
 
