@@ -138,10 +138,12 @@ void cWindowQT::CameraUpdate() {
 
                 for (auto Sprite : g_OFED->GetCursorRangeTiles().mSprites) {
 
+                    auto Sheet = g_Fodder->Sprite_Get_Sheet(Sprite.mSpriteID, 0);
 
                     g_Fodder->Sprite_Add(Sprite.mSpriteID,
-                        ((TileX) * 16) + Sprite.mX - 1,
-                        ((TileY+1) * 16) + Sprite.mY);
+                        ((TileX * 16) + Sprite.mX) - Sheet->mModX + (g_Fodder->mMapTile_MovedHorizontal * 16),
+                        (((TileY + 1) * 16)+ Sprite.mY) + Sheet->mModY + (g_Fodder->mMapTile_MovedVertical * 16));
+
                 }
 
             } else {
