@@ -155,8 +155,8 @@ void cOFED::OpenFodder_Prepare() {
 
 	g_Fodder->mMouseSpriteNew = eSprite_pStuff_Mouse_Cursor;
 	g_Fodder->mPhase_Aborted = 0;
-	g_Fodder->mPhase_Paused = 0;
-	g_Fodder->mMission_In_Progress = true;
+	g_Fodder->mPhase_Paused = false;
+	g_Fodder->mPhase_In_Progress = true;
 	g_Fodder->mMission_Finished = 0;
 	g_Fodder->mMission_ShowMapOverview = 0;
 
@@ -961,9 +961,9 @@ void cOFED::ShowDialog_LoadCampaign() {
     g_Fodder->mGame_Data.Phase_Next();
 
     // Disable this, otherwise it reloads the current version because of the current map
-    g_Fodder->mMission_In_Progress = false;
+    g_Fodder->mPhase_In_Progress = false;
     g_Fodder->VersionSwitch(g_Fodder->mVersions->GetForCampaign(g_Fodder->mGame_Data.mCampaign.getName()));
-    g_Fodder->mMission_In_Progress = true;
+    g_Fodder->mPhase_In_Progress = true;
 
     LoadMap();
 
