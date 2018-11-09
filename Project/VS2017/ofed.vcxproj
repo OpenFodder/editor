@@ -67,7 +67,7 @@
       <InputFile>%(FullPath)</InputFile>
       <OutputFile>.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</OutputFile>
       <IncludePath>.\GeneratedFiles\$(ConfigurationName);.\GeneratedFiles;.;$(QTDIR)\include;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtWidgets;$(ProjectDIr)..\..\Dependencies\OpenFodder\Source;$(ProjectDIr)..\..\Source;%(AdditionalIncludeDirectories)</IncludePath>
-      <Define>UNICODE;_UNICODE;WIN32;WIN64;QT_DLL;QT_CORE_LIB;QT_GUI_LIB;QT_WIDGETS_LIB;_OFED</Define>
+      <Define>UNICODE;_UNICODE;WIN32;WIN64;QT_DLL;QT_CORE_LIB;QT_GUI_LIB;QT_WIDGETS_LIB;_OFED;%(PreprocessorDefinitions)</Define>
       <ExecutionDescription>Moc'ing %(Identity)...</ExecutionDescription>
       <DynamicSource>output</DynamicSource>
     </QtMoc>
@@ -89,8 +89,8 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PreprocessorDefinitions>UNICODE;_UNICODE;WIN32;WIN64;QT_DLL;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;QT_GUI_LIB;QT_WIDGETS_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.\GeneratedFiles\$(ConfigurationName);.\GeneratedFiles;.;$(QTDIR)\include;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>UNICODE;_UNICODE;WIN32;WIN64;QT_DLL;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;QT_GUI_LIB;QT_WIDGETS_LIB;_OFED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.\GeneratedFiles\$(ConfigurationName);.\GeneratedFiles;.;$(QTDIR)\include;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtWidgets;$(ProjectDIr)..\..\Dependencies\OpenFodder\Source;$(ProjectDIr)..\..\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat />
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
@@ -107,8 +107,8 @@
       <QTDIR>$(QTDIR)</QTDIR>
       <InputFile>%(FullPath)</InputFile>
       <OutputFile>.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</OutputFile>
-      <IncludePath>.\GeneratedFiles\$(ConfigurationName);.\GeneratedFiles;.;$(QTDIR)\include;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtWidgets;%(AdditionalIncludeDirectories)</IncludePath>
-      <Define>UNICODE;_UNICODE;WIN32;WIN64;QT_DLL;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;QT_GUI_LIB;QT_WIDGETS_LIB</Define>
+      <IncludePath>.\GeneratedFiles\$(ConfigurationName);.\GeneratedFiles;.;$(QTDIR)\include;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtWidgets;$(ProjectDIr)..\..\Dependencies\OpenFodder\Source;$(ProjectDIr)..\..\Source;%(AdditionalIncludeDirectories)</IncludePath>
+      <Define>UNICODE;_UNICODE;WIN32;WIN64;QT_DLL;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;QT_GUI_LIB;QT_WIDGETS_LIB;_OFED;%(PreprocessorDefinitions)</Define>
       <ExecutionDescription>Moc'ing %(Identity)...</ExecutionDescription>
       <DynamicSource>output</DynamicSource>
     </QtMoc>
@@ -131,6 +131,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Amiga\dernc.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Amiga\Graphics_Amiga.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Amiga\Graphics_Amiga2.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Amiga\IntroData_Amiga.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Amiga\paula.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Amiga\Resource_Amiga_File.cpp" />
@@ -180,6 +181,7 @@
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Amiga\audiostream.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Amiga\dernc.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Amiga\Graphics_Amiga.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Amiga\Graphics_Amiga2.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Amiga\paula.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Amiga\Resource_Amiga_File.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Amiga\rjp1.hpp" />
@@ -217,6 +219,7 @@
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Types.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Utils\json.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Versions.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Versions_Files.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Window.hpp" />
     <ClInclude Include="..\..\Source\Dialogs\CampaignDialog.hpp" />
     <ClInclude Include="..\..\Source\Dialogs\NewMapDialog.hpp" />

@@ -63,6 +63,7 @@ HEADERS += Source/OFED.hpp \
            Dependencies/OpenFodder/Source/Tiles.hpp \
            Dependencies/OpenFodder/Source/Types.hpp \
            Dependencies/OpenFodder/Source/Versions.hpp \
+		   Dependencies/OpenFodder/Source/Versions_Files.hpp \
            Dependencies/OpenFodder/Source/Window.hpp \
            Dependencies/OpenFodder/Projects/VS2017/resource.h \
            Dependencies/OpenFodder/Source/Amiga/audiostream.hpp \
@@ -118,6 +119,7 @@ SOURCES += Source/main.cpp \
            Dependencies/OpenFodder/Source/Window.cpp \
            Dependencies/OpenFodder/Source/Amiga/dernc.cpp \
            Dependencies/OpenFodder/Source/Amiga/Graphics_Amiga.cpp \
+		   Dependencies/OpenFodder/Source/Amiga/Graphics_Amiga2.cpp \
            Dependencies/OpenFodder/Source/Amiga/IntroData_Amiga.cpp \
            Dependencies/OpenFodder/Source/Amiga/paula.cpp \
            Dependencies/OpenFodder/Source/Amiga/Resource_Amiga_File.cpp \

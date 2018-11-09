@@ -173,6 +173,9 @@
     <ClCompile Include="..\..\Source\Models\SpriteModel.cpp">
       <Filter>Source Files\Models</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Amiga\Graphics_Amiga2.cpp">
+      <Filter>OpenFodder\Amiga</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="ofed.ui">
@@ -362,6 +365,12 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Models\SpriteModel.hpp">
       <Filter>Source Files\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Amiga\Graphics_Amiga2.hpp">
+      <Filter>OpenFodder\Amiga</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Versions_Files.hpp">
+      <Filter>OpenFodder</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
