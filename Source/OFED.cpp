@@ -78,7 +78,7 @@ cOFED::cOFED(QWidget *parent) : QMainWindow(parent) {
 		return;
 	}
 
-    g_Fodder->VersionSwitch(g_Fodder->mVersions->GetRetail());
+    g_Fodder->VersionSwitch(g_Fodder->mVersions->GetRetail(ePlatform::Any));
     g_Fodder->mVersionDefault = g_Fodder->mVersionCurrent;
 
     g_Fodder->Mouse_Setup();
@@ -958,7 +958,7 @@ void cOFED::ShowDialog_LoadCampaign() {
     g_Fodder->mGame_Data.mMission_Phases_Remaining = 1;
     g_Fodder->mGame_Data.mMission_Number = 0;
     g_Fodder->mGame_Data.mMission_Phase = 0;
-    g_Fodder->mGame_Data.Phase_Next();
+    g_Fodder->mGame_Data.Phase_Start();
 
     // Disable this, otherwise it reloads the current version because of the current map
     g_Fodder->mPhase_In_Progress = false;
