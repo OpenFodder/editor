@@ -24,6 +24,7 @@ public:
 
     void MissionClicked(QModelIndex pIndex);
     void PhaseClicked(QModelIndex pIndex);
+    void SpriteClicked(QModelIndex pIndex);
 
     void SpriteDelete();
 

@@ -25,6 +25,7 @@ cCampaignDialog::cCampaignDialog(QWidget *parent, Qt::WindowFlags f) : QDialog(p
 
     connect(mUi->mMissionTable, &QTableView::doubleClicked, this, &cCampaignDialog::MissionClicked);
     connect(mUi->mPhaseTable, &QTableView::doubleClicked, this, &cCampaignDialog::PhaseClicked);
+    connect(mUi->mSpritesTable, &QTableView::doubleClicked, this, &cCampaignDialog::SpriteClicked);
 
     connect(mUi->aggression_min, &QSlider::valueChanged, this, &cCampaignDialog::AggressMinChange);
     connect(mUi->aggression_max, &QSlider::valueChanged, this, &cCampaignDialog::AggressMaxChange);
@@ -137,6 +138,49 @@ void cCampaignDialog::PhaseClicked(QModelIndex pIndex) {
     g_Fodder->mGame_Data.mMission_Phase = pIndex.row() + 1;
 
     LoadPhase(pIndex.row() + 1);
+}
+
+void cCampaignDialog::SpriteClicked(QModelIndex pIndex) {
+    int Count = 0;
+
+    for (auto& Sprite : g_Fodder->mSprites) {
+        if (Sprite.field_0 != -32768 && Sprite.field_0 != -1) {
+            if (Count == pIndex.row()) {
+
+                int PosX = Sprite.field_0 / 16;
+                int PosY = Sprite.field_4 / 16;
+
+                g_Fodder->mCamera_PanTargetX = PosX;
+                g_Fodder->mCamera_PanTargetY = PosY;
+                g_Fodder->mCamera_Scroll_Speed = 0x10;
+
+                int16 MovedX =0;
+                int16 MovedY = 0;
+
+               /* do {
+                    MovedX = g_Fodder->mMapTile_ColumnOffset;
+                    MovedY = g_Fodder->mMapTile_RowOffset;
+                    g_Fodder->Camera_Speed_Reset();
+                    g_Fodder->Camera_Speed_MaxSet();
+                    g_Fodder->Camera_Speed_Calculate();
+                    g_Fodder->Camera_TileSpeedX_Set();
+                    g_Fodder->Camera_Speed_Update_From_PanTarget();
+                    g_Fodder->Camera_Acceleration_Set();
+                    g_Fodder->MapTile_UpdateFromCamera();
+                    g_Fodder->MapTile_Update_Position();
+
+                    if (g_Fodder->mMapTile_ColumnOffset == MovedX && g_Fodder->mMapTile_RowOffset == MovedY) {
+                        break;
+                    }
+
+                } while (1);*/
+
+                return;
+            }
+            ++Count;
+        }
+    }
+
 }
 
 void cCampaignDialog::LoadPhase(const size_t pNumber) {
