@@ -120,13 +120,6 @@ void cOFED::OpenFodder_Prepare() {
 
     LoadMap();
 
-    g_Fodder->Phase_Goals_Set();
-
-	g_Fodder->Phase_Soldiers_Count();
-    g_Fodder->mGame_Data.Soldier_Sort();
-	g_Fodder->Phase_Soldiers_Prepare(false);
-	g_Fodder->Phase_Soldiers_AttachToSprites();
-
 	g_Fodder->mPhase_Aborted = false;
 
 	g_Fodder->MapTiles_Draw();
@@ -136,10 +129,6 @@ void cOFED::OpenFodder_Prepare() {
 
 	g_Fodder->Mouse_Inputs_Get();
 	g_Fodder->Sprite_Frame_Modifier_Update();
-
-	g_Fodder->mCamera_Start_Adjust = 1;
-	g_Fodder->mCamera_StartPosition_X = g_Fodder->mSprites[0].field_0;
-	g_Fodder->mCamera_StartPosition_Y = g_Fodder->mSprites[0].field_4;
 
 	g_Fodder->mInput_Enabled = -1;
 	g_Fodder->sub_11CAD();
@@ -1055,6 +1044,7 @@ void cOFED::Create_NewMap(const std::string& pTileSet, const std::string& pTileS
 }
 
 void cOFED::LoadMap() {
+    sSprite* Sprite = 0;
 
     if (g_Fodder->mGame_Data.mMission_Current) {
         auto MissionName = "Mission: " + g_Fodder->mGame_Data.mMission_Current->mName;
@@ -1066,22 +1056,57 @@ void cOFED::LoadMap() {
         mPhaseLabel->setText(QString::fromStdString(PhaseName));
     }
 
+
     g_Fodder->Map_Load();
     g_Fodder->Map_Load_Sprites();
 
-    g_Fodder->MapTiles_Draw();
+    g_Fodder->Phase_Soldiers_Count();
+    g_Fodder->mGame_Data.Soldier_Sort();
+    g_Fodder->Phase_Soldiers_Prepare(false);
+    g_Fodder->Phase_Soldiers_AttachToSprites();
+
+    g_Fodder->Squad_Troops_Count();
+
+    g_Fodder->mSquad_Selected = 0;
+    g_Fodder->sub_305D5(Sprite);
     g_Fodder->Sprite_Handle_Loop();
+
+    g_Fodder->MapTiles_Draw();
+
+    // THis has to happen now, as the map tiles x/y is currently 0
+    if (mToolboxSprites)
+        mToolboxSprites->RenderSprites();
+
+    if (mToolboxTiles)
+        mToolboxTiles->RenderTiles();
+
+    g_Fodder->mCamera_SquadLeaderX = 0;
+    g_Fodder->mCamera_SquadLeaderY = 0;
+
+    g_Fodder->mCamera_Panning_ToTarget = true;
+    g_Fodder->Camera_PanTarget_AdjustToward_SquadLeader();
+    g_Fodder->mCamera_Speed_Reset_X = false;
+    g_Fodder->mCamera_Speed_Reset_Y = false;
+    g_Fodder->mCamera_AccelerationX &= 0x0000FFFF;
+    g_Fodder->mCamera_AccelerationY &= 0x0000FFFF;
+    g_Fodder->mCamera_Reached_Target = true;
+    g_Fodder->mCamera_Start_Adjust = 1;
+
+    for (;;) {
+        g_Fodder->Camera_Pan_To_Target();
+        g_Fodder->Camera_Pan_To_Target();
+
+        if (!g_Fodder->mCamera_Reached_Target)
+            break;
+    }
 
     g_Fodder->mGraphics->PaletteSet();
     g_Fodder->mSurface->surfaceSetToPaletteNew();
 
-    g_Fodder->mWindow->FrameEnd();
+    g_Fodder->mGraphics->MapTiles_Draw();
+    g_Fodder->Mission_Sprites_Handle();
+    g_Fodder->mWindow->FrameEnd(); 
 
-    if(mToolboxSprites)
-        mToolboxSprites->RenderSprites();
-
-    if(mToolboxTiles)
-        mToolboxTiles->RenderTiles();
 }
 
 /**

@@ -164,7 +164,11 @@ void cCampaignDialog::SpriteClicked(QModelIndex pIndex) {
                         break;
                 }
 
-                g_Fodder->Mission_Sprites_Handle();
+
+                g_Fodder->Sprite_Sort_DrawList();
+                g_Fodder->MapTile_UpdateFromCamera();
+                g_Fodder->Sprites_Draw();
+
                 g_Fodder->sub_11CAD();
 
                 g_Fodder->Cycle_End();
