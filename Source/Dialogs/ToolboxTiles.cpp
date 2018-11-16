@@ -12,8 +12,6 @@ cToolboxTiles::cToolboxTiles( QWidget *parent, Qt::WindowFlags f) : QDialog(pare
 
 	mUi = new Ui_ToolboxTiles();
 	mUi->setupUi(this);
-
-	RenderTiles();
 }
 
 cToolboxTiles::~cToolboxTiles() {

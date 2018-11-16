@@ -66,7 +66,6 @@ cOFED::cOFED(QWidget *parent) : QMainWindow(parent) {
     QObject::connect(ui.actionNew_Mission, &QAction::triggered, this, &cOFED::Mission_AddNew);
     QObject::connect(ui.actionNew_Phase, &QAction::triggered, this, &cOFED::Phase_AddNew);
 
-
     g_Fodder = std::make_shared<cFodder>(g_Window);
 
 	// Prepare OpenFodder
@@ -84,7 +83,12 @@ cOFED::cOFED(QWidget *parent) : QMainWindow(parent) {
     g_Fodder->Mouse_Setup();
     g_Fodder->Mouse_Inputs_Get();
 
+    ShowDialog_ToolboxTiles();
+    ShowDialog_ToolboxSprites();
+
 	OpenFodder_Prepare();
+
+    ShowDialog_ToolboxCampaigns();
 
     CursorReset();
     ui.mSurface->CameraUpdate();
@@ -98,15 +102,13 @@ cOFED::cOFED(QWidget *parent) : QMainWindow(parent) {
 		)
 	);
 
-	ShowDialog_ToolboxTiles();
-	ShowDialog_ToolboxSprites();
-    ShowDialog_ToolboxCampaigns();
 }
 
 void cOFED::OpenFodder_Prepare() {
 
     if (!g_Fodder->Campaign_Load("Cannon Fodder")) {
         // TODO: Fail
+
         exit(1);
     }
     g_Fodder->Game_Setup();
@@ -122,11 +124,6 @@ void cOFED::OpenFodder_Prepare() {
 
 	g_Fodder->mPhase_Aborted = false;
 
-	g_Fodder->MapTiles_Draw();
-	g_Fodder->Sprite_Handle_Loop();
-
-	g_Fodder->Camera_Reset();
-
 	g_Fodder->Mouse_Inputs_Get();
 	g_Fodder->Sprite_Frame_Modifier_Update();
 
@@ -135,9 +132,8 @@ void cOFED::OpenFodder_Prepare() {
 
 	g_Fodder->mGUI_Mouse_Modifier_X = 0;
 	g_Fodder->mGUI_Mouse_Modifier_Y = 4;
-	g_Fodder->mCamera_Start_Adjust = 1;
 
-	g_Fodder->GUI_Sidebar_Prepare_Squads();
+	//g_Fodder->GUI_Sidebar_Prepare_Squads();
 	g_Fodder->Squad_Select_Grenades();
 	g_Fodder->mMap_Destroy_Tiles.clear();
 	g_Fodder->Sprite_Count_HelicopterCallPads();
@@ -149,9 +145,7 @@ void cOFED::OpenFodder_Prepare() {
 	g_Fodder->mMission_Finished = 0;
 	g_Fodder->mMission_ShowMapOverview = 0;
 
-	g_Fodder->Mission_Sprites_Handle();
-
-    g_Fodder->mWindow->FrameEnd();
+    g_Fodder->Mission_Sprites_Handle(); g_Fodder->mWindow->FrameEnd();
 }
 
 void cOFED::moveEvent(QMoveEvent *) {
@@ -1073,23 +1067,20 @@ void cOFED::LoadMap() {
 
     g_Fodder->MapTiles_Draw();
 
-    // THis has to happen now, as the map tiles x/y is currently 0
+    // This has to happen now, as the map tiles x/y is currently 0
     if (mToolboxSprites)
         mToolboxSprites->RenderSprites();
 
     if (mToolboxTiles)
         mToolboxTiles->RenderTiles();
 
+    g_Fodder->Camera_Reset();
+
     g_Fodder->mCamera_SquadLeaderX = 0;
     g_Fodder->mCamera_SquadLeaderY = 0;
 
     g_Fodder->mCamera_Panning_ToTarget = true;
     g_Fodder->Camera_PanTarget_AdjustToward_SquadLeader();
-    g_Fodder->mCamera_Speed_Reset_X = false;
-    g_Fodder->mCamera_Speed_Reset_Y = false;
-    g_Fodder->mCamera_AccelerationX &= 0x0000FFFF;
-    g_Fodder->mCamera_AccelerationY &= 0x0000FFFF;
-    g_Fodder->mCamera_Reached_Target = true;
     g_Fodder->mCamera_Start_Adjust = 1;
 
     for (;;) {

@@ -12,8 +12,6 @@ cToolboxSprites::cToolboxSprites(QWidget *parent, Qt::WindowFlags f) : QDialog(p
 
 	mUi = new Ui_ToolboxSprites();
 	mUi->setupUi(this);
-
-	RenderSprites();
 }
 
 cToolboxSprites::~cToolboxSprites() {
