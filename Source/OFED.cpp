@@ -133,7 +133,6 @@ void cOFED::OpenFodder_Prepare() {
 	g_Fodder->mGUI_Mouse_Modifier_X = 0;
 	g_Fodder->mGUI_Mouse_Modifier_Y = 4;
 
-	//g_Fodder->GUI_Sidebar_Prepare_Squads();
 	g_Fodder->Squad_Select_Grenades();
 	g_Fodder->mMap_Destroy_Tiles.clear();
 	g_Fodder->Sprite_Count_HelicopterCallPads();
