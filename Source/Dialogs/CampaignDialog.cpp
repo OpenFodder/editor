@@ -147,34 +147,29 @@ void cCampaignDialog::SpriteClicked(QModelIndex pIndex) {
         if (Sprite.field_0 != -32768 && Sprite.field_0 != -1) {
             if (Count == pIndex.row()) {
 
-                int PosX = Sprite.field_0 / 16;
-                int PosY = Sprite.field_4 / 16;
-
-                g_Fodder->mCamera_PanTargetX = PosX;
-                g_Fodder->mCamera_PanTargetY = PosY;
                 g_Fodder->mCamera_Scroll_Speed = 0x10;
 
-                int16 MovedX =0;
-                int16 MovedY = 0;
+                g_Fodder->mCamera_PanTargetX = Sprite.field_0;
+                g_Fodder->mCamera_PanTargetY = Sprite.field_4;
+                g_Fodder->mCamera_Speed_Reset_X = false;
+                g_Fodder->mCamera_AccelerationX &= 0x0000FFFF;
+                g_Fodder->mCamera_Speed_Reset_Y = false;
+                g_Fodder->mCamera_AccelerationY &= 0x0000FFFF;
 
-               /* do {
-                    MovedX = g_Fodder->mMapTile_ColumnOffset;
-                    MovedY = g_Fodder->mMapTile_RowOffset;
-                    g_Fodder->Camera_Speed_Reset();
-                    g_Fodder->Camera_Speed_MaxSet();
-                    g_Fodder->Camera_Speed_Calculate();
-                    g_Fodder->Camera_TileSpeedX_Set();
-                    g_Fodder->Camera_Speed_Update_From_PanTarget();
-                    g_Fodder->Camera_Acceleration_Set();
-                    g_Fodder->MapTile_UpdateFromCamera();
-                    g_Fodder->MapTile_Update_Position();
+                for (;;) {
+                    g_Fodder->Camera_Pan_To_Target();
+                    g_Fodder->Camera_Pan_To_Target();
 
-                    if (g_Fodder->mMapTile_ColumnOffset == MovedX && g_Fodder->mMapTile_RowOffset == MovedY) {
+                    if (!g_Fodder->mCamera_Reached_Target)
                         break;
-                    }
+                }
 
-                } while (1);*/
+                g_Fodder->Mission_Sprites_Handle();
+                g_Fodder->sub_11CAD();
 
+                g_Fodder->Cycle_End();
+
+                std::dynamic_pointer_cast<cWindowQT>(g_Window)->CameraUpdate();
                 return;
             }
             ++Count;

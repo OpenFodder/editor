@@ -206,7 +206,7 @@ void cWindowQT::CameraUpdate() {
 		}
 	}
 
-
+    g_Fodder->MapTile_Update_Position();
 	g_Fodder->mGraphics->MapTiles_Draw();
     g_Fodder->Mission_Sprites_Handle();
 
