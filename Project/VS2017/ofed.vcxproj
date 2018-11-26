@@ -138,6 +138,7 @@
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Amiga\rjp1.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Amiga\Sound_Amiga.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\CopyProtection.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Debugger.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Event.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Fodder.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\FontData.cpp" />
@@ -160,6 +161,7 @@
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Structures\Barracks.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Surface.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Tiles.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\UnitTesting.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Versions.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Window.cpp" />
     <ClCompile Include="..\..\Source\Dialogs\CampaignDialog.cpp" />
@@ -188,6 +190,7 @@
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Amiga\Sound_Amiga.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Amiga\SpriteData_Amiga.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\CopyProtection.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Debugger.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Dimension.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Event.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Fodder.hpp" />
@@ -217,6 +220,7 @@
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Surface.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Tiles.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Types.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\UnitTesting.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Utils\json.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Versions.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Versions_Files.hpp" />

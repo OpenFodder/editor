@@ -236,6 +236,7 @@ void cCampaignDialog::LoadPhase(const size_t pNumber) {
         }
     }
 
+    mPhaseSpriteModel.DataUpdated();
     mUi->aggression_min->setSliderPosition(g_Fodder->mGame_Data.mPhase_Current->mAggression.mMin);
     mUi->aggression_max->setSliderPosition(g_Fodder->mGame_Data.mPhase_Current->mAggression.mMax);
     mLoadingMission = false;

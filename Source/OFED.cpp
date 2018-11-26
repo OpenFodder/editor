@@ -148,7 +148,7 @@ void cOFED::OpenFodder_Prepare() {
 }
 
 void cOFED::moveEvent(QMoveEvent *) {
-	
+	 
 	if(mToolboxTiles)
 		mToolboxTiles->move(x() + width(), y());
 

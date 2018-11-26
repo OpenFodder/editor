@@ -176,6 +176,12 @@
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Amiga\Graphics_Amiga2.cpp">
       <Filter>OpenFodder\Amiga</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Debugger.cpp">
+      <Filter>OpenFodder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\UnitTesting.cpp">
+      <Filter>OpenFodder</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="ofed.ui">
@@ -370,6 +376,12 @@
       <Filter>OpenFodder\Amiga</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Versions_Files.hpp">
+      <Filter>OpenFodder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Debugger.hpp">
+      <Filter>OpenFodder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\UnitTesting.hpp">
       <Filter>OpenFodder</Filter>
     </ClInclude>
   </ItemGroup>
