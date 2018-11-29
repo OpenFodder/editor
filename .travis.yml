@@ -49,6 +49,6 @@ install:
      
 before_script: mkdir obj
 script: 
-  - qmake editor2.pro
+  - qmake editor.pro
   - qmake -spec linux-clang
   - make
