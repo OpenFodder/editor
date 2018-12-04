@@ -37,8 +37,8 @@ struct sTiles {
 };
 
 
-extern int32 g_SpriteAnim[111];
-extern std::string g_SpriteName[111];
+extern int32 g_SpriteAnim[118];
+extern std::string g_SpriteName[118];
 
 class cOFED : public QMainWindow
 {

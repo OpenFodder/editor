@@ -9,8 +9,8 @@
 #include <QFileDialog>
 #include <chrono>
 
-int32 g_SpriteAnim[111] = {};
-std::string g_SpriteName[111] = {};
+int32 g_SpriteAnim[118] = {};
+std::string g_SpriteName[118] = {};
 
 sFodderParameters Parms;
 
@@ -142,7 +142,7 @@ void cOFED::OpenFodder_Prepare() {
 	g_Fodder->mPhase_Paused = false;
 	g_Fodder->mPhase_In_Progress = true;
 	g_Fodder->mMission_Finished = 0;
-	g_Fodder->mMission_ShowMapOverview = 0;
+	g_Fodder->mPhase_ShowMapOverview = 0;
 
     g_Fodder->Mission_Sprites_Handle(); g_Fodder->mWindow->FrameEnd();
 }
@@ -1204,7 +1204,7 @@ void cOFED::SetCursorSprite(const size_t pSpriteID) {
 }
 
 void cOFED::SetupSprites() {
-	for (int i = 0; i < 111; ++i) {
+	for (int i = 0; i < 118; ++i) {
 		g_SpriteAnim[i] = -1;
 		g_SpriteName[i] = "";
 	}
@@ -1301,7 +1301,15 @@ void cOFED::SetupSprites() {
 	g_SpriteAnim[eSprite_Computer_3] = 0x8F;
 
 
-	g_SpriteName[eSprite_Player] = "Human Soldier";
+    g_SpriteAnim[eSprite_UFO_Callpad] = 0x7C;
+    g_SpriteAnim[112] = 0xD2;
+    g_SpriteAnim[113] = 0xD2;
+    g_SpriteAnim[114] = 0xA5;
+    g_SpriteAnim[115] = 0xA5;
+    g_SpriteAnim[116] = 0xA5;
+    g_SpriteAnim[117] = 0xA5;
+
+    g_SpriteName[eSprite_Player] = "Human Soldier";
 	g_SpriteName[eSprite_Enemy] = "Enemy Soldier";
 	g_SpriteName[eSprite_Null] = "Null";
 
@@ -1389,4 +1397,13 @@ void cOFED::SetupSprites() {
 	g_SpriteName[eSprite_Computer_1] = "Computer 1";
 	g_SpriteName[eSprite_Computer_2] = "Computer 2";
 	g_SpriteName[eSprite_Computer_3] = "Computer 3";
+
+    g_SpriteName[eSprite_UFO_Callpad] = "UFO Callpad";
+    g_SpriteName[112] = "Unk AI Turret Cannon";
+    g_SpriteName[113] = "Unk AI Turret Missile";
+    g_SpriteName[114] = "Unk AI Vehicle Cannon";
+    g_SpriteName[115] = "Unk AI Vehicle";
+    g_SpriteName[116] = "Unk Vehicle";
+    g_SpriteName[117] = "Unk Vehicle";
+
 }
