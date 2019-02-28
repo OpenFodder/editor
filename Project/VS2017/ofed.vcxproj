@@ -131,6 +131,9 @@
       <OutputFile>.\GeneratedFiles\ui_%(Filename).h</OutputFile>
       <ExecutionDescription>Uic'ing %(Identity)...</ExecutionDescription>
     </QtUic>
+    <PreBuildEvent>
+      <Command>$(ProjectDir)..\..\Dependencies\OpenFodder\Projects\VS2017\gitver.cmd</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\About.cpp" />
