@@ -141,7 +141,7 @@ SOURCES += Source/main.cpp \
            Dependencies/OpenFodder/Source/Amiga/Sound_Amiga.cpp \
            Dependencies/OpenFodder/Source/PC/Graphics_PC.cpp \
            Dependencies/OpenFodder/Source/PC/IntroData_PC.cpp \
-		   Dependencies/OpenFodder/Source/Map.hpp \
+		   Dependencies/OpenFodder/Source/Map.cpp \
            Dependencies/OpenFodder/Source/PC/Resource_PC_CD.cpp \
            Dependencies/OpenFodder/Source/PC/Sound_PC.cpp \
            Dependencies/OpenFodder/Source/PC/Sound_PC2.cpp \
