@@ -14,6 +14,7 @@
     <ProjectGuid>{B12702AD-ABFB-343A-A199-8E24837244A3}</ProjectGuid>
     <Keyword>Qt4VSv1.0</Keyword>
     <ProjectName>Editor</ProjectName>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -86,6 +87,9 @@
       <OutputFile>.\GeneratedFiles\ui_%(Filename).h</OutputFile>
       <ExecutionDescription>Uic'ing %(Identity)...</ExecutionDescription>
     </QtUic>
+    <PreBuildEvent>
+      <Command>$(ProjectDir)..\..\Dependencies\OpenFodder\Projects\VS2017\gitver.cmd</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -129,6 +133,7 @@
     </QtUic>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\About.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Amiga\dernc.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Amiga\Graphics_Amiga.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Amiga\Graphics_Amiga2.cpp" />
@@ -145,14 +150,15 @@
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\GameData.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Graphics.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\GUI_Element.cpp" />
-    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\md5.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Campaign.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Map.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\PC\Graphics_PC.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\PC\IntroData_PC.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\PC\Resource_PC_CD.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\PC\Sound_PC.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\PC\Sound_PC2.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Recruits.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\ResourceMan.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Resources.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Sound.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Sprites.cpp" />
@@ -162,6 +168,8 @@
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Surface.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Tiles.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\UnitTesting.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Utils\md5.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Utils\SimplexNoise.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Versions.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Window.cpp" />
     <ClCompile Include="..\..\Source\Dialogs\CampaignDialog.cpp" />
@@ -180,6 +188,7 @@
     </QtUic>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\About.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Amiga\audiostream.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Amiga\dernc.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Amiga\Graphics_Amiga.hpp" />
@@ -200,7 +209,6 @@
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\GUI_Element.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\IntroData.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Map.hpp" />
-    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\md5.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Campaign.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\PC\Graphics_PC.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\PC\Resource_PC_CD.hpp" />
@@ -210,6 +218,7 @@
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\PC\VocTable.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Position.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Recruits.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\ResourceMan.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Resources.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Singleton.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Sound.hpp" />
@@ -221,7 +230,12 @@
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Tiles.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Types.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\UnitTesting.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Utils\diamondsquare.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Utils\ini.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Utils\json.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Utils\md5.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Utils\pseudorand.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Utils\SimplexNoise.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Versions.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Versions_Files.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Window.hpp" />

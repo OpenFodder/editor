@@ -98,9 +98,6 @@
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\GUI_Element.cpp">
       <Filter>OpenFodder</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\md5.cpp">
-      <Filter>OpenFodder</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Recruits.cpp">
       <Filter>OpenFodder</Filter>
     </ClCompile>
@@ -180,6 +177,21 @@
       <Filter>OpenFodder</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\UnitTesting.cpp">
+      <Filter>OpenFodder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\ResourceMan.cpp">
+      <Filter>OpenFodder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Utils\md5.cpp">
+      <Filter>OpenFodder\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Utils\SimplexNoise.cpp">
+      <Filter>OpenFodder\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Map.cpp">
+      <Filter>OpenFodder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\About.cpp">
       <Filter>OpenFodder</Filter>
     </ClCompile>
   </ItemGroup>
@@ -268,9 +280,6 @@
       <Filter>OpenFodder</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Map.hpp">
-      <Filter>OpenFodder</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\md5.hpp">
       <Filter>OpenFodder</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Position.hpp">
@@ -382,6 +391,27 @@
       <Filter>OpenFodder</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\UnitTesting.hpp">
+      <Filter>OpenFodder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\ResourceMan.hpp">
+      <Filter>OpenFodder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Utils\diamondsquare.hpp">
+      <Filter>OpenFodder\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Utils\ini.hpp">
+      <Filter>OpenFodder\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Utils\md5.hpp">
+      <Filter>OpenFodder\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Utils\pseudorand.hpp">
+      <Filter>OpenFodder\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Utils\SimplexNoise.hpp">
+      <Filter>OpenFodder\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\About.hpp">
       <Filter>OpenFodder</Filter>
     </ClInclude>
   </ItemGroup>

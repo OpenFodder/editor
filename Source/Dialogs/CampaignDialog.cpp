@@ -56,16 +56,16 @@ void cCampaignDialog::SpriteDelete() {
         return;
 
     auto Sprite = &g_Fodder->mSprites[Row];
-    g_Fodder->Sprite_Clear(Sprite);
+	Sprite->Clear();
 
-    sSprite* Last = &g_Fodder->mSprites[44];
+    sSprite* Last = &g_Fodder->mSprites[g_Fodder->mSprites.size()-2];
     sSprite* Next = &g_Fodder->mSprites[0];
 
     for (; Next != Last; ++Next) {
         
         if (Next->field_0 == -32768 || Next->field_0 == -1) {
             *Next = *(Next+1);
-             g_Fodder->Sprite_Clear(Next+1);
+             (Next+1)->Clear();
              continue;
         }
     }

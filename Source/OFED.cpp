@@ -66,12 +66,14 @@ cOFED::cOFED(QWidget *parent) : QMainWindow(parent) {
     QObject::connect(ui.actionNew_Mission, &QAction::triggered, this, &cOFED::Mission_AddNew);
     QObject::connect(ui.actionNew_Phase, &QAction::triggered, this, &cOFED::Phase_AddNew);
 
+	g_Debugger = std::make_shared<cDebugger>();
+	g_ResourceMan = std::make_shared<cResourceMan>();
     g_Fodder = std::make_shared<cFodder>(g_Window);
 
 	// Prepare OpenFodder
     g_Fodder->Prepare(Parms);
 
-	if (!g_Fodder->mVersions->isDataAvailable()) {
+	if (!g_ResourceMan->isDataAvailable()) {
 
 		// TODO: Show a message that no data was found
 		return;
@@ -218,8 +220,8 @@ void cOFED::ShowDialog_NewMap() {
 
         NewPhase->mName = "Single Phase";
 
-        auto path = local_PathGenerate(g_Fodder->mGame_Data.mPhase_Current->mMapFilename, "Custom/Maps", eData);
-
+        auto path = g_ResourceMan->getCustomMapPath() + g_Fodder->mGame_Data.mPhase_Current->mMapFilename;
+		
         QString fileName = QFileDialog::getSaveFileName(this,
             tr("Save Map"), tr(path.c_str()),
             tr("Open Fodder (*.map);;All Files (*)"));
@@ -229,7 +231,7 @@ void cOFED::ShowDialog_NewMap() {
 
         NewPhase->mMapFilename = fileName.toStdString().substr(0, fileName.size() - 4);
 
-        g_Fodder->Map_Save(fileName.toStdString());
+        g_Fodder->mMapLoaded.save(fileName.toStdString(), true);
         mToolboxCampaigns->LoadCampaign(&g_Fodder->mGame_Data.mCampaign);
     }
     else {
@@ -567,7 +569,7 @@ void cOFED::Save_Map(std::shared_ptr<cPhase> pPhase) {
 
     //std::experimental::filesystem::create_directory(g_Fodder->mGame_Data.mCampaign.GetPath());
 
-    g_Fodder->Map_Save(g_Fodder->mGame_Data.mCampaign.GetPathToFile(pPhase->mMapFilename + ".map"));
+    g_Fodder->mMapLoaded.save(g_Fodder->mGame_Data.mCampaign.GetPathToFile(pPhase->mMapFilename + ".map"), true);
 }
 
 void cOFED::AddHut_With_Soldier() {
@@ -906,7 +908,7 @@ void cOFED::AddCliff() {
 void cOFED::ShowDialog_NewCampaign() {
 
     QString fileName = QFileDialog::getSaveFileName(this,
-        tr("Create Campaign"), tr(local_PathGenerate("", "", eDataType::eCampaign).c_str()),
+        tr("Create Campaign"), tr(g_ResourceMan->GetCampaignData("Cannon Fodder").c_str()),
         tr("Open Fodder Campaign (*.ofc);"));
 
     std::string filename = fileName.toStdString();
@@ -924,7 +926,7 @@ void cOFED::ShowDialog_NewCampaign() {
 void cOFED::ShowDialog_LoadCampaign() {
 
     QString fileName = QFileDialog::getOpenFileName(this,
-        tr("Load Campaign"), tr(local_PathGenerate("", "", eDataType::eCampaign).c_str()),
+        tr("Load Campaign"), tr(g_ResourceMan->GetCampaignData("Cannon Fodder").c_str()),
         tr("Open Fodder Campaign (*.ofc);"));
 
     std::string filename = fileName.toStdString();
@@ -963,7 +965,7 @@ void cOFED::ShowDialog_SaveCampaign() {
 void cOFED::ShowDialog_LoadMap() {
 
 	QString fileName = QFileDialog::getOpenFileName(this,
-		tr("Load Map"), tr(local_PathGenerate("", "Custom/Maps", eDataType::eData).c_str()),
+		tr("Load Map"), tr(g_ResourceMan->getCustomMapPath().c_str()),
 		tr("Open Fodder (*.map);;All Files (*)"));
 
 	CursorReset();
@@ -1001,7 +1003,7 @@ void cOFED::ShowDialog_SaveMap() {
         if (!fileName.size())
             return;
 
-        g_Fodder->Map_Save(fileName.toStdString());
+        g_Fodder->mMapLoaded.save(fileName.toStdString(), true);
     }
     else {
         // Campaign maps have to keep the filename
@@ -1025,7 +1027,13 @@ void cOFED::Create_NewMap(const std::string& pTileSet, const std::string& pTileS
 
 			CursorReset();
 
-			g_Fodder->Map_Create(TileType, mMapSub, pWidth, pHeight, pRandom);
+			sMapParams Params;
+			Params.mTileType = TileType.mType;
+			Params.mTileSub = mMapSub;
+			Params.mWidth = pWidth;
+			Params.mHeight = pHeight;
+
+			g_Fodder->Map_Create(Params, pRandom);
             g_Fodder->mWindow->FrameEnd();
 
 			// Update the Toolboxes

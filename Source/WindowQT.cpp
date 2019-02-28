@@ -107,11 +107,11 @@ void cWindowQT::CameraTilesUpdate() {
 	// Number of tiles which are shown
 	CameraSetTiles();
 
-	if (mCameraTilesX > g_Fodder->mMapWidth)
-		mCameraTilesX = g_Fodder->mMapWidth;
+	if (mCameraTilesX > g_Fodder->mMapLoaded.getWidth())
+		mCameraTilesX = g_Fodder->mMapLoaded.getWidth();
 
-	if (mCameraTilesY > g_Fodder->mMapHeight)
-		mCameraTilesY = g_Fodder->mMapHeight;
+	if (mCameraTilesY > g_Fodder->mMapLoaded.getHeight())
+		mCameraTilesY = g_Fodder->mMapLoaded.getHeight();
 }
 
 void cWindowQT::CameraUpdate() {
@@ -187,7 +187,7 @@ void cWindowQT::CameraUpdate() {
 
 	// Down
 	if (g_Fodder->mMouse_EventLastPosition.mY > Height - mEdgeWidth) {
-		if (g_Fodder->mMapTile_MovedVertical < g_Fodder->mMapHeight - mCameraTilesY) {
+		if (g_Fodder->mMapTile_MovedVertical < g_Fodder->mMapLoaded.getHeight() - mCameraTilesY) {
 			g_Fodder->MapTile_Move_Down(1);
 		}
 	}
@@ -201,7 +201,7 @@ void cWindowQT::CameraUpdate() {
 
 	// Right
 	if (g_Fodder->mMouse_EventLastPosition.mX > Width - mEdgeWidth) {
-		if (g_Fodder->mMapTile_MovedHorizontal < (g_Fodder->mMapWidth ) - mCameraTilesX) {
+		if (g_Fodder->mMapTile_MovedHorizontal < (g_Fodder->mMapLoaded.getWidth()) - mCameraTilesX) {
 			g_Fodder->MapTile_Move_Right(1);
 		}
 	}
