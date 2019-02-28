@@ -114,10 +114,8 @@ SOURCES += Source/main.cpp \
            Dependencies/OpenFodder/Source/GameData.cpp \
            Dependencies/OpenFodder/Source/Graphics.cpp \
            Dependencies/OpenFodder/Source/GUI_Element.cpp \
-		   Dependencies/OpenFodder/Source/Utils/ini.cpp \
            Dependencies/OpenFodder/Source/Utils/md5.cpp \
 		   Dependencies/OpenFodder/Source/Utils/SimplexNoise.cpp \
-		   Dependencies/OpenFodder/Source/Utils/pseudorand.cpp \
            Dependencies/OpenFodder/Source/Recruits.cpp \
            Dependencies/OpenFodder/Source/Resources.cpp \
 		   Dependencies/OpenFodder/Source/ResourceMan.cpp \
