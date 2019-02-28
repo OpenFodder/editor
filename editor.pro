@@ -39,6 +39,8 @@ HEADERS += Source/ofed.hpp \
            Source/Models/CampaignModel.hpp \
            Source/Models/MissionModel.hpp \
            Source/Models/SpriteModel.hpp \
+		   Source/gitver.hpp \
+		   Dependencies/OpenFodder/Source/About.hpp \
            Dependencies/OpenFodder/Source/Campaign.hpp \
            Dependencies/OpenFodder/Source/CopyProtection.hpp \
            Dependencies/OpenFodder/Source/Debugger.hpp \
@@ -105,6 +107,7 @@ SOURCES += Source/main.cpp \
            Source/Models/CampaignModel.cpp \
            Source/Models/MissionModel.cpp \
            Source/Models/SpriteModel.cpp \
+		   Dependencies/OpenFodder/Source/About.cpp \
            Dependencies/OpenFodder/Source/Campaign.cpp \
            Dependencies/OpenFodder/Source/CopyProtection.cpp \
            Dependencies/OpenFodder/Source/Debugger.cpp \
@@ -138,6 +141,7 @@ SOURCES += Source/main.cpp \
            Dependencies/OpenFodder/Source/Amiga/Sound_Amiga.cpp \
            Dependencies/OpenFodder/Source/PC/Graphics_PC.cpp \
            Dependencies/OpenFodder/Source/PC/IntroData_PC.cpp \
+		   Dependencies/OpenFodder/Source/Map.hpp \
            Dependencies/OpenFodder/Source/PC/Resource_PC_CD.cpp \
            Dependencies/OpenFodder/Source/PC/Sound_PC.cpp \
            Dependencies/OpenFodder/Source/PC/Sound_PC2.cpp \

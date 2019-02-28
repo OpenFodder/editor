@@ -1,0 +1,1 @@
+const char* gitversion="editor";
