@@ -51,10 +51,14 @@ HEADERS += Source/ofed.hpp \
            Dependencies/OpenFodder/Source/GUI_Element.hpp \
            Dependencies/OpenFodder/Source/IntroData.hpp \
            Dependencies/OpenFodder/Source/Map.hpp \
-           Dependencies/OpenFodder/Source/md5.hpp \
+		   Dependencies/OpenFodder/Source/Utils/ini.hpp \
+           Dependencies/OpenFodder/Source/Utils/md5.hpp \
+		   Dependencies/OpenFodder/Source/Utils/SimplexNoise.hpp \
+		   Dependencies/OpenFodder/Source/Utils/pseudorand.hpp \
            Dependencies/OpenFodder/Source/Position.hpp \
            Dependencies/OpenFodder/Source/Recruits.hpp \
            Dependencies/OpenFodder/Source/Resources.hpp \
+		   Dependencies/OpenFodder/Source/ResourceMan.hpp \
            Dependencies/OpenFodder/Source/Sound.hpp \
            Dependencies/OpenFodder/Source/Sprites.hpp \
            Dependencies/OpenFodder/Source/SpriteSheet.hpp \
@@ -110,9 +114,13 @@ SOURCES += Source/main.cpp \
            Dependencies/OpenFodder/Source/GameData.cpp \
            Dependencies/OpenFodder/Source/Graphics.cpp \
            Dependencies/OpenFodder/Source/GUI_Element.cpp \
-           Dependencies/OpenFodder/Source/md5.cpp \
+		   Dependencies/OpenFodder/Source/Utils/ini.cpp \
+           Dependencies/OpenFodder/Source/Utils/md5.cpp \
+		   Dependencies/OpenFodder/Source/Utils/SimplexNoise.cpp \
+		   Dependencies/OpenFodder/Source/Utils/pseudorand.cpp \
            Dependencies/OpenFodder/Source/Recruits.cpp \
            Dependencies/OpenFodder/Source/Resources.cpp \
+		   Dependencies/OpenFodder/Source/ResourceMan.cpp \
            Dependencies/OpenFodder/Source/Sound.cpp \
            Dependencies/OpenFodder/Source/Sprites.cpp \
            Dependencies/OpenFodder/Source/SpriteSheet.cpp \
