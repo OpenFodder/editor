@@ -53,7 +53,7 @@ public:
 
 	virtual void		PositionWindow();
 
-	virtual void		RenderAt(cSurface* pImage, cPosition pSource = cPosition(0, 0));
+	virtual void		RenderAt(cSurface* pImage);
 	virtual void		RenderShrunk(cSurface* pImage);
 
 	void				CameraSetTiles();

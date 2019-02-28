@@ -52,7 +52,7 @@ cCampaignDialog::cCampaignDialog(QWidget *parent, Qt::WindowFlags f) : QDialog(p
 void cCampaignDialog::SpriteDelete() {
 
     auto Row = mUi->mSpritesTable->currentIndex().row();
-    if (Row >= sizeof(g_Fodder->mSprites))
+    if (Row >= g_Fodder->mSprites.size())
         return;
 
     auto Sprite = &g_Fodder->mSprites[Row];

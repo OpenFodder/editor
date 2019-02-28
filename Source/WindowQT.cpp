@@ -59,7 +59,7 @@ void cWindowQT::PositionWindow() {
 
 }
 
-void cWindowQT::RenderAt(cSurface* pImage, cPosition ) {
+void cWindowQT::RenderAt(cSurface* pImage ) {
 
 	pImage->draw();
 
