@@ -29,7 +29,7 @@ void cToolboxSprites::RenderSprites() {
 
 	g_Fodder->mGraphics->SetActiveSpriteSheet(eGFX_IN_GAME);
 
-	for (size_t SpriteID = 0; SpriteID < 111; ++SpriteID) {
+	for (size_t SpriteID = 0; SpriteID < 118; ++SpriteID) {
 		sSprite Sprite;
 
 		int32 AnimID = g_SpriteAnim[SpriteID];

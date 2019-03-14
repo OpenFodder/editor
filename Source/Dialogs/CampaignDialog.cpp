@@ -169,7 +169,7 @@ void cCampaignDialog::SpriteClicked(QModelIndex pIndex) {
                 g_Fodder->MapTile_UpdateFromCamera();
                 g_Fodder->Sprites_Draw();
 
-                g_Fodder->sub_11CAD();
+                g_Fodder->Camera_Prepare();
 
                 g_Fodder->Cycle_End();
 

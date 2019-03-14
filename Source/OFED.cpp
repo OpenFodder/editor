@@ -12,7 +12,6 @@
 int32 g_SpriteAnim[118] = {};
 std::string g_SpriteName[118] = {};
 
-sFodderParameters Parms;
 
 cOFED::~cOFED() {
 
@@ -71,7 +70,7 @@ cOFED::cOFED(QWidget *parent) : QMainWindow(parent) {
     g_Fodder = std::make_shared<cFodder>(g_Window);
 
 	// Prepare OpenFodder
-    g_Fodder->Prepare(Parms);
+    g_Fodder->Prepare(g_Parameters);
 
 	if (!g_ResourceMan->isDataAvailable()) {
 
@@ -79,7 +78,7 @@ cOFED::cOFED(QWidget *parent) : QMainWindow(parent) {
 		return;
 	}
 
-    g_Fodder->VersionSwitch(g_Fodder->mVersions->GetRetail(ePlatform::Any));
+    g_Fodder->VersionSwitch(g_Fodder->mVersions->GetRetail(ePlatform::Any, eGame::CF1));
     g_Fodder->mVersionDefault = g_Fodder->mVersionCurrent;
 
     g_Fodder->Mouse_Setup();
@@ -115,36 +114,10 @@ void cOFED::OpenFodder_Prepare() {
     }
     g_Fodder->Game_Setup();
 
-	g_Fodder->Mission_Memory_Clear();
-	g_Fodder->Mission_Prepare_Squads();
-	g_Fodder->sub_10DEC();
-
-	g_Fodder->Squad_Set_Squad_Leader();
-	g_Fodder->Sprite_Clear_All();
+	g_Fodder->Phase_EngineReset();
+	g_Fodder->Phase_SquadPrepare();
 
     LoadMap();
-
-	g_Fodder->mPhase_Aborted = false;
-
-	g_Fodder->Mouse_Inputs_Get();
-	g_Fodder->Sprite_Frame_Modifier_Update();
-
-	g_Fodder->mInput_Enabled = -1;
-	g_Fodder->sub_11CAD();
-
-	g_Fodder->mGUI_Mouse_Modifier_X = 0;
-	g_Fodder->mGUI_Mouse_Modifier_Y = 4;
-
-	g_Fodder->Squad_Select_Grenades();
-	g_Fodder->mMap_Destroy_Tiles.clear();
-	g_Fodder->Sprite_Count_HelicopterCallPads();
-
-	g_Fodder->mMouseSpriteNew = eSprite_pStuff_Mouse_Cursor;
-	g_Fodder->mPhase_Aborted = 0;
-	g_Fodder->mPhase_Paused = false;
-	g_Fodder->mPhase_In_Progress = true;
-	g_Fodder->mMission_Finished = 0;
-	g_Fodder->mPhase_ShowMapOverview = 0;
 
     g_Fodder->Mission_Sprites_Handle(); g_Fodder->mWindow->FrameEnd();
 }
@@ -1057,7 +1030,7 @@ void cOFED::LoadMap() {
         mPhaseLabel->setText(QString::fromStdString(PhaseName));
     }
 
-
+	// Phase_Prepare()
     g_Fodder->Map_Load();
     g_Fodder->Map_Load_Sprites();
 

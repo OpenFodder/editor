@@ -22,7 +22,7 @@ QVariant cSpriteModel::data(const QModelIndex& index, int role) const
     size_t Row = (size_t)index.row();
     int Column = index.column();
 
-    if (Row >= sizeof(g_Fodder->mSprites) / sizeof(sSprite))
+    if (Row >= g_Fodder->mSprites.size())
         return "";
 
     auto Sprite = &g_Fodder->mSprites[Row];

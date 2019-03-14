@@ -194,6 +194,9 @@
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\About.cpp">
       <Filter>OpenFodder</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Parameters.cpp">
+      <Filter>OpenFodder</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="ofed.ui">
@@ -412,6 +415,9 @@
       <Filter>OpenFodder\Utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\About.hpp">
+      <Filter>OpenFodder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Parameters.hpp">
       <Filter>OpenFodder</Filter>
     </ClInclude>
   </ItemGroup>

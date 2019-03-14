@@ -155,6 +155,7 @@
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\GUI_Element.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Campaign.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Map.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Parameters.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\PC\Graphics_PC.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\PC\IntroData_PC.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\PC\Resource_PC_CD.cpp" />
@@ -213,6 +214,7 @@
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\IntroData.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Map.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Campaign.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Parameters.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\PC\Graphics_PC.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\PC\Resource_PC_CD.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\PC\Sound_PC.hpp" />

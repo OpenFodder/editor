@@ -3,8 +3,12 @@
 #include <QtWidgets/QApplication>
 
 cOFED* g_OFED;
+std::shared_ptr<sFodderParameters> g_Parameters;
 
-int main(int argc, char *argv[]) {
+int	start(int argc, char *argv[]) {
+
+	g_Parameters = std::make_shared<sFodderParameters>();
+	g_Parameters->Process(argc, argv);
 
 	QApplication a(argc, argv);
 
