@@ -58,6 +58,7 @@ HEADERS += Source/ofed.hpp \
 		   Dependencies/OpenFodder/Source/Utils/SimplexNoise.hpp \
 		   Dependencies/OpenFodder/Source/Utils/pseudorand.hpp \
            Dependencies/OpenFodder/Source/Position.hpp \
+		   Dependencies/OpenFodder/Source/Parameters.hpp \
            Dependencies/OpenFodder/Source/Recruits.hpp \
            Dependencies/OpenFodder/Source/Resources.hpp \
 		   Dependencies/OpenFodder/Source/ResourceMan.hpp \
@@ -119,6 +120,7 @@ SOURCES += Source/main.cpp \
            Dependencies/OpenFodder/Source/GUI_Element.cpp \
            Dependencies/OpenFodder/Source/Utils/md5.cpp \
 		   Dependencies/OpenFodder/Source/Utils/SimplexNoise.cpp \
+		   Dependencies/OpenFodder/Source/Parameters.cpp \
            Dependencies/OpenFodder/Source/Recruits.cpp \
            Dependencies/OpenFodder/Source/Resources.cpp \
 		   Dependencies/OpenFodder/Source/ResourceMan.cpp \
