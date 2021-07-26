@@ -3,9 +3,8 @@
 #include "ui_ToolboxTiles.h"
 #include "ui_CampaignDialog.h"
 
-#include <QDesktopWidget>
 #include <qpainter.h>
-
+#include <qscreen.h>
 #include <QFileDialog>
 #include <chrono>
 
@@ -99,7 +98,7 @@ cOFED::cOFED(QWidget *parent) : QMainWindow(parent) {
 			Qt::LeftToRight,
 			Qt::AlignCenter,
 			size(),
-			qApp->desktop()->availableGeometry()
+			qApp->screens().at(0)->availableGeometry()
 		)
 	);
 
@@ -139,7 +138,7 @@ void cOFED::moveEvent(QMoveEvent *) {
  */
 void cOFED::ShowDialog_ToolboxTiles() {
 
-	mToolboxTiles = new cToolboxTiles(this, 0);
+	mToolboxTiles = new cToolboxTiles(this);
 
 	// Position to the right of map editor
 	mToolboxTiles->move(x() + width(), y());
@@ -149,7 +148,7 @@ void cOFED::ShowDialog_ToolboxTiles() {
 
 void cOFED::ShowDialog_ToolboxSprites() {
 	
-	mToolboxSprites = new cToolboxSprites(this, 0);
+	mToolboxSprites = new cToolboxSprites(this);
 
 	// Position to the bottom of map editor
 	mToolboxSprites->move(x(), y() + height() + 30);
@@ -159,7 +158,7 @@ void cOFED::ShowDialog_ToolboxSprites() {
 
 void cOFED::ShowDialog_ToolboxCampaigns() {
     if (!mToolboxCampaigns) {
-        mToolboxCampaigns = new cCampaignDialog(this, 0);
+        mToolboxCampaigns = new cCampaignDialog(this);
 
         mToolboxCampaigns->move(x() - mToolboxCampaigns->width(), y());
         mToolboxCampaigns->show();
@@ -180,7 +179,7 @@ void cOFED::CloseDialog_ToolboxCampaigns() {
 void cOFED::ShowDialog_NewMap() {
 
 
-    cNewMapDialog* NewMap = new cNewMapDialog(this, 0);
+    cNewMapDialog* NewMap = new cNewMapDialog(this);
 
     if (NewMap->exec()) {
         g_Fodder->mGame_Data.mCampaign.SetSingleMapCampaign();
@@ -204,7 +203,7 @@ void cOFED::ShowDialog_NewMap() {
 
         NewPhase->mMapFilename = fileName.toStdString().substr(0, fileName.size() - 4);
 
-        g_Fodder->mMapLoaded.save(fileName.toStdString(), true);
+        g_Fodder->mMapLoaded->save(fileName.toStdString(), true);
         mToolboxCampaigns->LoadCampaign(&g_Fodder->mGame_Data.mCampaign);
     }
     else {
@@ -216,7 +215,7 @@ void cOFED::ShowDialog_NewMap() {
 sTiles cOFED::SetupHut() {
 	sTiles Tiles(true);
 
-	if (g_Fodder->mMap_TileSet  == eTileTypes_Jungle) {
+	if (g_Fodder->mMapLoaded->getTileType()   == eTileTypes_Jungle) {
 		Tiles.mTiles.push_back(sRangeTile(0, 0, 255));
 		Tiles.mTiles.push_back(sRangeTile(1, 0, 256));
 		Tiles.mTiles.push_back(sRangeTile(2, 0, 257));
@@ -232,7 +231,7 @@ sTiles cOFED::SetupHut() {
 		 mCursorSurface = std::make_shared<cSurface>(16 * 3, 16 * 3);
 	}
 
-	if (g_Fodder->mMap_TileSet  == eTileTypes_Desert) {
+	if (g_Fodder->mMapLoaded->getTileType()   == eTileTypes_Desert) {
 		Tiles.mTiles.push_back(sRangeTile(0, 0, 12));
 		Tiles.mTiles.push_back(sRangeTile(1, 0, 15));
 		Tiles.mTiles.push_back(sRangeTile(2, 0, 16));
@@ -256,7 +255,7 @@ sTiles cOFED::SetupHut() {
 		 mCursorSurface = std::make_shared<cSurface>(16 * 4, 16 * 4);
 	}
 
-	if (g_Fodder->mMap_TileSet  == eTileTypes_Ice) {
+	if (g_Fodder->mMapLoaded->getTileType()   == eTileTypes_Ice) {
 		Tiles.mTiles.push_back(sRangeTile(1, 0, 241));
 		Tiles.mTiles.push_back(sRangeTile(2, 0, 242));
 		Tiles.mTiles.push_back(sRangeTile(3, 0, 243));
@@ -275,7 +274,7 @@ sTiles cOFED::SetupHut() {
 		 mCursorSurface = std::make_shared<cSurface>(16 * 4, 16 * 3);
 	}
 
-	if (g_Fodder->mMap_TileSet  == eTileTypes_Moors) {
+	if (g_Fodder->mMapLoaded->getTileType()   == eTileTypes_Moors) {
 
 		Tiles.mTiles.push_back(sRangeTile(0, 0, 240));
 		Tiles.mTiles.push_back(sRangeTile(1, 0, 241));
@@ -305,7 +304,7 @@ sTiles cOFED::SetupHut() {
 		 mCursorSurface = std::make_shared<cSurface>(16 * 4, 16 * 5);
 	}
 
-	if (g_Fodder->mMap_TileSet  == eTileTypes_Int) {
+	if (g_Fodder->mMapLoaded->getTileType()   == eTileTypes_Int) {
 		Tiles.mTiles.push_back(sRangeTile(0, 0, 246));
 		Tiles.mTiles.push_back(sRangeTile(0, 1, 266));
 
@@ -319,7 +318,7 @@ sTiles cOFED::SetupHut() {
 sTiles cOFED::SetupBarracks() {
 	sTiles Tiles(true);
 
-	if (g_Fodder->mMap_TileSet  == eTileTypes_Jungle) {
+	if (g_Fodder->mMapLoaded->getTileType()   == eTileTypes_Jungle) {
 		Tiles.mTiles.push_back(sRangeTile(1, 0, 333));
 		Tiles.mTiles.push_back(sRangeTile(2, 0, 334));
 
@@ -339,7 +338,7 @@ sTiles cOFED::SetupBarracks() {
 		 mCursorSurface = std::make_shared<cSurface>(16 * 4, 16 * 4);
 	}
 
-	if (g_Fodder->mMap_TileSet  == eTileTypes_Ice) {
+	if (g_Fodder->mMapLoaded->getTileType()   == eTileTypes_Ice) {
 		Tiles.mTiles.push_back(sRangeTile(1, 0, 245));
 		Tiles.mTiles.push_back(sRangeTile(2, 0, 246));
 		Tiles.mTiles.push_back(sRangeTile(3, 0, 247));
@@ -357,7 +356,7 @@ sTiles cOFED::SetupBarracks() {
 		 mCursorSurface = std::make_shared<cSurface>(16 * 4, 16 * 3);
 	}
 
-	if (g_Fodder->mMap_TileSet  == eTileTypes_Desert) {
+	if (g_Fodder->mMapLoaded->getTileType()   == eTileTypes_Desert) {
 		Tiles.mTiles.push_back(sRangeTile(0, 0, 196));
 		Tiles.mTiles.push_back(sRangeTile(1, 0, 197));
 		Tiles.mTiles.push_back(sRangeTile(2, 0, 198));
@@ -373,7 +372,7 @@ sTiles cOFED::SetupBarracks() {
 		 mCursorSurface = std::make_shared<cSurface>(16 * 3, 16 * 3);
 	}
 
-	if (g_Fodder->mMap_TileSet  == eTileTypes_Moors) {
+	if (g_Fodder->mMapLoaded->getTileType()   == eTileTypes_Moors) {
 		Tiles.mTiles.push_back(sRangeTile(1, 0, 335));
 		Tiles.mTiles.push_back(sRangeTile(2, 0, 336));
 
@@ -392,7 +391,7 @@ sTiles cOFED::SetupBarracks() {
 		 mCursorSurface = std::make_shared<cSurface>(16 * 3, 16 * 4);
 	}
 
-	if (g_Fodder->mMap_TileSet  == eTileTypes_Int) {
+	if (g_Fodder->mMapLoaded->getTileType()   == eTileTypes_Int) {
 		Tiles.mTiles.push_back(sRangeTile(0, 0, 246));
 		Tiles.mTiles.push_back(sRangeTile(0, 1, 266));
 
@@ -406,7 +405,7 @@ sTiles cOFED::SetupBarracks() {
 sTiles cOFED::SetupBunker() {
 	sTiles Tiles(true);
 	
-	if (g_Fodder->mMap_TileSet  == eTileTypes_Jungle && mMapSub == 0) {
+	if (g_Fodder->mMapLoaded->getTileType()   == eTileTypes_Jungle && mMapSub == 0) {
 		Tiles.mTiles.push_back(sRangeTile(0, 0, 267));
 		Tiles.mTiles.push_back(sRangeTile(1, 0, 268));
 		Tiles.mTiles.push_back(sRangeTile(2, 0, 269));
@@ -429,7 +428,7 @@ sTiles cOFED::SetupBunker() {
 		 mCursorSurface = std::make_shared<cSurface>(16 * 4, 16 * 4);
 	}
 
-	if (g_Fodder->mMap_TileSet  == eTileTypes_Desert) {
+	if (g_Fodder->mMapLoaded->getTileType()   == eTileTypes_Desert) {
 		Tiles.mTiles.push_back(sRangeTile(0, 0, 9));
 		Tiles.mTiles.push_back(sRangeTile(1, 0, 10));
 		Tiles.mTiles.push_back(sRangeTile(2, 0, 11));
@@ -445,7 +444,7 @@ sTiles cOFED::SetupBunker() {
 		 mCursorSurface = std::make_shared<cSurface>(16 * 3, 16 * 3);
 	}
 
-	if (g_Fodder->mMap_TileSet  == eTileTypes_Ice) {
+	if (g_Fodder->mMapLoaded->getTileType()   == eTileTypes_Ice) {
 		Tiles.mTiles.push_back(sRangeTile(0, 0, 307));
 		Tiles.mTiles.push_back(sRangeTile(1, 0, 308));
 		Tiles.mTiles.push_back(sRangeTile(2, 0, 309));
@@ -469,7 +468,7 @@ sTiles cOFED::SetupBunker() {
 		 mCursorSurface = std::make_shared<cSurface>(16 * 4, 16 * 4);
 	}
 
-	if (g_Fodder->mMap_TileSet  == eTileTypes_Moors) {
+	if (g_Fodder->mMapLoaded->getTileType()   == eTileTypes_Moors) {
 		Tiles.mTiles.push_back(sRangeTile(0, 0, 160));
 		Tiles.mTiles.push_back(sRangeTile(1, 0, 161));
 		Tiles.mTiles.push_back(sRangeTile(2, 0, 162));
@@ -486,7 +485,7 @@ sTiles cOFED::SetupBunker() {
 	}
 
 
-	if (g_Fodder->mMap_TileSet  == eTileTypes_Int) {
+	if (g_Fodder->mMapLoaded->getTileType()   == eTileTypes_Int) {
 		Tiles.mTiles.push_back(sRangeTile(0, 0, 331));
 		Tiles.mTiles.push_back(sRangeTile(0, 1, 351));
 
@@ -517,7 +516,7 @@ void cOFED::Phase_AddNew() {
 
     g_Fodder->mGame_Data.mMission_Current->mPhases.push_back(NewPhase);
 
-    cNewMapDialog* NewMap = new cNewMapDialog(this, 0);
+    cNewMapDialog* NewMap = new cNewMapDialog(this);
 
     if (NewMap->exec()) {
         Save_Map(NewPhase);
@@ -542,32 +541,32 @@ void cOFED::Save_Map(std::shared_ptr<cPhase> pPhase) {
 
     //std::experimental::filesystem::create_directory(g_Fodder->mGame_Data.mCampaign.GetPath());
 
-    g_Fodder->mMapLoaded.save(g_Fodder->mGame_Data.mCampaign.GetPathToFile(pPhase->mMapFilename + ".map"), true);
+    g_Fodder->mMapLoaded->save(g_Fodder->mGame_Data.mCampaign.GetPathToFile(pPhase->mMapFilename + ".map"), true);
 }
 
 void cOFED::AddHut_With_Soldier() {
 
 	sTiles Tiles = SetupHut();
 
-	if (g_Fodder->mMap_TileSet == eTileTypes_Jungle) {
+	if (g_Fodder->mMapLoaded->getTileType()  == eTileTypes_Jungle) {
 		Tiles.mSprites.push_back(sRangeSprite(20, 27, eSprite_BuildingDoor2));
 	}
 
-	if (g_Fodder->mMap_TileSet == eTileTypes_Desert) {
+	if (g_Fodder->mMapLoaded->getTileType()  == eTileTypes_Desert) {
 		Tiles.mSprites.push_back(sRangeSprite(35, 40, eSprite_BuildingDoor2));
 	}
 
-	if (g_Fodder->mMap_TileSet == eTileTypes_Ice) {
+	if (g_Fodder->mMapLoaded->getTileType()  == eTileTypes_Ice) {
 		// In this case 'Shrub' is roof
 		Tiles.mSprites.push_back(sRangeSprite(20, 1, eSprite_Shrub));
 		Tiles.mSprites.push_back(sRangeSprite(12, 23, eSprite_BuildingDoor2));
 	}
 
-	if (g_Fodder->mMap_TileSet == eTileTypes_Moors) {
+	if (g_Fodder->mMapLoaded->getTileType()  == eTileTypes_Moors) {
 		Tiles.mSprites.push_back(sRangeSprite(28, 65, eSprite_BuildingDoor2));
 	}
 
-	if (g_Fodder->mMap_TileSet == eTileTypes_Int) {
+	if (g_Fodder->mMapLoaded->getTileType()  == eTileTypes_Int) {
 		Tiles.mSprites.push_back(sRangeSprite(3, 5, eSprite_BuildingDoor2));
 	}
 
@@ -577,26 +576,26 @@ void cOFED::AddHut_With_Soldier() {
 void cOFED::AddHut_With_Indigenous() {
 	sTiles Tiles = SetupHut();
 
-	if (g_Fodder->mMap_TileSet  == eTileTypes_Jungle) {
-		Tiles.mSprites.push_back(sRangeSprite(20, 27, eSprite_Door_Indigenous));
+	if (g_Fodder->mMapLoaded->getTileType()   == eTileTypes_Jungle) {
+		Tiles.mSprites.push_back(sRangeSprite(20, 27, eSprite_Door_Civilian));
 	}
 
-	if (g_Fodder->mMap_TileSet  == eTileTypes_Desert) {
-		Tiles.mSprites.push_back(sRangeSprite(35, 40, eSprite_Door_Indigenous));
+	if (g_Fodder->mMapLoaded->getTileType()   == eTileTypes_Desert) {
+		Tiles.mSprites.push_back(sRangeSprite(35, 40, eSprite_Door_Civilian));
 	}
 
-	if (g_Fodder->mMap_TileSet  == eTileTypes_Ice) {
+	if (g_Fodder->mMapLoaded->getTileType()   == eTileTypes_Ice) {
 		// In this case 'Shrub' is roof
 		Tiles.mSprites.push_back(sRangeSprite(20, 1, eSprite_Shrub));
-		Tiles.mSprites.push_back(sRangeSprite(12, 23, eSprite_Door_Indigenous));
+		Tiles.mSprites.push_back(sRangeSprite(12, 23, eSprite_Door_Civilian));
 	}
 
-	if (g_Fodder->mMap_TileSet  == eTileTypes_Moors) {
-		Tiles.mSprites.push_back(sRangeSprite(28, 65, eSprite_Door_Indigenous));
+	if (g_Fodder->mMapLoaded->getTileType()   == eTileTypes_Moors) {
+		Tiles.mSprites.push_back(sRangeSprite(28, 65, eSprite_Door_Civilian));
 	}
 
-	if (g_Fodder->mMap_TileSet  == eTileTypes_Int) {
-		Tiles.mSprites.push_back(sRangeSprite(3, 5, eSprite_Door_Indigenous));
+	if (g_Fodder->mMapLoaded->getTileType()   == eTileTypes_Int) {
+		Tiles.mSprites.push_back(sRangeSprite(3, 5, eSprite_Door_Civilian));
 	}
 
 	setCursorTiles(Tiles);
@@ -605,26 +604,26 @@ void cOFED::AddHut_With_Indigenous() {
 void cOFED::AddHut_With_Indigenous_Spear() {
 	sTiles Tiles = SetupHut();
 
-	if (g_Fodder->mMap_TileSet  == eTileTypes_Jungle) {
-		Tiles.mSprites.push_back(sRangeSprite(20, 27, eSprite_Door_Indigenous_Spear));
+	if (g_Fodder->mMapLoaded->getTileType()   == eTileTypes_Jungle) {
+		Tiles.mSprites.push_back(sRangeSprite(20, 27, eSprite_Door_Civilian_Spear));
 	}
 
-	if (g_Fodder->mMap_TileSet  == eTileTypes_Desert) {
-		Tiles.mSprites.push_back(sRangeSprite(35, 40, eSprite_Door_Indigenous_Spear));
+	if (g_Fodder->mMapLoaded->getTileType()   == eTileTypes_Desert) {
+		Tiles.mSprites.push_back(sRangeSprite(35, 40, eSprite_Door_Civilian_Spear));
 	}
 
-	if (g_Fodder->mMap_TileSet  == eTileTypes_Ice) {
+	if (g_Fodder->mMapLoaded->getTileType()   == eTileTypes_Ice) {
 		// In this case 'Shrub' is roof
 		Tiles.mSprites.push_back(sRangeSprite(20, 1, eSprite_Shrub));
-		Tiles.mSprites.push_back(sRangeSprite(12, 23, eSprite_Door_Indigenous_Spear));
+		Tiles.mSprites.push_back(sRangeSprite(12, 23, eSprite_Door_Civilian_Spear));
 	}
 
-	if (g_Fodder->mMap_TileSet  == eTileTypes_Moors) {
-		Tiles.mSprites.push_back(sRangeSprite(28, 65, eSprite_Door_Indigenous_Spear));
+	if (g_Fodder->mMapLoaded->getTileType()   == eTileTypes_Moors) {
+		Tiles.mSprites.push_back(sRangeSprite(28, 65, eSprite_Door_Civilian_Spear));
 	}
 
-	if (g_Fodder->mMap_TileSet  == eTileTypes_Int) {
-		Tiles.mSprites.push_back(sRangeSprite(3, 5, eSprite_Door_Indigenous_Spear));
+	if (g_Fodder->mMapLoaded->getTileType()   == eTileTypes_Int) {
+		Tiles.mSprites.push_back(sRangeSprite(3, 5, eSprite_Door_Civilian_Spear));
 	}
 	setCursorTiles(Tiles);
 }
@@ -632,27 +631,27 @@ void cOFED::AddHut_With_Indigenous_Spear() {
 void cOFED::AddBarracks_With_Soldier() {
 	sTiles Tiles = SetupBarracks();
 
-	if (g_Fodder->mMap_TileSet  == eTileTypes_Jungle) {
+	if (g_Fodder->mMapLoaded->getTileType()   == eTileTypes_Jungle) {
 		Tiles.mSprites.push_back(sRangeSprite(13, 2, eSprite_BuildingRoof));
 		Tiles.mSprites.push_back(sRangeSprite(9, 34, eSprite_BuildingDoor));
 	}
 
-	if (g_Fodder->mMap_TileSet  == eTileTypes_Desert) {
+	if (g_Fodder->mMapLoaded->getTileType()   == eTileTypes_Desert) {
 		Tiles.mSprites.push_back(sRangeSprite(12, -15, eSprite_BuildingRoof));
 		Tiles.mSprites.push_back(sRangeSprite(7, 16, eSprite_BuildingDoor));
 	}
 
-	if (g_Fodder->mMap_TileSet  == eTileTypes_Ice) {
+	if (g_Fodder->mMapLoaded->getTileType()  == eTileTypes_Ice) {
 		Tiles.mSprites.push_back(sRangeSprite(23, -5, eSprite_BuildingRoof));
 		Tiles.mSprites.push_back(sRangeSprite(20, 27, eSprite_BuildingDoor));
 	}
 
-	if (g_Fodder->mMap_TileSet  == eTileTypes_Moors) {
+	if (g_Fodder->mMapLoaded->getTileType()   == eTileTypes_Moors) {
 		Tiles.mSprites.push_back(sRangeSprite(15, 1, eSprite_BuildingRoof));
 		Tiles.mSprites.push_back(sRangeSprite(7, 33, eSprite_BuildingDoor));
 	}
 
-	if (g_Fodder->mMap_TileSet  == eTileTypes_Int) {
+	if (g_Fodder->mMapLoaded->getTileType()   == eTileTypes_Int) {
 		Tiles.mSprites.push_back(sRangeSprite(3, 5, eSprite_BuildingDoor));
 	}
 
@@ -662,23 +661,23 @@ void cOFED::AddBarracks_With_Soldier() {
 void cOFED::AddBunker_With_Soldier() {
 	sTiles Tiles = SetupBunker();
 
-	if (g_Fodder->mMap_TileSet == eTileTypes_Jungle) {
+	if (g_Fodder->mMapLoaded->getTileType()  == eTileTypes_Jungle) {
 		Tiles.mSprites.push_back(sRangeSprite(23, 32, eSprite_BuildingDoor3));
 	}
 
-	if (g_Fodder->mMap_TileSet == eTileTypes_Desert) {
+	if (g_Fodder->mMapLoaded->getTileType()  == eTileTypes_Desert) {
 		Tiles.mSprites.push_back(sRangeSprite(23, 32, eSprite_BuildingDoor3));
 	}
 
-	if (g_Fodder->mMap_TileSet == eTileTypes_Ice) {
+	if (g_Fodder->mMapLoaded->getTileType()  == eTileTypes_Ice) {
 		Tiles.mSprites.push_back(sRangeSprite(23, 32, eSprite_BuildingDoor3));
 	}
 
-	if (g_Fodder->mMap_TileSet == eTileTypes_Moors) {
+	if (g_Fodder->mMapLoaded->getTileType()  == eTileTypes_Moors) {
 		Tiles.mSprites.push_back(sRangeSprite(23, 32, eSprite_BuildingDoor3));
 	}
 
-	if (g_Fodder->mMap_TileSet == eTileTypes_Int) {
+	if (g_Fodder->mMapLoaded->getTileType()  == eTileTypes_Int) {
 		Tiles.mSprites.push_back(sRangeSprite(3, 3, eSprite_BuildingDoor3));
 	}
 
@@ -688,23 +687,23 @@ void cOFED::AddBunker_With_Soldier() {
 void cOFED::AddBunker_With_SoldierReinforced() {
 	sTiles Tiles = SetupBunker();
 
-	if (g_Fodder->mMap_TileSet == eTileTypes_Jungle) {
+	if (g_Fodder->mMapLoaded->getTileType()  == eTileTypes_Jungle) {
 		Tiles.mSprites.push_back(sRangeSprite(23, 32, eSprite_BuildingDoor_Reinforced));
 	}
 
-	if (g_Fodder->mMap_TileSet == eTileTypes_Desert) {
+	if (g_Fodder->mMapLoaded->getTileType()  == eTileTypes_Desert) {
 		Tiles.mSprites.push_back(sRangeSprite(23, 32, eSprite_BuildingDoor_Reinforced));
 	}
 
-	if (g_Fodder->mMap_TileSet == eTileTypes_Ice) {
+	if (g_Fodder->mMapLoaded->getTileType()  == eTileTypes_Ice) {
 		Tiles.mSprites.push_back(sRangeSprite(23, 32, eSprite_BuildingDoor_Reinforced));
 	}
 
-	if (g_Fodder->mMap_TileSet == eTileTypes_Moors) {
+	if (g_Fodder->mMapLoaded->getTileType()  == eTileTypes_Moors) {
 		Tiles.mSprites.push_back(sRangeSprite(23, 32, eSprite_BuildingDoor_Reinforced));
 	}
 
-	if (g_Fodder->mMap_TileSet == eTileTypes_Int) {
+	if (g_Fodder->mMapLoaded->getTileType()  == eTileTypes_Int) {
 		Tiles.mSprites.push_back(sRangeSprite(3, 3, eSprite_BuildingDoor_Reinforced));
 	}
 
@@ -715,7 +714,7 @@ void cOFED::AddCliff() {
 	sTiles Tiles(true);
 	CursorReset();
 
-	if (g_Fodder->mMap_TileSet== eTileTypes_Ice) {
+	if (g_Fodder->mMapLoaded->getTileType() == eTileTypes_Ice) {
 		Tiles.mTiles.push_back(sRangeTile(0, 0, 120));
 		Tiles.mTiles.push_back(sRangeTile(1, 0, 121));
 		Tiles.mTiles.push_back(sRangeTile(2, 0, 122));
@@ -764,7 +763,7 @@ void cOFED::AddCliff() {
 		 mCursorSurface = std::make_shared<cSurface>(16 * 8, 16 * 5);
 	}
 
-	if (g_Fodder->mMap_TileSet== eTileTypes_Jungle) {
+	if (g_Fodder->mMapLoaded->getTileType() == eTileTypes_Jungle) {
 		Tiles.mTiles.push_back(sRangeTile(0, 0, 89));
 		Tiles.mTiles.push_back(sRangeTile(1, 0, 90));
 		Tiles.mTiles.push_back(sRangeTile(2, 0, 91));
@@ -814,7 +813,7 @@ void cOFED::AddCliff() {
 	}
 
 
-	if (g_Fodder->mMap_TileSet== eTileTypes_Desert) {
+	if (g_Fodder->mMapLoaded->getTileType() == eTileTypes_Desert) {
 		Tiles.mTiles.push_back(sRangeTile(0, 0, 80));
 		Tiles.mTiles.push_back(sRangeTile(1, 0, 81));
 		Tiles.mTiles.push_back(sRangeTile(2, 0, 82));
@@ -976,7 +975,7 @@ void cOFED::ShowDialog_SaveMap() {
         if (!fileName.size())
             return;
 
-        g_Fodder->mMapLoaded.save(fileName.toStdString(), true);
+        g_Fodder->mMapLoaded->save(fileName.toStdString(), true);
     }
     else {
         // Campaign maps have to keep the filename
@@ -1002,11 +1001,12 @@ void cOFED::Create_NewMap(const std::string& pTileSet, const std::string& pTileS
 
 			sMapParams Params;
 			Params.mTileType = TileType.mType;
-			Params.mTileSub = mMapSub;
+			Params.mTileSub = (eTileSub) mMapSub;
 			Params.mWidth = pWidth;
 			Params.mHeight = pHeight;
+			Params.mRandom = pRandom;
 
-			g_Fodder->Map_Create(Params, pRandom);
+			g_Fodder->Map_Create(Params);
             g_Fodder->mWindow->FrameEnd();
 
 			// Update the Toolboxes
@@ -1224,8 +1224,8 @@ void cOFED::SetupSprites() {
 	g_SpriteAnim[eSprite_Spike] = 0xC9;
 
 	g_SpriteAnim[eSprite_BoilingPot] = 0xCD;
-	g_SpriteAnim[eSprite_Indigenous] = 0xD0;
-	g_SpriteAnim[eSprite_Indigenous2] = 0xD0;
+	g_SpriteAnim[eSprite_Civilian] = 0xD0;
+	g_SpriteAnim[eSprite_Civilian2] = 0xD0;
 	g_SpriteAnim[eSprite_VehicleNoGun_Human] = 0xA5;
 	g_SpriteAnim[eSprite_VehicleGun_Human] = 0xA5;
 
@@ -1235,13 +1235,13 @@ void cOFED::SetupSprites() {
 	g_SpriteAnim[eSprite_Seal] = 0xD5;
 	g_SpriteAnim[eSprite_Tank_Enemy] = 0xD1;
 
-	g_SpriteAnim[eSprite_Indigenous_Spear] = 0xD0;
+	g_SpriteAnim[eSprite_Civilian_Spear] = 0xD0;
 	g_SpriteAnim[eSprite_Hostage] = 0xD9;
 	g_SpriteAnim[eSprite_Hostage_Rescue_Tent] = 0xDD;
 
-	g_SpriteAnim[eSprite_Door_Indigenous] = 0x9B;
-	g_SpriteAnim[eSprite_Door2_Indigenous] = 0x9B;
-	g_SpriteAnim[eSprite_Door_Indigenous_Spear] = 0x9B;
+	g_SpriteAnim[eSprite_Door_Civilian] = 0x9B;
+	g_SpriteAnim[eSprite_Door2_Civilian] = 0x9B;
+	g_SpriteAnim[eSprite_Door_Civilian_Spear] = 0x9B;
 	g_SpriteAnim[eSprite_Cannon] = 0x96;
 
 	g_SpriteAnim[eSprite_Turret_Missile_Human] = 0xD2;
@@ -1250,13 +1250,13 @@ void cOFED::SetupSprites() {
 	g_SpriteAnim[eSprite_VehicleNoGun_Enemy] = 0xA5;
 	g_SpriteAnim[eSprite_VehicleGun_Enemy] = 0xA5;
 	g_SpriteAnim[eSprite_Vehicle_Unk_Enemy] = 0xA5;
-	g_SpriteAnim[eSprite_Indigenous_Invisible] = 0xD6;
+	g_SpriteAnim[eSprite_Civilian_Invisible] = 0xD6;
 
 	g_SpriteAnim[eSprite_Turret_Missile_Enemy] = 0xD2;
 	g_SpriteAnim[eSprite_Turret_Missile2_Enemy] = 0xD2;
 	g_SpriteAnim[eSprite_BuildingDoor3] = 0xE0;
 
-	g_SpriteAnim[eSprite_OpenCloseDoor] = 0x9B;
+	g_SpriteAnim[eSprite_Door_Civilian_Rescue] = 0x9B;
 	g_SpriteAnim[eSprite_Seal_Mine] = 0xD5;
 	g_SpriteAnim[eSprite_Spider_Mine] = 0xE2;
 
@@ -1275,7 +1275,7 @@ void cOFED::SetupSprites() {
 	g_SpriteAnim[eSprite_Helicopter_Homing_Human_Called] = 0x8B;
 	g_SpriteAnim[eSprite_Turret_HomingMissile_Enemy] = 0xD2;
 
-	g_SpriteAnim[eSprite_Hostage_2] = 0xD9;
+	g_SpriteAnim[eSprite_Enemy_Leader] = 0xD9;
 	g_SpriteAnim[eSprite_Helicopter_Homing_Enemy2] = 0x8B;
 	g_SpriteAnim[eSprite_Computer_1] = 0x8F;
 	g_SpriteAnim[eSprite_Computer_2] = 0x8F;
@@ -1325,8 +1325,8 @@ void cOFED::SetupSprites() {
 	g_SpriteName[eSprite_Spike] = "Spike";
 
 	g_SpriteName[eSprite_BoilingPot] = "Boiling Pot";
-	g_SpriteName[eSprite_Indigenous] = "Indigenous";
-	g_SpriteName[eSprite_Indigenous2] = "Indigenous 2";
+	g_SpriteName[eSprite_Civilian] = "Indigenous";
+	g_SpriteName[eSprite_Civilian2] = "Indigenous 2";
 	g_SpriteName[eSprite_VehicleNoGun_Human] = "Human Vehicle: No Weapon";
 	g_SpriteName[eSprite_VehicleGun_Human] = "Human Vehicle: Weapon";
 
@@ -1336,13 +1336,13 @@ void cOFED::SetupSprites() {
 	g_SpriteName[eSprite_Seal] = "Seal";
 	g_SpriteName[eSprite_Tank_Enemy] = "Enemy Tank";
 
-	g_SpriteName[eSprite_Indigenous_Spear] = "Indigenous: Spear";
+	g_SpriteName[eSprite_Civilian_Spear] = "Indigenous: Spear";
 	g_SpriteName[eSprite_Hostage] = "Hostage";
 	g_SpriteName[eSprite_Hostage_Rescue_Tent] = "Hostage Rescue Tent";
 
-	g_SpriteName[eSprite_Door_Indigenous] = "Building Door: Indigenous";
-	g_SpriteName[eSprite_Door2_Indigenous] = "Building Door: Indigenous 2";
-	g_SpriteName[eSprite_Door_Indigenous_Spear] = "Building Door: Indigenous Spear";
+	g_SpriteName[eSprite_Door_Civilian] = "Building Door: Indigenous";
+	g_SpriteName[eSprite_Door2_Civilian] = "Building Door: Indigenous 2";
+	g_SpriteName[eSprite_Door_Civilian_Spear] = "Building Door: Indigenous Spear";
 
 	g_SpriteName[eSprite_Turret_Missile_Human] = "Human Turret: Missile";
 	g_SpriteName[eSprite_Turret_Missile2_Human] = "Human Turret: Missile 2";
@@ -1350,13 +1350,13 @@ void cOFED::SetupSprites() {
 	g_SpriteName[eSprite_VehicleNoGun_Enemy] = "Enemy Vehicle: No Weapon";
 	g_SpriteName[eSprite_VehicleGun_Enemy] = "Enemy Vehicle: Weapon";
 	g_SpriteName[eSprite_Vehicle_Unk_Enemy] = "Enemy Vehicle: Unknown";
-	g_SpriteName[eSprite_Indigenous_Invisible] = "Indigenous: Invisible?";
+	g_SpriteName[eSprite_Civilian_Invisible] = "Indigenous: Invisible?";
 
 	g_SpriteName[eSprite_Turret_Missile_Enemy] = "Enemy Turret: Missile";
 	g_SpriteName[eSprite_Turret_Missile2_Enemy] = "Enemy Turret: Missile 2";
 	g_SpriteName[eSprite_BuildingDoor3] = "Building Door3";
 
-	g_SpriteName[eSprite_OpenCloseDoor] = "Building Door: In";
+	g_SpriteName[eSprite_Door_Civilian_Rescue] = "Building Door: In";
 	g_SpriteName[eSprite_Seal_Mine] = "Seal Mine";
 	g_SpriteName[eSprite_Spider_Mine] = "Spider Mine";
 
@@ -1373,7 +1373,7 @@ void cOFED::SetupSprites() {
 	g_SpriteName[eSprite_Helicopter_Homing_Human_Called] = "Human Helicopter: Homing Missile Callable";
 
 	g_SpriteName[eSprite_Turret_HomingMissile_Enemy] = "Enemey Turret: Homing Missile";
-	g_SpriteName[eSprite_Hostage_2] = "Hostage 2";
+	g_SpriteName[eSprite_Enemy_Leader] = "Hostage 2";
 	g_SpriteName[eSprite_Helicopter_Homing_Enemy2] = "Enemy Helicopter: Homing Missile2";
 	g_SpriteName[eSprite_Computer_1] = "Computer 1";
 	g_SpriteName[eSprite_Computer_2] = "Computer 2";

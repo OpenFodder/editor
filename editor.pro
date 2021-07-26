@@ -52,7 +52,6 @@ HEADERS += Source/ofed.hpp \
            Dependencies/OpenFodder/Source/Graphics.hpp \
            Dependencies/OpenFodder/Source/GUI_Element.hpp \
            Dependencies/OpenFodder/Source/IntroData.hpp \
-           Dependencies/OpenFodder/Source/Map.hpp \
 		   Dependencies/OpenFodder/Source/Utils/ini.hpp \
            Dependencies/OpenFodder/Source/Utils/md5.hpp \
 		   Dependencies/OpenFodder/Source/Utils/SimplexNoise.hpp \
@@ -73,6 +72,9 @@ HEADERS += Source/ofed.hpp \
            Dependencies/OpenFodder/Source/Versions.hpp \
            Dependencies/OpenFodder/Source/Versions_Files.hpp \
            Dependencies/OpenFodder/Source/Window.hpp \
+		   Dependencies/OpenFodder/Source/Map/Map.hpp \
+		   Dependencies/OpenFodder/Source/Map/Original.hpp \
+		   Dependencies/OpenFodder/Source/Map/Random.hpp \
            Dependencies/OpenFodder/Projects/VS2017/resource.h \
            Dependencies/OpenFodder/Source/Amiga/audiostream.hpp \
            Dependencies/OpenFodder/Source/Amiga/dernc.hpp \
@@ -92,7 +94,12 @@ HEADERS += Source/ofed.hpp \
            Dependencies/OpenFodder/Source/Structures/Barracks.hpp \
            Dependencies/OpenFodder/Source/Utils/cxxopts.hpp \
            Dependencies/OpenFodder/Source/Utils/diamondsquare.hpp \
-           Dependencies/OpenFodder/Source/Utils/json.hpp
+           Dependencies/OpenFodder/Source/Utils/json.hpp \
+		   Dependencies/OpenFodder/Source/Utils/SimplexNoise.hpp \
+		   Dependencies/OpenFodder/Source/Utils/SimplexIslands.hpp \
+		   Dependencies/OpenFodder/Source/Utils/micropather.h \
+		   Dependencies/OpenFodder/Source/Utils/duktape.h \
+		   Dependencies/OpenFodder/Source/Utils/duk_config.h
 FORMS += Project/VS2017/ofed.ui \
          Source/Dialogs/CampaignDialog.ui \
          Source/Dialogs/NewMapDialog.ui \
@@ -143,9 +150,15 @@ SOURCES += Source/main.cpp \
            Dependencies/OpenFodder/Source/Amiga/Sound_Amiga.cpp \
            Dependencies/OpenFodder/Source/PC/Graphics_PC.cpp \
            Dependencies/OpenFodder/Source/PC/IntroData_PC.cpp \
-		   Dependencies/OpenFodder/Source/Map.cpp \
+		   Dependencies/OpenFodder/Source/MapData.cpp \
            Dependencies/OpenFodder/Source/PC/Resource_PC_CD.cpp \
            Dependencies/OpenFodder/Source/PC/Sound_PC.cpp \
            Dependencies/OpenFodder/Source/PC/Sound_PC2.cpp \
-           Dependencies/OpenFodder/Source/Structures/Barracks.cpp
+           Dependencies/OpenFodder/Source/Structures/Barracks.cpp \
+		   Dependencies/OpenFodder/Source/Map/Map.cpp \
+		   Dependencies/OpenFodder/Source/Map/Original.cpp \
+		   Dependencies/OpenFodder/Source/Map/Random.cpp \
+		   Dependencies/OpenFodder/Source/Utils/duktape.cpp \
+		   Dependencies/OpenFodder/Source/Utils/SimplexIslands.cpp \
+		   Dependencies/OpenFodder/Source/Utils/micropather.cpp
 RESOURCES += Project/VS2017/ofed.qrc

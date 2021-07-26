@@ -45,6 +45,9 @@
     <Filter Include="Source Files\Models">
       <UniqueIdentifier>{24688922-079c-41ab-a6f8-8afc10e54dcd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="OpenFodder\Map">
+      <UniqueIdentifier>{0517ef7d-afd3-440c-b63b-779837b512cd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\ofed.cpp">
@@ -188,14 +191,35 @@
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Utils\SimplexNoise.cpp">
       <Filter>OpenFodder\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Map.cpp">
-      <Filter>OpenFodder</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\About.cpp">
       <Filter>OpenFodder</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Parameters.cpp">
       <Filter>OpenFodder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Map\Map.cpp">
+      <Filter>OpenFodder\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Map\Original.cpp">
+      <Filter>OpenFodder\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Map\Random.cpp">
+      <Filter>OpenFodder\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\ScriptingEngine.cpp">
+      <Filter>OpenFodder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Utils\duktape.cpp">
+      <Filter>OpenFodder\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\MapData.cpp">
+      <Filter>OpenFodder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Utils\micropather.cpp">
+      <Filter>OpenFodder\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Utils\SimplexIslands.cpp">
+      <Filter>OpenFodder\Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -280,9 +304,6 @@
       <Filter>OpenFodder</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\IntroData.hpp">
-      <Filter>OpenFodder</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Map.hpp">
       <Filter>OpenFodder</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Position.hpp">
@@ -419,6 +440,33 @@
     </ClInclude>
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Parameters.hpp">
       <Filter>OpenFodder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Map\Map.hpp">
+      <Filter>OpenFodder\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Map\Original.hpp">
+      <Filter>OpenFodder\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Map\Random.hpp">
+      <Filter>OpenFodder\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\ScriptingEngine.hpp">
+      <Filter>OpenFodder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Utils\duk_config.h">
+      <Filter>OpenFodder\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Utils\duk_trans_socket.h">
+      <Filter>OpenFodder\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Utils\duktape.h">
+      <Filter>OpenFodder\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Utils\micropather.h">
+      <Filter>OpenFodder\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Utils\SimplexIslands.hpp">
+      <Filter>OpenFodder\Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

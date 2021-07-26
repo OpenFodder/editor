@@ -1,9 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Release|x64">
       <Configuration>Release</Configuration>
@@ -14,13 +22,13 @@
     <ProjectGuid>{B12702AD-ABFB-343A-A199-8E24837244A3}</ProjectGuid>
     <Keyword>Qt4VSv1.0</Keyword>
     <ProjectName>Editor</ProjectName>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v141</PlatformToolset>
-	 <Link>
+    <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -28,13 +36,33 @@
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v141</PlatformToolset>
-	<Link>
+    <Link>
+      <SubSystem xmlns="http://schemas.microsoft.com/developer/msbuild/2003">Windows</SubSystem>
+      <GenerateDebugInformation xmlns="http://schemas.microsoft.com/developer/msbuild/2003">true</GenerateDebugInformation>
+      <EnableCOMDATFolding xmlns="http://schemas.microsoft.com/developer/msbuild/2003">true</EnableCOMDATFolding>
+      <OptimizeReferences xmlns="http://schemas.microsoft.com/developer/msbuild/2003">true</OptimizeReferences>
+      <AdditionalDependencies xmlns="http://schemas.microsoft.com/developer/msbuild/2003">SDL2.lib;SDL2main.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+    <Link>
+      <SubSystem xmlns="http://schemas.microsoft.com/developer/msbuild/2003">Console</SubSystem>
+      <GenerateDebugInformation xmlns="http://schemas.microsoft.com/developer/msbuild/2003">true</GenerateDebugInformation>
+      <AdditionalDependencies xmlns="http://schemas.microsoft.com/developer/msbuild/2003">SDL2.lib;SDL2main.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -54,12 +82,64 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PreprocessorDefinitions>UNICODE;_UNICODE;WIN32;WIN64;QT_DLL;QT_CORE_LIB;QT_GUI_LIB;QT_WIDGETS_LIB;_OFED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>UNICODE;_UNICODE;WIN32;WIN64;QT_CORE_LIB;QT_GUI_LIB;QT_WIDGETS_LIB;_OFED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.\GeneratedFiles\$(ConfigurationName);.\GeneratedFiles;.;$(QTDIR)\include;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtWidgets;$(ProjectDIr)..\..\Dependencies\OpenFodder\Source;$(ProjectDIr)..\..\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Disabled</Optimization>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <MinimalRebuild>true</MinimalRebuild>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
+      <AdditionalLibraryDirectories>$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>qtmaind.lib;Qt5Cored.lib;Qt5Guid.lib;Qt5Widgetsd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <QtMoc>
+      <QTDIR>$(QTDIR)</QTDIR>
+      <InputFile>%(FullPath)</InputFile>
+      <OutputFile>.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</OutputFile>
+      <IncludePath>.\GeneratedFiles\$(ConfigurationName);.\GeneratedFiles;.;$(QTDIR)\include;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtWidgets;$(ProjectDIr)..\..\Dependencies\OpenFodder\Source;$(ProjectDIr)..\..\Source;%(AdditionalIncludeDirectories)</IncludePath>
+      <Define>UNICODE;_UNICODE;WIN32;WIN64;QT_DLL;QT_CORE_LIB;QT_GUI_LIB;QT_WIDGETS_LIB;_OFED;%(PreprocessorDefinitions)</Define>
+      <ExecutionDescription>Moc'ing %(Identity)...</ExecutionDescription>
+      <DynamicSource>output</DynamicSource>
+    </QtMoc>
+    <QtRcc>
+      <QTDIR>$(QTDIR)</QTDIR>
+      <InputFile>%(FullPath)</InputFile>
+      <OutputFile>.\GeneratedFiles\qrc_%(Filename).cpp</OutputFile>
+      <InitFuncName>%(Filename)</InitFuncName>
+      <Compression>default</Compression>
+      <NoCompression>true</NoCompression>
+      <ExecutionDescription>Rcc'ing %(Identity)...</ExecutionDescription>
+    </QtRcc>
+    <QtUic>
+      <QTDIR>$(QTDIR)</QTDIR>
+      <InputFile>%(FullPath)</InputFile>
+      <OutputFile>.\GeneratedFiles\ui_%(Filename).h</OutputFile>
+      <ExecutionDescription>Uic'ing %(Identity)...</ExecutionDescription>
+    </QtUic>
+    <PreBuildEvent>
+      <Command>$(ProjectDir)..\..\Dependencies\OpenFodder\Projects\VS2017\gitver.cmd</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>UNICODE;_UNICODE;WIN32;WIN64;QT_CORE_LIB;QT_GUI_LIB;QT_WIDGETS_LIB;_OFED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.\GeneratedFiles\$(ConfigurationName);.\GeneratedFiles;.;$(QTDIR)\include;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtWidgets;$(ProjectDIr)..\..\Dependencies\OpenFodder\Source;$(ProjectDIr)..\..\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -105,9 +185,55 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PreprocessorDefinitions>UNICODE;_UNICODE;WIN32;WIN64;QT_DLL;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;QT_GUI_LIB;QT_WIDGETS_LIB;_OFED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>UNICODE;_UNICODE;WIN32;WIN64;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;QT_GUI_LIB;QT_WIDGETS_LIB;_OFED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.\GeneratedFiles\$(ConfigurationName);.\GeneratedFiles;.;$(QTDIR)\include;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtWidgets;$(ProjectDIr)..\..\Dependencies\OpenFodder\Source;$(ProjectDIr)..\..\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat />
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
+      <AdditionalLibraryDirectories>$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <AdditionalDependencies>Qt6Core.lib;Qt6Gui.lib;Qt6Widgets.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <QtMoc>
+      <QTDIR>$(QTDIR)</QTDIR>
+      <InputFile>%(FullPath)</InputFile>
+      <OutputFile>.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</OutputFile>
+      <IncludePath>.\GeneratedFiles\$(ConfigurationName);.\GeneratedFiles;.;$(QTDIR)\include;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtWidgets;$(ProjectDIr)..\..\Dependencies\OpenFodder\Source;$(ProjectDIr)..\..\Source;%(AdditionalIncludeDirectories)</IncludePath>
+      <Define>UNICODE;_UNICODE;WIN32;WIN64;QT_DLL;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;QT_GUI_LIB;QT_WIDGETS_LIB;_OFED;%(PreprocessorDefinitions)</Define>
+      <ExecutionDescription>Moc'ing %(Identity)...</ExecutionDescription>
+      <DynamicSource>output</DynamicSource>
+    </QtMoc>
+    <QtRcc>
+      <QTDIR>$(QTDIR)</QTDIR>
+      <InputFile>%(FullPath)</InputFile>
+      <OutputFile>.\GeneratedFiles\qrc_%(Filename).cpp</OutputFile>
+      <InitFuncName>%(Filename)</InitFuncName>
+      <Compression>default</Compression>
+      <NoCompression>true</NoCompression>
+      <ExecutionDescription>Rcc'ing %(Identity)...</ExecutionDescription>
+    </QtRcc>
+    <QtUic>
+      <QTDIR>$(QTDIR)</QTDIR>
+      <InputFile>%(FullPath)</InputFile>
+      <OutputFile>.\GeneratedFiles\ui_%(Filename).h</OutputFile>
+      <ExecutionDescription>Uic'ing %(Identity)...</ExecutionDescription>
+    </QtUic>
+    <PreBuildEvent>
+      <Command>$(ProjectDir)..\..\Dependencies\OpenFodder\Projects\VS2017\gitver.cmd</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>UNICODE;_UNICODE;WIN32;WIN64;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;QT_GUI_LIB;QT_WIDGETS_LIB;_OFED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.\GeneratedFiles\$(ConfigurationName);.\GeneratedFiles;.;$(QTDIR)\include;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtWidgets;$(ProjectDIr)..\..\Dependencies\OpenFodder\Source;$(ProjectDIr)..\..\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -166,7 +292,10 @@
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Graphics.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\GUI_Element.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Campaign.cpp" />
-    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Map.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\MapData.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Map\Map.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Map\Original.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Map\Random.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Parameters.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\PC\Graphics_PC.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\PC\IntroData_PC.cpp" />
@@ -176,6 +305,7 @@
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Recruits.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\ResourceMan.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Resources.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\ScriptingEngine.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Sound.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Sprites.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\SpriteSheet.cpp" />
@@ -184,7 +314,10 @@
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Surface.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Tiles.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\UnitTesting.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Utils\duktape.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Utils\md5.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Utils\micropather.cpp" />
+    <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Utils\SimplexIslands.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Utils\SimplexNoise.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Versions.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Window.cpp" />
@@ -224,8 +357,10 @@
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Graphics.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\GUI_Element.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\IntroData.hpp" />
-    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Map.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Campaign.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Map\Map.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Map\Original.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Map\Random.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Parameters.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\PC\Graphics_PC.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\PC\Resource_PC_CD.hpp" />
@@ -237,6 +372,7 @@
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Recruits.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\ResourceMan.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Resources.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\ScriptingEngine.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Singleton.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Sound.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Sprites.hpp" />
@@ -248,10 +384,15 @@
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Types.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\UnitTesting.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Utils\diamondsquare.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Utils\duktape.h" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Utils\duk_config.h" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Utils\duk_trans_socket.h" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Utils\ini.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Utils\json.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Utils\md5.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Utils\micropather.h" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Utils\pseudorand.hpp" />
+    <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Utils\SimplexIslands.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Utils\SimplexNoise.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Versions.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Versions_Files.hpp" />
@@ -300,7 +441,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties MocDir=".\GeneratedFiles\$(ConfigurationName)" UicDir=".\GeneratedFiles" RccDir=".\GeneratedFiles" lupdateOptions="" lupdateOnBuild="0" lreleaseOptions="" Qt5Version_x0020_x64="msvc2017_64" MocOptions="" />
+      <UserProperties lreleaseOptions="" lupdateOnBuild="0" lupdateOptions="" MocDir=".\GeneratedFiles\$(ConfigurationName)" MocOptions="" Qt5Version_x0020_x64="6.1.2_msvc2019_64" RccDir=".\GeneratedFiles" UicDir=".\GeneratedFiles" />
     </VisualStudio>
   </ProjectExtensions>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
