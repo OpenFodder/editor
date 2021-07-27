@@ -7,6 +7,7 @@ std::shared_ptr<sFodderParameters> g_Parameters;
 
 int	start(int argc, char *argv[]) {
 
+	g_ResourceMan = std::make_shared<cResourceMan>();
 	g_Parameters = std::make_shared<sFodderParameters>();
 	g_Parameters->Process(argc, argv);
 

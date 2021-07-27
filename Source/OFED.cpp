@@ -65,7 +65,6 @@ cOFED::cOFED(QWidget *parent) : QMainWindow(parent) {
     QObject::connect(ui.actionNew_Phase, &QAction::triggered, this, &cOFED::Phase_AddNew);
 
 	g_Debugger = std::make_shared<cDebugger>();
-	g_ResourceMan = std::make_shared<cResourceMan>();
     g_Fodder = std::make_shared<cFodder>(g_Window);
 
 	// Prepare OpenFodder
