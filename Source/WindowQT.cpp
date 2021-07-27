@@ -86,12 +86,12 @@ void cWindowQT::paintEvent(QPaintEvent*) {
 	painter.drawImage( Dest, mSurface, Src);
 }
 
-void cWindowQT::enterEvent(QEvent *) {
+void cWindowQT::enterEvent(QEnterEvent*) {
 
 	mMouseInTimer.start(4);
 }
 
-void cWindowQT::leaveEvent(QEvent *) {
+void cWindowQT::leaveEvent(QEnterEvent*) {
 
 	mMouseInTimer.stop();
 }

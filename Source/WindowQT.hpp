@@ -40,8 +40,8 @@ protected:
 	void				mouseMoveEvent(QMouseEvent *eventMove);
 	void				mousePressEvent(QMouseEvent *eventPress);
 	void				mouseReleaseEvent(QMouseEvent *releaseEvent);
-	void				enterEvent(QEvent *pEvent);
-	void				leaveEvent(QEvent *pEvent);
+	void				enterEvent(QEnterEvent*pEvent);
+	void				leaveEvent(QEnterEvent*pEvent);
 
 public:
 						cWindowQT(QWidget* pParent);
