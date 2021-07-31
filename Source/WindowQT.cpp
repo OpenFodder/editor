@@ -40,8 +40,6 @@ cWindowQT::cWindowQT(QWidget* pParent) : QWidget(pParent), cWindow() {
 
 	// Mouse inside widget callback
 	connect(&mMouseInTimer, &QTimer::timeout, this, &cWindowQT::CameraUpdate);
-
-    
 }
 
 void cWindowQT::FrameEnd() {

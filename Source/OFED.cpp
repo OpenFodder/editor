@@ -998,15 +998,27 @@ void cOFED::Create_NewMap(const std::string& pTileSet, const std::string& pTileS
 
 			CursorReset();
 
-			sMapParams Params;
-			Params.mTileType = TileType.mType;
-			Params.mTileSub = (eTileSub) mMapSub;
-			Params.mWidth = pWidth;
-			Params.mHeight = pHeight;
-			Params.mRandom = pRandom;
+			sMapParams Params(pWidth, pHeight, TileType.mType, (eTileSub)mMapSub);
+			Params.mRandom.setSeed(g_Fodder->mRandom.get());
 
-			g_Fodder->Map_Create(Params);
-            g_Fodder->mWindow->FrameEnd();
+			if (pRandom) {
+				g_Fodder->mParams->mScriptRun = "mapeditor.js";
+				g_Fodder->CreateRandom(Params);
+
+			} else
+				g_Fodder->Map_Create(Params);
+
+			// Editor needs to render the surface now
+			// Draw the tiles
+			g_Fodder->MapTiles_Draw();
+
+			g_Fodder->Mission_Sprites_Handle();
+
+			// Refresh the palette
+			g_Fodder->mGraphics->PaletteSet(g_Fodder->mSurface);
+			g_Fodder->mSurface->surfaceSetToPaletteNew();
+
+			g_Fodder->mWindow->FrameEnd();
 
 			// Update the Toolboxes
 			mToolboxSprites->RenderSprites();
