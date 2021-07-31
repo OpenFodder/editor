@@ -38,7 +38,7 @@ DISTNAME      = editor21.0.0
 DISTDIR = /home/segra/editor2/.tmp/editor21.0.0
 LINK          = g++
 LFLAGS        = -Wl,-O1
-LIBS          = $(SUBLIBS) -lSDL2 -lSDL2_mixer -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread 
+LIBS          = $(SUBLIBS) -lSDL2 -lSDL2_mixer -lQt6Widgets -lQt6Gui -lQt6Core -lGL -lpthread 
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -312,7 +312,7 @@ TARGET        = editor2
 first: all
 ####### Build rules
 
-$(TARGET): ui_ofed.h ui_CampaignDialog.h ui_NewMapDialog.h ui_ToolboxSprites.h ui_ToolboxTiles.h $(OBJECTS)  
+$(TARGET): ui_ofed.h ui_CampaignDialog.h ui_NewMapDialog.h ui_ToolboxSprites.h ui_ToolboxTiles.h ui_MapView.h $(OBJECTS)  
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
 
 Makefile: editor2.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \

@@ -221,6 +221,9 @@
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Utils\SimplexIslands.cpp">
       <Filter>OpenFodder\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Dialogs\MapView.cpp">
+      <Filter>Source Files\Dialog</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="ofed.ui">
@@ -242,6 +245,9 @@
       <Filter>Source Files\Dialog</Filter>
     </QtUic>
     <QtUic Include="..\..\Source\Dialogs\CampaignDialog.ui">
+      <Filter>Source Files\Dialog</Filter>
+    </QtUic>
+    <QtUic Include="..\..\Source\Dialogs\MapView.ui">
       <Filter>Source Files\Dialog</Filter>
     </QtUic>
   </ItemGroup>
@@ -467,6 +473,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Utils\SimplexIslands.hpp">
       <Filter>OpenFodder\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Dialogs\MapView.hpp">
+      <Filter>Source Files\Dialog</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

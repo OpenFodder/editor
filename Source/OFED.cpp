@@ -25,6 +25,7 @@ cOFED::cOFED(QWidget *parent) : QMainWindow(parent) {
 	mToolboxTiles = 0;
 	mToolboxSprites = 0;
     mMapSub = 0;
+	mMapView = 0;
 
     delete ui.mSurface;
     g_Window = std::make_shared<cWindowQT> (ui.centralWidget);
@@ -63,6 +64,8 @@ cOFED::cOFED(QWidget *parent) : QMainWindow(parent) {
 
     QObject::connect(ui.actionNew_Mission, &QAction::triggered, this, &cOFED::Mission_AddNew);
     QObject::connect(ui.actionNew_Phase, &QAction::triggered, this, &cOFED::Phase_AddNew);
+
+	QObject::connect(ui.actionMap_Overview, &QAction::triggered, this, &cOFED::ShowDialog_MapOverview);
 
 	g_Debugger = std::make_shared<cDebugger>();
     g_Fodder = std::make_shared<cFodder>(g_Window);
@@ -876,6 +879,11 @@ void cOFED::AddCliff() {
 		setCursorTiles(Tiles);
 }
 
+void cOFED::ShowDialog_MapOverview() {
+	mMapView = new cMapView(this);
+	mMapView->show();
+}
+
 void cOFED::ShowDialog_NewCampaign() {
 
     QString fileName = QFileDialog::getSaveFileName(this,
@@ -1023,6 +1031,9 @@ void cOFED::Create_NewMap(const std::string& pTileSet, const std::string& pTileS
 			// Update the Toolboxes
 			mToolboxSprites->RenderSprites();
 			mToolboxTiles->RenderTiles();
+
+			if (mMapView)
+				mMapView->RenderTiles();
 			return;
 		}
 	}
@@ -1089,6 +1100,8 @@ void cOFED::LoadMap() {
     g_Fodder->Mission_Sprites_Handle();
     g_Fodder->mWindow->FrameEnd(); 
 
+	if(mMapView)
+		mMapView->RenderTiles();
 }
 
 /**

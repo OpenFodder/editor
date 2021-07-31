@@ -21,6 +21,7 @@
 #include "Dialogs/NewMapDialog.hpp"
 #include "Dialogs/ToolboxTiles.hpp"
 #include "Dialogs/ToolboxSprites.hpp"
+#include "Dialogs/MapView.hpp"
 
 class cOFED;
 

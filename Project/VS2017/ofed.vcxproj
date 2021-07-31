@@ -323,6 +323,7 @@
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Versions.cpp" />
     <ClCompile Include="..\..\Dependencies\OpenFodder\Source\Window.cpp" />
     <ClCompile Include="..\..\Source\Dialogs\CampaignDialog.cpp" />
+    <ClCompile Include="..\..\Source\Dialogs\MapView.cpp" />
     <ClCompile Include="..\..\Source\Dialogs\NewMapDialog.cpp" />
     <ClCompile Include="..\..\Source\Dialogs\ToolboxSprites.cpp" />
     <ClCompile Include="..\..\Source\Dialogs\ToolboxTiles.cpp" />
@@ -334,6 +335,7 @@
     <ClCompile Include="..\..\Source\WindowQT.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <QtUic Include="..\..\Source\Dialogs\MapView.ui" />
     <QtUic Include="ofed.ui">
     </QtUic>
   </ItemGroup>
@@ -399,6 +401,7 @@
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Versions_Files.hpp" />
     <ClInclude Include="..\..\Dependencies\OpenFodder\Source\Window.hpp" />
     <ClInclude Include="..\..\Source\Dialogs\CampaignDialog.hpp" />
+    <ClInclude Include="..\..\Source\Dialogs\MapView.hpp" />
     <ClInclude Include="..\..\Source\Dialogs\NewMapDialog.hpp" />
     <ClInclude Include="..\..\Source\Dialogs\ToolboxSprites.hpp" />
     <ClInclude Include="..\..\Source\Dialogs\ToolboxTiles.hpp" />

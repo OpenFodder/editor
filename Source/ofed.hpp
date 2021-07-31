@@ -74,6 +74,9 @@ public:
 
 	void AddCliff();
 
+
+	void ShowDialog_MapOverview();
+
     void ShowDialog_NewCampaign();
     void ShowDialog_LoadCampaign();
     void ShowDialog_SaveCampaign();
@@ -109,6 +112,7 @@ public:
 
 private:
 	Ui::mOFED ui;
+	cMapView* mMapView;
     cCampaignDialog* mToolboxCampaigns;
 	cToolboxTiles*	mToolboxTiles;
 	cToolboxSprites* mToolboxSprites;
