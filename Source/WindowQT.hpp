@@ -20,10 +20,13 @@
  *
  */
 
+class QEvent;
+
 class cWindowQT : public QWidget, public cWindow {
 
 	QImage				mSurface;
 	QTimer				mMouseInTimer;
+	QTimer				mRedrawTimer;
 
 	int16				mCameraTilesX;
 	int16				mCameraTilesY;
@@ -40,8 +43,8 @@ protected:
 	void				mouseMoveEvent(QMouseEvent *eventMove);
 	void				mousePressEvent(QMouseEvent *eventPress);
 	void				mouseReleaseEvent(QMouseEvent *releaseEvent);
-	void				enterEvent(QEnterEvent*pEvent);
-	void				leaveEvent(QEnterEvent*pEvent);
+	void				enterEvent(QEvent* pEvent) override;
+	void				leaveEvent(QEvent* pEvent) override;
 
 public:
 						cWindowQT(QWidget* pParent);

@@ -120,7 +120,12 @@ void cOFED::OpenFodder_Prepare() {
 
     LoadMap();
 
-    g_Fodder->Mission_Sprites_Handle(); g_Fodder->mWindow->FrameEnd();
+	g_Fodder->mPhase_In_Progress = true;
+
+    g_Fodder->Mission_Sprites_Handle(); 
+	g_Fodder->mWindow->FrameEnd();
+
+
 }
 
 void cOFED::moveEvent(QMoveEvent *) {
@@ -1235,11 +1240,11 @@ void cOFED::SetupSprites() {
 
 	g_SpriteAnim[eSprite_Helicopter_Grenade_Enemy] = 0x8B;
 	g_SpriteAnim[eSprite_Flashing_Light] = 0xC4;
-	g_SpriteAnim[eSprite_Helicopter_Grenade2_Enemy] = 0x8B;
+	g_SpriteAnim[eSprite_Helicopter_Unarmed_Enemy] = 0x8B;
 	g_SpriteAnim[eSprite_Helicopter_Missile_Enemy] = 0x8B;
 	g_SpriteAnim[eSprite_Helicopter_Homing_Enemy] = 0x8B;
-	g_SpriteAnim[eSprite_Helicopter_Grenade2_Human] = 0x8B;
 	g_SpriteAnim[eSprite_Helicopter_Grenade_Human] = 0x8B;
+	g_SpriteAnim[eSprite_Helicopter_Unarmed_Human] = 0x8B;
 	g_SpriteAnim[eSprite_Helicopter_Missile_Human] = 0x8B;
 	g_SpriteAnim[eSprite_Helicopter_Homing_Human] = 0x8B;
 
@@ -1293,8 +1298,8 @@ void cOFED::SetupSprites() {
 	g_SpriteAnim[eSprite_Helicopter_CallPad] = 0xE7;
 
 	g_SpriteAnim[eSprite_BuildingDoor_Reinforced] = 0xE0;
-	g_SpriteAnim[eSprite_Helicopter_Grenade2_Human_Called] = 0x8B;
 	g_SpriteAnim[eSprite_Helicopter_Grenade_Human_Called] = 0x8B;
+	g_SpriteAnim[eSprite_Helicopter_Unarmed_Human_Called] = 0x8B;
 	g_SpriteAnim[eSprite_Helicopter_Missile_Human_Called] = 0x8B;
 	g_SpriteAnim[eSprite_Helicopter_Homing_Human_Called] = 0x8B;
 	g_SpriteAnim[eSprite_Turret_HomingMissile_Enemy] = 0xD2;
@@ -1336,11 +1341,11 @@ void cOFED::SetupSprites() {
 
 	g_SpriteName[eSprite_Helicopter_Grenade_Enemy] = "Enemy Helicopter: Grenade";
 	g_SpriteName[eSprite_Flashing_Light] = "Flashing Light";
-	g_SpriteName[eSprite_Helicopter_Grenade2_Enemy] = "Enemy Helicopter: Grenade2";
+	g_SpriteName[eSprite_Helicopter_Unarmed_Enemy] = "Enemy Helicopter: Unarmed";
 	g_SpriteName[eSprite_Helicopter_Missile_Enemy] = "Enemy Helicopter: Missile";
 	g_SpriteName[eSprite_Helicopter_Homing_Enemy] = "Enemy Helicopter: Homing Missile";
-	g_SpriteName[eSprite_Helicopter_Grenade2_Human] = "Human Helicopter: Grenade2";
 	g_SpriteName[eSprite_Helicopter_Grenade_Human] = "Human Helicopter: Grenade";
+	g_SpriteName[eSprite_Helicopter_Unarmed_Human] = "Human Helicopter: Unarmed";
 	g_SpriteName[eSprite_Helicopter_Missile_Human] = "Human Helicopter: Missile";
 	g_SpriteName[eSprite_Helicopter_Homing_Human] = "Human Helicopter: Homing Missile";
 
@@ -1391,8 +1396,8 @@ void cOFED::SetupSprites() {
 	g_SpriteName[eSprite_Bonus_RankHomingInvin_Squad] = "Bonus: Squad General and Rockets";
 	g_SpriteName[eSprite_Helicopter_CallPad] = "Helicopter Callpad";
 	g_SpriteName[eSprite_BuildingDoor_Reinforced] = "Building Door: Reinforced";
-	g_SpriteName[eSprite_Helicopter_Grenade2_Human_Called] = "Human Helicopter: Grenade2 Callable";
 	g_SpriteName[eSprite_Helicopter_Grenade_Human_Called] = "Human Helicopter: Grenade Callable";
+	g_SpriteName[eSprite_Helicopter_Unarmed_Human_Called] = "Human Helicopter: Unarmed Callable";
 	g_SpriteName[eSprite_Helicopter_Missile_Human_Called] = "Human Helicopter: Missile Callable";
 	g_SpriteName[eSprite_Helicopter_Homing_Human_Called] = "Human Helicopter: Homing Missile Callable";
 

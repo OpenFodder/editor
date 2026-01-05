@@ -1,0 +1,17 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "vs2022",
+      "displayName": "Visual Studio 2022 (Project/VS)",
+      "generator": "Visual Studio 17 2022",
+      "binaryDir": "Project/VS"
+    },
+    {
+      "name": "vs2019",
+      "displayName": "Visual Studio 2019 (Project/VS)",
+      "generator": "Visual Studio 16 2019",
+      "binaryDir": "Project/VS"
+    }
+  ]
+}

@@ -75,7 +75,7 @@ HEADERS += Source/ofed.hpp \
 		   Dependencies/OpenFodder/Source/Map/Map.hpp \
 		   Dependencies/OpenFodder/Source/Map/Original.hpp \
 		   Dependencies/OpenFodder/Source/Map/Random.hpp \
-           Dependencies/OpenFodder/Projects/VS2017/resource.h \
+           Dependencies/OpenFodder/Projects/resource.h \
            Dependencies/OpenFodder/Source/Amiga/audiostream.hpp \
            Dependencies/OpenFodder/Source/Amiga/dernc.hpp \
            Dependencies/OpenFodder/Source/Amiga/Graphics_Amiga.hpp \
@@ -100,7 +100,7 @@ HEADERS += Source/ofed.hpp \
 		   Dependencies/OpenFodder/Source/Utils/micropather.h \
 		   Dependencies/OpenFodder/Source/Utils/duktape.h \
 		   Dependencies/OpenFodder/Source/Utils/duk_config.h
-FORMS += Project/VS2017/ofed.ui \
+FORMS += Project/Qt/ofed.ui \
          Source/Dialogs/CampaignDialog.ui \
          Source/Dialogs/NewMapDialog.ui \
          Source/Dialogs/ToolboxSprites.ui \
@@ -161,4 +161,4 @@ SOURCES += Source/main.cpp \
 		   Dependencies/OpenFodder/Source/Utils/duktape.cpp \
 		   Dependencies/OpenFodder/Source/Utils/SimplexIslands.cpp \
 		   Dependencies/OpenFodder/Source/Utils/micropather.cpp
-RESOURCES += Project/VS2017/ofed.qrc
+RESOURCES += Project/Qt/ofed.qrc

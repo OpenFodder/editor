@@ -9,6 +9,7 @@
 #include <QtWidgets/QMainWindow>
 #include <QAbstractTableModel>
 #include <qlabel.h>
+#include <QEnterEvent>
 
 #include "stdafx.hpp"
 #include "WindowQT.hpp"

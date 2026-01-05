@@ -40,6 +40,20 @@ cWindowQT::cWindowQT(QWidget* pParent) : QWidget(pParent), cWindow() {
 
 	// Mouse inside widget callback
 	connect(&mMouseInTimer, &QTimer::timeout, this, &cWindowQT::CameraUpdate);
+
+	// Redraw tick (50 Hz)
+	connect(&mRedrawTimer, &QTimer::timeout, this, [this]() {
+		g_Fodder->Mission_Sprites_Handle();
+
+
+		g_Fodder->Phase_Loop_Interrupt(); 
+		g_Fodder->mGraphics->MapTiles_Draw();
+		g_Fodder->Sprites_Draw();
+
+		g_Fodder->Video_Sleep();
+
+	}); 
+	mRedrawTimer.start(20);
 }
 
 void cWindowQT::FrameEnd() {
@@ -73,7 +87,7 @@ void cWindowQT::RenderShrunk(cSurface*) {
 }
 
 void cWindowQT::EventCheck() {
-	
+
 }
 
 void cWindowQT::paintEvent(QPaintEvent*) {
@@ -84,12 +98,12 @@ void cWindowQT::paintEvent(QPaintEvent*) {
 	painter.drawImage( Dest, mSurface, Src);
 }
 
-void cWindowQT::enterEvent(QEnterEvent*) {
+void cWindowQT::enterEvent(QEvent*) {
 
 	mMouseInTimer.start(4);
 }
 
-void cWindowQT::leaveEvent(QEnterEvent*) {
+void cWindowQT::leaveEvent(QEvent*) {
 
 	mMouseInTimer.stop();
 }
@@ -205,10 +219,6 @@ void cWindowQT::CameraUpdate() {
 	}
 
     g_Fodder->MapTile_Update_Position();
-	g_Fodder->mGraphics->MapTiles_Draw();
-    g_Fodder->Mission_Sprites_Handle();
-
-	FrameEnd();
 }
 
 void cWindowQT::mouseMoveEvent(QMouseEvent *eventMove) {
@@ -217,7 +227,6 @@ void cWindowQT::mouseMoveEvent(QMouseEvent *eventMove) {
 	Event.mPosition = cPosition(eventMove->x() / mScaleWidth, eventMove->y() / mScaleHeight);
 
     g_Fodder->mWindow->EventGet()->push_back(Event);
-	g_Fodder->Cycle_End();
 }
 
 void cWindowQT::mousePressEvent(QMouseEvent *eventPress) {
@@ -236,7 +245,6 @@ void cWindowQT::mousePressEvent(QMouseEvent *eventPress) {
 	Event.mPosition = cPosition(eventPress->x() / mScaleWidth, eventPress->y() / mScaleHeight);
 
 	g_Fodder->mWindow->EventGet()->push_back(Event);
-	g_Fodder->Cycle_End();
 }
 
 void cWindowQT::mouseReleaseEvent(QMouseEvent *releaseEvent) {
@@ -255,5 +263,4 @@ void cWindowQT::mouseReleaseEvent(QMouseEvent *releaseEvent) {
 	Event.mPosition = cPosition(releaseEvent->x() / mScaleWidth, releaseEvent->y() / mScaleHeight);
 
 	g_Fodder->mWindow->EventGet()->push_back(Event);
-	g_Fodder->Cycle_End();
 }

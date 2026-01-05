@@ -1,0 +1,50 @@
+image: Visual Studio 2022
+
+clone_depth: 1
+
+environment:
+  matrix:
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
+      ARCH: x64
+      CMAKE_PLATFORM: x64
+      CONFIGURATION: Release
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
+      ARCH: x86
+      CMAKE_PLATFORM: Win32
+      CONFIGURATION: Release
+
+cache:
+  - Project\VS\_deps -> appveyor.yml
+  - Project\third_party\vcpkg\downloads -> appveyor.yml
+  - Project\third_party\vcpkg\archives -> appveyor.yml
+
+build_script:
+  - Project\build_vs.cmd %CMAKE_PLATFORM% %CONFIGURATION%
+
+after_build:
+  - 7z a OpenFodderEditor-%ARCH%-%CONFIGURATION%-latest.zip %APPVEYOR_BUILD_FOLDER%\Run\*
+  - appveyor PushArtifact OpenFodderEditor-%ARCH%-%CONFIGURATION%-latest.zip
+
+artifacts:
+  - path: Run\editor.exe
+    name: editor.exe
+
+deploy:
+  - provider: S3
+    access_key_id: "%AWS_ACCESS_KEY_ID%"
+    secret_access_key: "%AWS_SECRET_ACCESS_KEY%"
+    bucket: openfodder-builds
+    artifact: OpenFodderEditor-%ARCH%-%CONFIGURATION%-latest.zip
+    set_public: true
+
+on_success:
+  - ps: >-
+      Invoke-RestMethod https://raw.githubusercontent.com/DiscordHooks/appveyor-discord-webhook/master/send.ps1 -o send.ps1
+
+      ./send.ps1 success $env:WEBHOOK_URL
+
+on_failure:
+  - ps: >-
+      Invoke-RestMethod https://raw.githubusercontent.com/DiscordHooks/appveyor-discord-webhook/master/send.ps1 -o send.ps1
+
+      ./send.ps1 failure $env:WEBHOOK_URL

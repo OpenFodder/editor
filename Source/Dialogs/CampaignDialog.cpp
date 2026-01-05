@@ -171,7 +171,7 @@ void cCampaignDialog::SpriteClicked(QModelIndex pIndex) {
 
                 g_Fodder->Camera_Prepare();
 
-                g_Fodder->Cycle_End();
+                g_Fodder->Video_Sleep();
 
                 std::dynamic_pointer_cast<cWindowQT>(g_Window)->CameraUpdate();
                 return;

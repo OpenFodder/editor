@@ -1,0 +1,8 @@
+{
+  "name": "openfodder-editor",
+  "version-string": "0.0.0",
+  "builtin-baseline": "af752f21c9d79ba3df9cb0250ce2233933f58486",
+  "dependencies": [
+    "qt5-base"
+  ]
+}

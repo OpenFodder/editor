@@ -50,7 +50,7 @@ void cToolboxSprites::RenderSprites() {
 		Sprite.field_20 = 0;
 
 		cSurface *Surface = new cSurface(SpriteWidth , SpriteHeight );
-
+		Surface->clearBuffer(0);
 		g_Fodder->mGraphics->PaletteSet(Surface);
 		g_Fodder->Sprite_Draw_Frame(&Sprite, AnimID, 0, Surface);
 
@@ -76,7 +76,7 @@ void cToolboxSprites::RenderSprites() {
 
 		g_Fodder->mGraphics->PaletteSet(Surface);
 		Surface->surfaceSetToPaletteNew();
-		Surface->draw();
+		Surface->draw(0,0);
 
 		SDL_BlitSurface(Surface->GetSurface(), &SrcRect, mSpriteSurface->GetSurface(), &DstRect);
 
