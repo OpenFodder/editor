@@ -344,21 +344,13 @@ if(WIN32)
 
     if(DEFINED _qt6_debug_bin AND DEFINED _qt6_debug_plugins)
         add_custom_command(TARGET editor POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_CURRENT_LIST_DIR}/Run/platforms"
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                "${_qt6_debug_bin}/Qt6Cored.dll"
-                "${_qt6_debug_bin}/Qt6Guid.dll"
-                "${_qt6_debug_bin}/Qt6Widgetsd.dll"
-                "${CMAKE_CURRENT_LIST_DIR}/Run"
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                "${_qt6_debug_plugins}/platforms/qwindowsd.dll"
-                "${CMAKE_CURRENT_LIST_DIR}/Run/platforms"
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                "${_qt6_debug_bin}/Qt6Cored.dll"
-                "${_qt6_debug_bin}/Qt6Guid.dll"
-                "${_qt6_debug_bin}/Qt6Widgetsd.dll"
-                "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin"
-            COMMENT "Copy Qt debug DLLs and platform plugin"
-            CONFIGURATIONS Debug)
+            COMMAND ${CMAKE_COMMAND}
+                -DDEPLOY_CONFIG=$<CONFIG>
+                -DRUN_DIR="${CMAKE_CURRENT_LIST_DIR}/Run"
+                -DQT_DEBUG_BIN="${_qt6_debug_bin}"
+                -DQT_DEBUG_PLUGINS="${_qt6_debug_plugins}"
+                -DQT_RELEASE_BIN="${_qt6_release_bin}"
+                -P "${CMAKE_CURRENT_LIST_DIR}/cmake/copy_qt_debug.cmake"
+            COMMENT "Copy Qt debug DLLs and platform plugin")
     endif()
 endif()
