@@ -343,6 +343,59 @@ if(WIN32)
     endif()
 
     if(DEFINED _qt6_debug_bin AND DEFINED _qt6_debug_plugins)
+        set(_qt_debug_script "${CMAKE_CURRENT_BINARY_DIR}/copy_qt_debug.cmake")
+        file(WRITE "${_qt_debug_script}" [=[
+if(DEFINED DEPLOY_CONFIG AND NOT DEPLOY_CONFIG STREQUAL "Debug")
+    return()
+endif()
+
+if(NOT DEFINED RUN_DIR)
+    message(FATAL_ERROR "RUN_DIR not set for Qt debug deployment")
+endif()
+
+if(NOT DEFINED QT_DEBUG_BIN OR NOT EXISTS "${QT_DEBUG_BIN}")
+    message(FATAL_ERROR "QT_DEBUG_BIN not found: ${QT_DEBUG_BIN}")
+endif()
+
+if(NOT DEFINED QT_DEBUG_PLUGINS OR NOT EXISTS "${QT_DEBUG_PLUGINS}")
+    message(FATAL_ERROR "QT_DEBUG_PLUGINS not found: ${QT_DEBUG_PLUGINS}")
+endif()
+
+file(MAKE_DIRECTORY "${RUN_DIR}/platforms")
+
+execute_process(
+    COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+        "${QT_DEBUG_BIN}/Qt6Cored.dll"
+        "${QT_DEBUG_BIN}/Qt6Guid.dll"
+        "${QT_DEBUG_BIN}/Qt6Widgetsd.dll"
+        "${RUN_DIR}"
+    RESULT_VARIABLE _copy_core_result
+)
+
+execute_process(
+    COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+        "${QT_DEBUG_PLUGINS}/platforms/qwindowsd.dll"
+        "${RUN_DIR}/platforms"
+    RESULT_VARIABLE _copy_platform_result
+)
+
+set(_copy_root_result 0)
+if(DEFINED QT_RELEASE_BIN AND EXISTS "${QT_RELEASE_BIN}")
+    execute_process(
+        COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+            "${QT_DEBUG_BIN}/Qt6Cored.dll"
+            "${QT_DEBUG_BIN}/Qt6Guid.dll"
+            "${QT_DEBUG_BIN}/Qt6Widgetsd.dll"
+            "${QT_RELEASE_BIN}"
+        RESULT_VARIABLE _copy_root_result
+    )
+endif()
+
+if(NOT _copy_core_result EQUAL 0 OR NOT _copy_platform_result EQUAL 0 OR NOT _copy_root_result EQUAL 0)
+    message(FATAL_ERROR "Qt debug deployment failed")
+endif()
+]=])
+
         add_custom_command(TARGET editor POST_BUILD
             COMMAND ${CMAKE_COMMAND}
                 -DDEPLOY_CONFIG=$<CONFIG>
@@ -350,7 +403,7 @@ if(WIN32)
                 -DQT_DEBUG_BIN="${_qt6_debug_bin}"
                 -DQT_DEBUG_PLUGINS="${_qt6_debug_plugins}"
                 -DQT_RELEASE_BIN="${_qt6_release_bin}"
-                -P "${CMAKE_CURRENT_LIST_DIR}/cmake/copy_qt_debug.cmake"
+                -P "${_qt_debug_script}"
             COMMENT "Copy Qt debug DLLs and platform plugin")
     endif()
 endif()
