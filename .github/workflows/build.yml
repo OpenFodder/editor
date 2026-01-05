@@ -2,7 +2,9 @@ name: build
 
 on:
   push:
+    branches: [ master ]
   pull_request:
+    branches: [ master ]
 
 jobs:
   windows:
@@ -27,8 +29,50 @@ jobs:
         run: |
           .\Project\build_vs.cmd x64 Release
 
+      - name: Package build
+        shell: pwsh
+        run: |
+          $zipName = "OpenFodderEditor-x64-Release-latest.zip"
+          if (Test-Path $zipName) { Remove-Item $zipName -Force }
+          Compress-Archive -Path Run\* -DestinationPath $zipName
+          Write-Output "ZIP_NAME=$zipName" | Out-File -FilePath $env:GITHUB_ENV -Append
+
       - name: Upload Run artifacts
         uses: actions/upload-artifact@v4
         with:
           name: editor-run
           path: Run/*
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION || 'us-east-1' }}
+
+      - name: Upload build zip to S3
+        shell: pwsh
+        run: |
+          aws s3 cp "$env:ZIP_NAME" "s3://openfodder-builds/$env:ZIP_NAME" --acl public-read
+
+      - name: Discord notify (success)
+        if: ${{ success() }}
+        shell: pwsh
+        run: |
+          $payload = @{
+            content = "OpenFodder Editor build succeeded: $env:ZIP_NAME"
+          } | ConvertTo-Json -Compress
+          Invoke-RestMethod -Uri $env:WEBHOOK_URL -Method Post -ContentType "application/json" -Body $payload
+        env:
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+
+      - name: Discord notify (failure)
+        if: ${{ failure() }}
+        shell: pwsh
+        run: |
+          $payload = @{
+            content = "OpenFodder Editor build failed."
+          } | ConvertTo-Json -Compress
+          Invoke-RestMethod -Uri $env:WEBHOOK_URL -Method Post -ContentType "application/json" -Body $payload
+        env:
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
