@@ -2,9 +2,9 @@
 #include "ofed.hpp"
 #include "ui_MapView.h"
 
-#include <qpixmap.h>
-#include <qpainter.h>
-#include <qevent.h>
+#include <QPixmap>
+#include <QPainter>
+#include <QEvent>
 
 cMapView::cMapView( QWidget *parent, Qt::WindowFlags f) : QDialog(parent, f) {
 

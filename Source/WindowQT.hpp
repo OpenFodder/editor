@@ -21,6 +21,7 @@
  */
 
 class QEvent;
+class QEnterEvent;
 
 class cWindowQT : public QWidget, public cWindow {
 
@@ -43,8 +44,13 @@ protected:
 	void				mouseMoveEvent(QMouseEvent *eventMove);
 	void				mousePressEvent(QMouseEvent *eventPress);
 	void				mouseReleaseEvent(QMouseEvent *releaseEvent);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+	void				enterEvent(QEnterEvent* pEvent) override;
+	void				leaveEvent(QEvent* pEvent) override;
+#else
 	void				enterEvent(QEvent* pEvent) override;
 	void				leaveEvent(QEvent* pEvent) override;
+#endif
 
 public:
 						cWindowQT(QWidget* pParent);

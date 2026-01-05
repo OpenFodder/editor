@@ -3,8 +3,8 @@
 #include "ui_ToolboxTiles.h"
 #include "ui_CampaignDialog.h"
 
-#include <qpainter.h>
-#include <qscreen.h>
+#include <QPainter>
+#include <QScreen>
 #include <QFileDialog>
 #include <chrono>
 

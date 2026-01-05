@@ -14,7 +14,7 @@ set(CMAKE_AUTOUIC_SEARCH_PATHS
     "${CMAKE_CURRENT_LIST_DIR}/Source/Dialogs"
 )
 
-find_package(Qt5 REQUIRED COMPONENTS Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Widgets)
 
 if(WIN32)
     include(FetchContent)
@@ -266,6 +266,15 @@ set_target_properties(editor PROPERTIES
     VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/Run"
 )
 
+if(WIN32)
+    set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT editor)
+
+    # Rely on windeployqt instead of vcpkg applocal for Qt deployment.
+    set(VCPKG_APPLOCAL_DEPS OFF CACHE BOOL "" FORCE)
+    set_target_properties(editor PROPERTIES VCPKG_APPLOCAL_DEPS OFF)
+    set_property(TARGET editor PROPERTY VS_GLOBAL_VcpkgApplocalDeps "false")
+endif()
+
 target_include_directories(editor PRIVATE
     .
     Source
@@ -281,7 +290,7 @@ target_compile_definitions(editor PRIVATE
 )
 
 target_link_libraries(editor PRIVATE
-    Qt5::Widgets
+    Qt6::Widgets
     SDL3::SDL3
     SDL3_mixer::SDL3_mixer
 )
@@ -300,21 +309,56 @@ if(WIN32)
         list(APPEND _runtime_dlls $<TARGET_FILE:SDL3_mixer-shared>)
     endif()
 
-    if(TARGET Qt5::Widgets)
-        list(APPEND _runtime_dlls $<TARGET_FILE:Qt5::Widgets>)
-    endif()
-    if(TARGET Qt5::Gui)
-        list(APPEND _runtime_dlls $<TARGET_FILE:Qt5::Gui>)
-    endif()
-    if(TARGET Qt5::Core)
-        list(APPEND _runtime_dlls $<TARGET_FILE:Qt5::Core>)
-    endif()
-
     if(_runtime_dlls)
         add_custom_command(TARGET editor POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
                 ${_runtime_dlls}
                 "${CMAKE_CURRENT_LIST_DIR}/Run"
             COMMENT "Copy runtime DLLs to Run")
+    endif()
+
+    if(TARGET Qt6::qmake)
+        get_target_property(_qt6_qmake Qt6::qmake IMPORTED_LOCATION)
+        get_filename_component(_qt6_bin_dir "${_qt6_qmake}" DIRECTORY)
+        set(_qt6_windeployqt "${_qt6_bin_dir}/windeployqt.exe")
+        if(EXISTS "${_qt6_windeployqt}")
+            if(DEFINED VCPKG_INSTALLED_DIR AND DEFINED VCPKG_TARGET_TRIPLET)
+                set(_qt6_debug_bin "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/bin")
+                set(_qt6_release_bin "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin")
+                set(_qt6_debug_plugins "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/Qt6/plugins")
+                set(_qt6_release_plugins "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/Qt6/plugins")
+            endif()
+            add_custom_command(TARGET editor POST_BUILD
+                COMMAND ${CMAKE_COMMAND}
+                    -DDEPLOY_CONFIG=$<CONFIG>
+                    -DWINDEPLOYQT="${_qt6_windeployqt}"
+                    -DRUN_DIR="${CMAKE_CURRENT_LIST_DIR}/Run"
+                    -DTARGET_EXE="$<TARGET_FILE:editor>"
+                    -DQT_DEBUG_BIN="${_qt6_debug_bin}"
+                    -DQT_RELEASE_BIN="${_qt6_release_bin}"
+                    -DQT_BIN_DIR="${_qt6_bin_dir}"
+                    -P "${CMAKE_CURRENT_LIST_DIR}/cmake/windeployqt.cmake"
+                COMMENT "Run windeployqt for editor")
+        endif()
+    endif()
+
+    if(DEFINED _qt6_debug_bin AND DEFINED _qt6_debug_plugins)
+        add_custom_command(TARGET editor POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_CURRENT_LIST_DIR}/Run/platforms"
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${_qt6_debug_bin}/Qt6Cored.dll"
+                "${_qt6_debug_bin}/Qt6Guid.dll"
+                "${_qt6_debug_bin}/Qt6Widgetsd.dll"
+                "${CMAKE_CURRENT_LIST_DIR}/Run"
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${_qt6_debug_plugins}/platforms/qwindowsd.dll"
+                "${CMAKE_CURRENT_LIST_DIR}/Run/platforms"
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${_qt6_debug_bin}/Qt6Cored.dll"
+                "${_qt6_debug_bin}/Qt6Guid.dll"
+                "${_qt6_debug_bin}/Qt6Widgetsd.dll"
+                "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin"
+            COMMENT "Copy Qt debug DLLs and platform plugin"
+            CONFIGURATIONS Debug)
     endif()
 endif()

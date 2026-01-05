@@ -31,7 +31,7 @@ protected:
     void mouseMoveEvent(QMouseEvent *eventMove) override;
 
 public:
-	cToolboxSprites(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
+	cToolboxSprites(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
 	~cToolboxSprites();
 
 	void RenderSprites();

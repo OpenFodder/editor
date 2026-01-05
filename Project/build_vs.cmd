@@ -4,6 +4,7 @@ setlocal
 set "ROOT_DIR=%~dp0.."
 set "BUILD_DIR=%~dp0VS"
 set "GENERATOR=Visual Studio 17 2022"
+set "VCPKG_BUILD_TYPE="
 
 if "%~1"=="" (
     set "PLATFORM=x64"
@@ -82,6 +83,7 @@ if not exist "%VCPKG_ROOT%\vcpkg.exe" (
 )
 
 set "VCPKG_TOOLCHAIN=%VCPKG_ROOT%\scripts\buildsystems\vcpkg.cmake"
+set "VCPKG_INSTALLED_DIR=%ROOT_DIR%\vcpkg_installed"
 
 if exist "%VCPKG_ROOT%\vcpkg.exe" (
     "%VCPKG_ROOT%\vcpkg.exe" install --triplet %VCPKG_TRIPLET%
@@ -97,7 +99,7 @@ if exist "%BUILD_DIR%\CMakeCache.txt" (
 )
 
 if exist "%VCPKG_TOOLCHAIN%" (
-    cmake -S "%ROOT_DIR%" -B "%BUILD_DIR%" -G "%GENERATOR%" -A "%PLATFORM%" -DCMAKE_TOOLCHAIN_FILE="%VCPKG_TOOLCHAIN%" -DVCPKG_TARGET_TRIPLET=%VCPKG_TRIPLET%
+    cmake -S "%ROOT_DIR%" -B "%BUILD_DIR%" -G "%GENERATOR%" -A "%PLATFORM%" -DCMAKE_TOOLCHAIN_FILE="%VCPKG_TOOLCHAIN%" -DVCPKG_TARGET_TRIPLET=%VCPKG_TRIPLET% -DVCPKG_INSTALLED_DIR="%VCPKG_INSTALLED_DIR%"
 ) else (
     cmake -S "%ROOT_DIR%" -B "%BUILD_DIR%" -G "%GENERATOR%" -A "%PLATFORM%"
 )

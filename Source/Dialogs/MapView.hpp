@@ -12,7 +12,7 @@ protected:
 	void paintEvent(QPaintEvent* e) override;
 
 public:
-	cMapView( QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
+	cMapView( QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
 	~cMapView();
 
 	void RenderTiles();

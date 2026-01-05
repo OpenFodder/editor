@@ -1,0 +1,32 @@
+name: build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  windows:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache vcpkg
+        uses: actions/cache@v4
+        with:
+          path: |
+            vcpkg_installed
+            Project/third_party/vcpkg
+            Project/third_party/vcpkg/downloads
+            Project/third_party/vcpkg/archives
+          key: vcpkg-${{ runner.os }}-${{ hashFiles('vcpkg.json') }}
+
+      - name: Build (Release x64)
+        shell: pwsh
+        run: |
+          .\Project\build_vs.cmd x64 Release
+
+      - name: Upload Run artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: editor-run
+          path: Run/*

@@ -12,7 +12,7 @@ protected:
 
 
 public:
-    cCampaignDialog(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
+    cCampaignDialog(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
     ~cCampaignDialog();
 
     void accept() override;

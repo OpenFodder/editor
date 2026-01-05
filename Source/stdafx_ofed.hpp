@@ -2,13 +2,13 @@
 #define _STDAFX_OFED
 
 
-#include <qimage.h>
-#include <qwidget.h>
-#include <qtimer.h>
-#include <qdialog.h>
-#include <QtWidgets/QMainWindow>
+#include <QImage>
+#include <QWidget>
+#include <QTimer>
+#include <QDialog>
+#include <QMainWindow>
 #include <QAbstractTableModel>
-#include <qlabel.h>
+#include <QLabel>
 #include <QEnterEvent>
 
 #include "stdafx.hpp"

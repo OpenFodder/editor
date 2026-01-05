@@ -22,9 +22,9 @@
 
 #include "stdafx_ofed.hpp"
 #include "ofed.hpp"
-#include <qpixmap.h>
-#include <qpainter.h>
-#include <qevent.h>
+#include <QPixmap>
+#include <QPainter>
+#include <QEvent>
 
 
 cWindowQT::cWindowQT(QWidget* pParent) : QWidget(pParent), cWindow() {
@@ -98,7 +98,11 @@ void cWindowQT::paintEvent(QPaintEvent*) {
 	painter.drawImage( Dest, mSurface, Src);
 }
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+void cWindowQT::enterEvent(QEnterEvent*) {
+#else
 void cWindowQT::enterEvent(QEvent*) {
+#endif
 
 	mMouseInTimer.start(4);
 }

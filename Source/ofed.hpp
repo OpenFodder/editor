@@ -50,7 +50,7 @@ protected:
 	void moveEvent(QMoveEvent *event);
 
 public:
-	cOFED(QWidget *parent = Q_NULLPTR);
+	cOFED(QWidget *parent = nullptr);
     ~cOFED();
 
 	void OpenFodder_Prepare();

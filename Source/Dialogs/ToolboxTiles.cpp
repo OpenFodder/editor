@@ -2,9 +2,9 @@
 #include "ofed.hpp"
 #include "ui_ToolboxTiles.h"
 
-#include <qpixmap.h>
-#include <qpainter.h>
-#include <qevent.h>
+#include <QPixmap>
+#include <QPainter>
+#include <QEvent>
 
 cToolboxTiles::cToolboxTiles( QWidget *parent, Qt::WindowFlags f) : QDialog(parent, f) {
 

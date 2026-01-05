@@ -1,10 +1,10 @@
 #include "stdafx_ofed.hpp"
 #include "ofed.hpp"
-#include<qlineedit.h>
+#include <QLineEdit>
 
 #include "ui_CampaignDialog.h"
-#include <qevent.h>
-#include <qshortcut.h>
+#include <QEvent>
+#include <QShortcut>
 
 cCampaignDialog::cCampaignDialog(QWidget *parent, Qt::WindowFlags f) : QDialog(parent, f) {
 

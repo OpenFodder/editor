@@ -1,6 +1,6 @@
 
 #include "ofed.hpp"
-#include <QtWidgets/QApplication>
+#include <QApplication>
 
 cOFED* g_OFED;
 std::shared_ptr<sFodderParameters> g_Parameters;
