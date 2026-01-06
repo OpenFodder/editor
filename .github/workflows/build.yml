@@ -69,8 +69,9 @@ jobs:
         run: |
           $status = if ("${{ job.status }}" -eq "success") { "Success" } else { "Failure" }
           $color = if ("${{ job.status }}" -eq "success") { 3066993 } else { 15158332 }
-          $title = "Windows build $status (x64)"
+          $title = "Editor (Windows) build $status (x64)"
           $runUrl = "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          $downloadUrl = "https://s3.amazonaws.com/openfodder-builds/$env:ZIP_NAME"
           $payload = @{
             username = "GitHub Actions"
             embeds = @(
@@ -80,8 +81,10 @@ jobs:
                 color = $color
                 fields = @(
                   @{ name = "Commit"; value = "${{ github.sha }}"; inline = $true }
+                  @{ name = "Message"; value = "${{ github.event.head_commit.message || github.event.pull_request.title }}"; inline = $false }
                   @{ name = "Branch"; value = "${{ github.ref_name }}"; inline = $true }
                   @{ name = "Config"; value = "Release"; inline = $true }
+                  @{ name = "Download"; value = $downloadUrl; inline = $false }
                 )
               }
             )
