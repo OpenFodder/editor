@@ -61,24 +61,30 @@ jobs:
         run: |
           aws s3 cp "$env:ZIP_NAME" "s3://openfodder-builds/$env:ZIP_NAME" --acl public-read
 
-      - name: Discord notify (success)
-        if: ${{ success() }}
+      - name: Discord notification
+        if: always() && env.DISCORD_WEBHOOK_URL != ''
         shell: pwsh
-        run: |
-          $payload = @{
-            content = "OpenFodder Editor build succeeded: $env:ZIP_NAME"
-          } | ConvertTo-Json -Compress
-          Invoke-RestMethod -Uri $env:WEBHOOK_URL -Method Post -ContentType "application/json" -Body $payload
         env:
-          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          $status = if ("${{ job.status }}" -eq "success") { "Success" } else { "Failure" }
+          $color = if ("${{ job.status }}" -eq "success") { 3066993 } else { 15158332 }
+          $title = "Windows build $status (x64)"
+          $runUrl = "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          $payload = @{
+            username = "GitHub Actions"
+            embeds = @(
+              @{
+                title = $title
+                url = $runUrl
+                color = $color
+                fields = @(
+                  @{ name = "Commit"; value = "${{ github.sha }}"; inline = $true }
+                  @{ name = "Branch"; value = "${{ github.ref_name }}"; inline = $true }
+                  @{ name = "Config"; value = "Release"; inline = $true }
+                )
+              }
+            )
+          } | ConvertTo-Json -Depth 5
 
-      - name: Discord notify (failure)
-        if: ${{ failure() }}
-        shell: pwsh
-        run: |
-          $payload = @{
-            content = "OpenFodder Editor build failed."
-          } | ConvertTo-Json -Compress
-          Invoke-RestMethod -Uri $env:WEBHOOK_URL -Method Post -ContentType "application/json" -Body $payload
-        env:
-          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+          Invoke-RestMethod -Method Post -Uri $env:DISCORD_WEBHOOK_URL -ContentType "application/json" -Body $payload
