@@ -14,10 +14,17 @@ Windows (Visual Studio + vcpkg):
 2. The output is placed in `Run\` (exe + required DLLs/plugins).
 
 Linux (Ubuntu/Debian):
-1. Install deps: `sudo apt-get install cmake ninja-build qt6-base-dev libsdl3-dev libsdl3-mixer-dev`
-   (If SDL3 packages are unavailable, build/install SDL3 + SDL3_mixer from source.)
-2. Configure: `cmake -S . -B build -G Ninja`
-3. Build: `cmake --build build`
+1. Install deps: `sudo apt-get install cmake ninja-build qt6-base-dev build-essential git pkg-config`
+2. If SDL3 packages are available: `sudo apt-get install libsdl3-dev libsdl3-mixer-dev`
+3. If SDL3 packages are not available, build from source:
+   - `git clone https://github.com/libsdl-org/SDL.git`
+   - `cmake -S SDL -B SDL/build -G Ninja -DSDL_SHARED=ON -DSDL_STATIC=OFF -DSDL_TESTS=OFF`
+   - `sudo cmake --install SDL/build`
+   - `git clone https://github.com/libsdl-org/SDL_mixer.git`
+   - `cmake -S SDL_mixer -B SDL_mixer/build -G Ninja -DSDLMIXER_VENDORED=ON -DSDLMIXER_SHARED=ON -DSDLMIXER_STATIC=OFF -DSDLMIXER_TESTS=OFF`
+   - `sudo cmake --install SDL_mixer/build`
+4. Configure: `cmake -S . -B build -G Ninja`
+5. Build: `cmake --build build`
 
 Notes:
 * Dependencies are fetched with vcpkg via `Project\build_vs.cmd`.
