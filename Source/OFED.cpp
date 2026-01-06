@@ -50,6 +50,7 @@ cOFED::cOFED(QWidget *parent) : QMainWindow(parent) {
 	QObject::connect(ui.action_New_Map, &QAction::triggered, this, &cOFED::ShowDialog_NewMap);
 	QObject::connect(ui.action_Load_Map, &QAction::triggered, this, &cOFED::ShowDialog_LoadMap);
 	QObject::connect(ui.action_Save_Map, &QAction::triggered, this, &cOFED::ShowDialog_SaveMap);
+	QObject::connect(ui.actionExit, &QAction::triggered, this, &QWidget::close);
 
 	QObject::connect(ui.action_Hut_Soldier, &QAction::triggered, this, &cOFED::AddHut_With_Soldier);
 	QObject::connect(ui.action_Hut_Indeigenous, &QAction::triggered, this, &cOFED::AddHut_With_Indigenous);
