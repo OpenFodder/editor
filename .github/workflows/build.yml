@@ -27,7 +27,13 @@ jobs:
       - name: Build (Release x64)
         shell: pwsh
         run: |
+          if (Test-Path Run) { Remove-Item Run -Recurse -Force }
           .\Project\build_vs.cmd x64 Release
+
+      - name: List Run contents
+        shell: pwsh
+        run: |
+          Get-ChildItem -Path Run -File | Format-Table Name, Length
 
       - name: Package build
         shell: pwsh

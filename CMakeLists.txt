@@ -317,6 +317,12 @@ if(WIN32)
             COMMENT "Copy runtime DLLs to Run")
     endif()
 
+    add_custom_command(TARGET editor POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${CMAKE_CURRENT_LIST_DIR}/Dependencies/OpenFodder/openfodder.ini.example"
+            "${CMAKE_CURRENT_LIST_DIR}/Run/openfodder.ini"
+        COMMENT "Copy openfodder.ini into Run")
+
     if(TARGET Qt6::qmake)
         get_target_property(_qt6_qmake Qt6::qmake IMPORTED_LOCATION)
         get_filename_component(_qt6_bin_dir "${_qt6_qmake}" DIRECTORY)
