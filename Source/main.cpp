@@ -9,7 +9,8 @@ int	start(int argc, char *argv[]) {
 
 	g_ResourceMan = std::make_shared<cResourceMan>();
 	g_Parameters = std::make_shared<sFodderParameters>();
-	g_Parameters->Process(argc, argv);
+	if (!g_Parameters->Process(argc, argv) || g_Parameters->mShowHelp)
+		return 0;
 
 	QApplication a(argc, argv);
 

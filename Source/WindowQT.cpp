@@ -22,249 +22,285 @@
 
 #include "stdafx_ofed.hpp"
 #include "ofed.hpp"
-#include <QPixmap>
+#include "SurfaceImage.hpp"
 #include <QPainter>
-#include <QEvent>
+#include <QMouseEvent>
+#include <QWheelEvent>
+#include <QResizeEvent>
+#include <QStatusBar>
+#include <QLineF>
 
-
-cWindowQT::cWindowQT(QWidget* pParent) : QWidget(pParent), cWindow() {
-
-	setAttribute(Qt::WA_Hover);
-	setMouseTracking(true);
-
-	mScaleWidth = 0;
-	mScaleHeight = 0;
-
-    mCameraTilesX = mCameraTilesY = 0;
-    mMouseX = mMouseY = 0;
-
-	// Mouse inside widget callback
-	connect(&mMouseInTimer, &QTimer::timeout, this, &cWindowQT::CameraUpdate);
-
-	// Redraw tick (50 Hz)
-	connect(&mRedrawTimer, &QTimer::timeout, this, [this]() {
-		g_Fodder->Mission_Sprites_Handle();
-
-
-		g_Fodder->Phase_Loop_Interrupt(); 
-		g_Fodder->mGraphics->MapTiles_Draw();
-		g_Fodder->Sprites_Draw();
-
-		g_Fodder->Video_Sleep();
-
-	}); 
-	mRedrawTimer.start(20);
+namespace {
+bool mapReady() {
+    return g_Fodder && g_Fodder->mMapLoaded && g_Fodder->mGraphics && g_Fodder->mMap;
+}
+QImage surfaceImage(cSurface& surface) {
+    surface.surfaceSetToPaletteNew();
+    surface.draw(0, 0);
+    return ImageFromSDLSurface(*surface.GetSurface());
+}
 }
 
-void cWindowQT::FrameEnd() {
-
-	RenderAt(g_Fodder->mSurface);
-	this->repaint();
+cWindowQT::cWindowQT(QWidget* parent) : QWidget(parent), cWindow() {
+    setMouseTracking(true);
+    setFocusPolicy(Qt::StrongFocus);
+    setMinimumSize(240, 180);
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    setToolTip(tr("Mouse wheel: zoom at cursor\nMiddle drag: pan\nLeft click/drag: place selected tiles or sprites\nRight click: advance simulation"));
+    connect(&mRedrawTimer, &QTimer::timeout, this, [this]() {
+        if (!mapReady()) return;
+        g_Fodder->Mission_Sprites_Handle();
+        g_Fodder->Phase_Loop_Interrupt();
+        g_Fodder->mGraphics->MapTiles_Draw();
+        g_Fodder->Sprites_Draw();
+        g_Fodder->Video_Sleep();
+    });
+    mRedrawTimer.start(20);
 }
+void cWindowQT::EventCheck() {}
+bool cWindowQT::InitWindow(const std::string&) { return true; }
+void cWindowQT::PositionWindow() {}
+void cWindowQT::RenderShrunk(cSurface*) { update(); }
+void cWindowQT::RenderAt(cSurface*) { update(); }
+void cWindowQT::FrameEnd() { update(); }
 
-bool cWindowQT::InitWindow(const std::string&) {
-
-	return true;
+int cWindowQT::TileAt(int x, int y) const {
+    if (!mapReady() || x < 0 || y < 0 || x >= g_Fodder->mMapLoaded->getWidth() || y >= g_Fodder->mMapLoaded->getHeight()) return -1;
+    const size_t offset = 0x60 + 2 * (size_t(y) * g_Fodder->mMapLoaded->getWidth() + x);
+    if (offset + 2 > g_Fodder->mMap->size()) return -1;
+    const int tile = readLE<uint16>(g_Fodder->mMap->data() + offset) & 0x1FF;
+    return tile < 480 ? tile : 0;
 }
-
-void cWindowQT::PositionWindow() {
-
-}
-
-void cWindowQT::RenderAt(cSurface* pImage ) {
-
-	pImage->draw();
-
-	SDL_Surface* Surface = pImage->GetSurface();
-
-	// Copy to surface
-	mSurface = QImage(static_cast<uchar*>(Surface->pixels), Surface->w, Surface->h, QImage::Format_RGB32);
-}
-
-void cWindowQT::RenderShrunk(cSurface*) {
-	//pImage->draw();
-	// Copy to surface
-}
-
-void cWindowQT::EventCheck() {
-
-}
-
-void cWindowQT::paintEvent(QPaintEvent*) {
-	QPainter painter(this);
-	QRectF Dest(0,0, size().width(), size().height());
-	QRectF Src(16, 16, mScreenSize.mWidth - 16, mScreenSize.mHeight - 16);
-	
-	painter.drawImage( Dest, mSurface, Src);
-}
-
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-void cWindowQT::enterEvent(QEnterEvent*) {
-#else
-void cWindowQT::enterEvent(QEvent*) {
-#endif
-
-	mMouseInTimer.start(4);
-}
-
-void cWindowQT::leaveEvent(QEvent*) {
-
-	mMouseInTimer.stop();
-}
-
-void cWindowQT::CameraSetTiles() {
-
-		mCameraTilesX = 0x15;
-		mCameraTilesY = PLATFORM_BASED(0x0C, 0x0D);
-}
-void cWindowQT::CameraTilesUpdate() {
-	mScaleWidth = (static_cast<double>(size().width()) / static_cast<double>(mScreenSize.mWidth));
-	mScaleHeight = (static_cast<double>(size().height()) / static_cast<double>(mScreenSize.mHeight));
-	// Number of tiles which are shown
-	CameraSetTiles();
-
-	if (mCameraTilesX > g_Fodder->mMapLoaded->getWidth())
-		mCameraTilesX = g_Fodder->mMapLoaded->getWidth();
-
-	if (mCameraTilesY > g_Fodder->mMapLoaded->getHeight())
-		mCameraTilesY = g_Fodder->mMapLoaded->getHeight();
-}
-
-void cWindowQT::CameraUpdate() {
-	int32 mEdgeWidth = 40;
-
-	CameraTilesUpdate();
-	g_Fodder->MapTile_UpdateFromCamera();
-
-	// Button Pressed?
-	if (g_Fodder->mMouse_EventLastButtonsPressed & 1) {
-		if (g_Fodder->mMouse_EventLastPosition.mX >= 0 || g_Fodder->mMouse_EventLastPosition.mY >= 0) {
-            
-            uint32 TileX = (double)((g_Fodder->mMouse_EventLastPosition.mX) / 17) + 1;
-            uint32 TileY = (double)((g_Fodder->mMouse_EventLastPosition.mY) / 17);
-
-
-            // Adding tiles
-            if(g_OFED->GetCursorRangeTiles().mTiles.size()) {
-            
-                for (auto Tile : g_OFED->GetCursorRangeTiles().mTiles) {
-
-                    g_Fodder->MapTile_Set(TileX + Tile.mX, TileY + Tile.mY, Tile.mTileID);
-                }
-
-                for (auto Sprite : g_OFED->GetCursorRangeTiles().mSprites) {
-
-                    auto Sheet = g_Fodder->Sprite_Get_Sheet(Sprite.mSpriteID, 0);
-
-                    g_Fodder->Sprite_Add(Sprite.mSpriteID,
-                        ((TileX * 16) + Sprite.mX) - Sheet->mModX + (g_Fodder->mMapTile_MovedHorizontal * 16),
-                        (((TileY + 1) * 16)+ Sprite.mY) + Sheet->mModY + (g_Fodder->mMapTile_MovedVertical * 16));
-
-                }
-
-            } else {
-                // Adding a sprite?
-                if (g_OFED->GetCursorSpriteID() != -1) {
-
-                    auto Sheet = g_Fodder->Sprite_Get_Sheet(g_OFED->GetCursorSpriteID(), 0);
-
-                    g_Fodder->Sprite_Add(g_OFED->GetCursorSpriteID(),
-                        (g_Fodder->mMouse_EventLastPosition.mX) - Sheet->mModX + (g_Fodder->mMapTile_MovedHorizontal * 16),
-                        (g_Fodder->mMouse_EventLastPosition.mY) + Sheet->mModY + (g_Fodder->mMapTile_MovedVertical * 16));
-
-                    // Prevent adding a sprite more than once
-                    g_Fodder->mMouse_EventLastButtonsPressed &= ~1;
-                }
-            } 
-
-            g_OFED->Sprite_AddNew();
-
-			if (g_OFED->GetCursorRangeTiles().mOnce) {
-				g_OFED->CursorReset();
-			}
-		}
-	}
-
-    // Tick the engine on right click
-    if (g_Fodder->mMouse_EventLastButtonsPressed & 2) {
-        g_Fodder->Sprite_Handle_Loop();
+void cWindowQT::SetTileAt(int x, int y, int tile) {
+    if (TileAt(x, y) < 0 || tile < 0 || tile >= 480) return;
+    const size_t offset = 0x60 + 2 * (size_t(y) * g_Fodder->mMapLoaded->getWidth() + x);
+    writeLEWord(g_Fodder->mMap->data() + offset, uint16(tile));
+    if (!mTerrain.isNull()) {
+        QPainter painter(&mTerrain);
+        painter.drawImage(QRect(x * 16, y * 16, 16, 16), mTileAtlas,
+                          QRect((tile % 20) * 16, (tile / 20) * 16, 16, 16));
     }
+}
+void cWindowQT::RefreshMap(bool resetView) {
+    if (!mapReady()) return;
+    cSurface atlas(320, 384);
+    atlas.clearBuffer();
+    for (int tile = 0; tile < 480; ++tile)
+        g_Fodder->mGraphics->Map_Tile_Draw(&atlas, tile, tile % 20, tile / 20, 0);
+    g_Fodder->mGraphics->PaletteSet(&atlas);
+    mTileAtlas = surfaceImage(atlas);
+    mSpritePreviews.clear();
+    const int w = g_Fodder->mMapLoaded->getWidth(), h = g_Fodder->mMapLoaded->getHeight();
+    // Cache ordinary maps; very large maps draw only visible tiles instead.
+    mTerrain = (int64(w) * h <= 65536) ? QImage(w * 16, h * 16, QImage::Format_RGB32) : QImage();
+    if (!mTerrain.isNull()) {
+        QPainter painter(&mTerrain);
+        for (int y = 0; y < h; ++y) for (int x = 0; x < w; ++x) {
+            const int tile = TileAt(x, y);
+            if (tile >= 0) painter.drawImage(QRect(x * 16, y * 16, 16, 16), mTileAtlas,
+                                           QRect(tile % 20 * 16, tile / 20 * 16, 16, 16));
+        }
+    }
+    if (resetView) mViewOrigin = QPointF();
+    mLastPaintTile = QPoint(-1, -1);
+    ClampView();
+    emit mapEdited();
+    emit viewChanged();
+    update();
+}
+const cWindowQT::sSpritePreview& cWindowQT::SpritePreview(int type, int sheetIndex, int frame) {
+    const auto key = std::make_tuple(type, sheetIndex, frame);
+    auto existing = mSpritePreviews.find(key);
+    if (existing != mSpritePreviews.end()) return existing->second;
+    sSpritePreview preview;
+    if (type >= 0 && type < 118 && type != eSprite_Null && (sheetIndex >= 0 || g_SpriteAnim[type] >= 0)) {
+        const int anim = sheetIndex >= 0 ? sheetIndex : g_SpriteAnim[type];
+        auto sheet = g_Fodder->Sprite_Get_Sheet(anim, frame);
+        int w = sheet->mColCount, h = sheet->mRowCount;
+        if (g_Fodder->mVersionCurrent->isAmiga()) w = (w - 1) * 16;
+        if (w > 0 && h > 0) {
+            cSurface surface(w, h);
+            surface.clearBuffer();
+            g_Fodder->mGraphics->PaletteSet(&surface);
+            sSprite sprite;
+            sprite.mPosX = g_Fodder->mMapTile_MovedHorizontal * 16 + g_Fodder->mMapTile_ColumnOffset - sheet->mModX;
+            sprite.mPosY = g_Fodder->mMapTile_MovedVertical * 16 + g_Fodder->mMapTile_RowOffset + h - 16 - sheet->mModY;
+            sprite.mHeight = sprite.mRowsToSkip = 0;
+            g_Fodder->Sprite_Draw_Frame(&sprite, anim, frame, &surface);
+            preview.image = surfaceImage(surface).convertToFormat(QImage::Format_ARGB32);
+            const auto indexed = surface.GetSurfaceBuffer();
+            for (int y = 0; y < h; ++y) {
+                auto pixels = reinterpret_cast<QRgb*>(preview.image.scanLine(y));
+                for (int x = 0; x < w; ++x) if (!indexed[y * w + x]) pixels[x] = 0;
+            }
+            // The full-map canvas starts at column zero; the old 16-pixel
+            // cropped viewport inset must not be subtracted from sprite X.
+            preview.offset = QPoint(sheet->mModX, sheet->mModY - h);
+        }
+    }
+    return mSpritePreviews.emplace(key, std::move(preview)).first->second;
+}
+void cWindowQT::DrawTerrain(QPainter& painter, const QRectF& visible) {
+    if (!mTerrain.isNull()) { painter.drawImage(QPoint(0, 0), mTerrain); return; }
+    int left = std::max(0, int(std::floor(visible.left() / 16)));
+    int top = std::max(0, int(std::floor(visible.top() / 16)));
+    int right = std::min(g_Fodder->mMapLoaded->getWidth(), int(std::ceil(visible.right() / 16)));
+    int bottom = std::min(g_Fodder->mMapLoaded->getHeight(), int(std::ceil(visible.bottom() / 16)));
+    for (int y = top; y < bottom; ++y) for (int x = left; x < right; ++x) {
+        int tile = TileAt(x, y);
+        if (tile >= 0) painter.drawImage(QRect(x * 16, y * 16, 16, 16), mTileAtlas,
+                                       QRect(tile % 20 * 16, tile / 20 * 16, 16, 16));
+    }
+}
+void cWindowQT::paintEvent(QPaintEvent*) {
+    QPainter painter(this);
+    painter.fillRect(rect(), QColor(30, 34, 38));
+    if (!mapReady() || mTileAtlas.isNull()) return;
+    painter.setRenderHint(QPainter::SmoothPixmapTransform, false);
+    painter.scale(mZoom, mZoom);
+    painter.translate(-mViewOrigin);
+    DrawTerrain(painter, Viewport());
+    std::vector<const sSprite*> sprites;
+    for (const auto& sprite : g_Fodder->mSprites)
+        if (sprite.mPosX != -32768 && sprite.mPosX != -1) sprites.push_back(&sprite);
+    std::stable_sort(sprites.begin(), sprites.end(), [](const sSprite* a, const sSprite* b) {
+        return std::make_pair(a->mDrawOrder, a->mPosY) < std::make_pair(b->mDrawOrder, b->mPosY);
+    });
+    for (const auto* sprite : sprites) {
+        const auto& preview = SpritePreview(sprite->mSpriteType, sprite->mSheetIndex, sprite->mFrameIndex);
+        const QPoint point = QPoint(sprite->mPosX, sprite->mPosY - sprite->mHeight) + preview.offset;
+        if (Viewport().intersects(QRectF(point, preview.image.size()))) painter.drawImage(point, preview.image);
+    }
+    if (mHasMouse && !mPanning && g_OFED) {
+        const QPointF world = MapAt(mLastMouse);
+        const int x = int(std::floor(world.x() / 16)), y = int(std::floor(world.y() / 16));
+        if (TileAt(x, y) >= 0) {
+            painter.setOpacity(0.55);
+            for (const auto& tile : g_OFED->GetCursorRangeTiles().mTiles) {
+                if (tile.mTileID < 480) painter.drawImage(QRect((x + tile.mX) * 16, (y + tile.mY) * 16, 16, 16), mTileAtlas,
+                    QRect(tile.mTileID % 20 * 16, tile.mTileID / 20 * 16, 16, 16));
+            }
+            if (g_OFED->GetCursorSpriteID() >= 0) painter.drawImage(world, SpritePreview(g_OFED->GetCursorSpriteID()).image);
+            painter.setOpacity(1);
+            painter.setPen(QPen(QColor(255, 220, 90), 1 / mZoom));
+            painter.drawRect(QRectF(x * 16, y * 16, 16, 16));
+        }
+    }
+}
+void cWindowQT::ClampView() {
+    if (!mapReady()) return;
+    const double w = g_Fodder->mMapLoaded->getWidthPixels(), h = g_Fodder->mMapLoaded->getHeightPixels();
+    const double vw = width() / mZoom, vh = height() / mZoom;
+    mViewOrigin.setX(vw >= w ? (w - vw) / 2 : std::max(0.0, std::min(mViewOrigin.x(), w - vw)));
+    mViewOrigin.setY(vh >= h ? (h - vh) / 2 : std::max(0.0, std::min(mViewOrigin.y(), h - vh)));
+    CameraTilesUpdate();
+}
+void cWindowQT::SetViewZoom(double zoom, const QPointF& anchor) {
+    if (!mapReady()) return;
+    const QPointF world = MapAt(anchor);
+    const double fit = std::min(double(width()) / g_Fodder->mMapLoaded->getWidthPixels(),
+                                double(height()) / g_Fodder->mMapLoaded->getHeightPixels());
+    mZoom = std::max(std::min(0.125, fit), std::min(8.0, zoom));
+    mScaleWidth = mScaleHeight = mZoom;
+    mViewOrigin = world - anchor / mZoom;
+    ClampView();
+    emit viewChanged();
+    update();
+}
+void cWindowQT::CenterOnMap(const QPointF& point) {
+    mViewOrigin = point - QPointF(width() / (2 * mZoom), height() / (2 * mZoom));
+    ClampView();
+    emit viewChanged();
+    update();
+}
+void cWindowQT::FitMap() {
+    if (!mapReady()) return;
+    SetViewZoom(std::min(double(width()) / g_Fodder->mMapLoaded->getWidthPixels(),
+                         double(height()) / g_Fodder->mMapLoaded->getHeightPixels()), rect().center());
+    CenterOnMap(QPointF(g_Fodder->mMapLoaded->getWidthPixels() / 2.0, g_Fodder->mMapLoaded->getHeightPixels() / 2.0));
+}
+void cWindowQT::CameraSetTiles() { CameraTilesUpdate(); }
+void cWindowQT::CameraTilesUpdate() {
+    if (!mapReady()) return;
+    mScaleWidth = mScaleHeight = mZoom;
+    mCameraTilesX = int16(std::min(g_Fodder->mMapLoaded->getWidth(), int(std::ceil(width() / mZoom / 16))));
+    mCameraTilesY = int16(std::min(g_Fodder->mMapLoaded->getHeight(), int(std::ceil(height() / mZoom / 16))));
+}
+void cWindowQT::CameraUpdate() { update(); }
+void cWindowQT::resizeEvent(QResizeEvent*) { ClampView(); emit viewChanged(); }
+void cWindowQT::wheelEvent(QWheelEvent* event) {
+    double steps = event->angleDelta().y() / 120.0;
+    if (steps == 0) steps = event->pixelDelta().y() / 120.0;
+    SetViewZoom(mZoom * std::pow(1.25, steps), event->position());
+    event->accept();
+}
+void cWindowQT::enterEvent(QEnterEvent*) { mHasMouse = true; }
+void cWindowQT::leaveEvent(QEvent*) { mHasMouse = false; update(); }
 
-	// Calculate the width/height of the playfield, adjusted to the window scale
-	int32 Height = height() / mScaleHeight;
-	int32 Width = width() / mScaleWidth;
-
-	// Up
-	if (g_Fodder->mMouse_EventLastPosition.mY < mEdgeWidth) {
-		if (g_Fodder->mMapTile_MovedVertical > 0 || g_Fodder->mMapTile_RowOffset) {
-			g_Fodder->MapTile_Move_Up(1);
-		}
-	}
-
-	// Down
-	if (g_Fodder->mMouse_EventLastPosition.mY > Height - mEdgeWidth) {
-		if (g_Fodder->mMapTile_MovedVertical < g_Fodder->mMapLoaded->getHeight() - mCameraTilesY) {
-			g_Fodder->MapTile_Move_Down(1);
-		}
-	}
-
-	// Left
-	if (g_Fodder->mMouse_EventLastPosition.mX < mEdgeWidth) {
-		if (g_Fodder->mMapTile_MovedHorizontal > 0 || g_Fodder->mMapTile_ColumnOffset) {
-			g_Fodder->MapTile_Move_Left(1);
-		}
-	}
-
-	// Right
-	if (g_Fodder->mMouse_EventLastPosition.mX > Width - mEdgeWidth) {
-		if (g_Fodder->mMapTile_MovedHorizontal < (g_Fodder->mMapLoaded->getWidth()) - mCameraTilesX) {
-			g_Fodder->MapTile_Move_Right(1);
-		}
-	}
-
-    g_Fodder->MapTile_Update_Position();
+void cWindowQT::PaintAt(const QPointF& position, bool first) {
+    if (!mapReady() || !g_OFED) return;
+    const QPointF world = MapAt(position);
+    const QPoint tile(int(std::floor(world.x() / 16)), int(std::floor(world.y() / 16)));
+    if (TileAt(tile.x(), tile.y()) < 0 || (!first && tile == mLastPaintTile)) return;
+    mLastPaintTile = tile;
+    const auto brush = g_OFED->GetCursorRangeTiles();
+    bool edited = false;
+    if (!brush.mTiles.empty() && (first || !brush.mOnce)) {
+        for (const auto& cell : brush.mTiles) SetTileAt(tile.x() + cell.mX, tile.y() + cell.mY, cell.mTileID);
+        for (const auto& sprite : brush.mSprites) {
+            auto sheet = g_Fodder->Sprite_Get_Sheet(g_SpriteAnim[sprite.mSpriteID], 0);
+            g_Fodder->Sprite_Add(sprite.mSpriteID, tile.x() * 16 + sprite.mX - sheet->mModX,
+                                (tile.y() + 1) * 16 + sprite.mY + sheet->mModY);
+        }
+        edited = true;
+        if (brush.mOnce) g_OFED->CursorReset();
+    } else if (first && g_OFED->GetCursorSpriteID() >= 0) {
+        int type = g_OFED->GetCursorSpriteID();
+        const auto& preview = SpritePreview(type);
+        g_Fodder->Sprite_Add(type, int(world.x()) - preview.offset.x(), int(world.y()) - preview.offset.y());
+        edited = true;
+    }
+    if (edited) { g_OFED->Sprite_AddNew(); update(); }
+}
+void cWindowQT::mousePressEvent(QMouseEvent* event) {
+    setFocus();
+    mLastMouse = event->position();
+    if (event->button() == Qt::MiddleButton) { mPanning = true; setCursor(Qt::ClosedHandCursor); }
+    else if (event->button() == Qt::LeftButton) { mPainting = true; PaintAt(event->position(), true); }
+    else if (event->button() == Qt::RightButton && mapReady()) {
+        g_Fodder->Sprite_Handle_Loop(); RefreshMap(false);
+    }
+}
+void cWindowQT::mouseMoveEvent(QMouseEvent* event) {
+    const QPointF position = event->position();
+    if (mPanning) {
+        mViewOrigin -= (position - mLastMouse) / mZoom;
+        ClampView(); emit viewChanged();
+    } else if (mPainting) {
+        const int steps = std::max(1, int(QLineF(mLastMouse, position).length() / std::max(1.0, 8 * mZoom)));
+        for (int i = 1; i <= steps; ++i) PaintAt(mLastMouse + (position - mLastMouse) * (double(i) / steps), false);
+    }
+    mLastMouse = position;
+    if (mapReady() && g_OFED) {
+        auto world = MapAt(position);
+        g_OFED->statusBar()->showMessage(tr("Tile %1, %2  |  Wheel to zoom · Middle drag to pan").arg(int(std::floor(world.x() / 16))).arg(int(std::floor(world.y() / 16))));
+    }
+    update();
+}
+void cWindowQT::mouseReleaseEvent(QMouseEvent* event) {
+    if (event->button() == Qt::MiddleButton) { mPanning = false; unsetCursor(); }
+    if (event->button() == Qt::LeftButton) { mPainting = false; mLastPaintTile = QPoint(-1, -1); }
+    update();
 }
 
-void cWindowQT::mouseMoveEvent(QMouseEvent *eventMove) {
-	cEvent Event;
-	Event.mType = eEvent_MouseMove;
-	Event.mPosition = cPosition(eventMove->x() / mScaleWidth, eventMove->y() / mScaleHeight);
-
-    g_Fodder->mWindow->EventGet()->push_back(Event);
-}
-
-void cWindowQT::mousePressEvent(QMouseEvent *eventPress) {
-	cEvent Event;
-
-	if (eventPress->button() == Qt::MouseButton::LeftButton) {
-		Event.mType = eEvent_MouseLeftDown;
-		Event.mButton = 1;
-	}
-
-	if (eventPress->button() == Qt::MouseButton::RightButton) {
-		Event.mType = eEvent_MouseRightDown;
-		Event.mButton = 3;
-	}
-	
-	Event.mPosition = cPosition(eventPress->x() / mScaleWidth, eventPress->y() / mScaleHeight);
-
-	g_Fodder->mWindow->EventGet()->push_back(Event);
-}
-
-void cWindowQT::mouseReleaseEvent(QMouseEvent *releaseEvent) {
-	cEvent Event;
-
-	if (releaseEvent->button() == Qt::MouseButton::LeftButton) {
-		Event.mType = eEvent_MouseLeftUp;
-		Event.mButton = 1;
-	}
-
-	if (releaseEvent->button() == Qt::MouseButton::RightButton) {
-		Event.mType = eEvent_MouseRightUp;
-		Event.mButton = 3;
-	}
-
-	Event.mPosition = cPosition(releaseEvent->x() / mScaleWidth, releaseEvent->y() / mScaleHeight);
-
-	g_Fodder->mWindow->EventGet()->push_back(Event);
+QImage cWindowQT::OverviewImage() {
+    if (!mapReady() || mTileAtlas.isNull()) return QImage();
+    const QSize world(g_Fodder->mMapLoaded->getWidthPixels(), g_Fodder->mMapLoaded->getHeightPixels());
+    const QSize size = world.scaled(512, 512, Qt::KeepAspectRatio);
+    QImage image(size, QImage::Format_RGB32);
+    image.fill(Qt::black);
+    QPainter painter(&image);
+    painter.scale(double(size.width()) / world.width(), double(size.height()) / world.height());
+    DrawTerrain(painter, QRectF(QPointF(), world));
+    return image;
 }

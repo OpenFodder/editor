@@ -10,7 +10,7 @@ public:
         int Count = 0;
 
         for (auto& Sprite : g_Fodder->mSprites) {
-            if (Sprite.field_0 != -32768 && Sprite.field_0 != -1)
+            if (Sprite.mPosX != -32768 && Sprite.mPosX != -1)
                 ++Count;
         }
 

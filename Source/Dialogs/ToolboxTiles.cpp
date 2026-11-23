@@ -1,5 +1,6 @@
 #include "stdafx_ofed.hpp"
 #include "ofed.hpp"
+#include "SurfaceImage.hpp"
 #include "ui_ToolboxTiles.h"
 
 #include <QPixmap>
@@ -45,11 +46,11 @@ void cToolboxTiles::RenderTiles() {
 	mTileSurface->surfaceSetToPaletteNew();
 
 	// Draw the final image
-	mTileSurface->draw();
+	mTileSurface->draw(0, 0);
 
 	// Copy the image into a QImage
 	SDL_Surface* Source = mTileSurface->GetSurface();
-	mImage = QImage(static_cast<uchar*>(Source->pixels), Source->w, Source->h, QImage::Format_RGB32);
+	mImage = ImageFromSDLSurface(*Source);
 
 	this->repaint();
 }

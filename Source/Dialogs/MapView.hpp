@@ -1,20 +1,19 @@
-class Ui_MapView;
+#pragma once
+#include <QWidget>
+#include <QImage>
+#include <QRectF>
+#include <QTimer>
 
-class cMapView : public QDialog {
-	Ui_MapView *mUi;
-
-	QImage			 mImage;
-
-	double			 mScaleWidth, mScaleHeight;
-
+class cMapView : public QWidget {
+    QImage mImage;
+    QTimer mRefreshTimer;
+    QRectF ImageRect() const;
+    void Navigate(const QPointF& position);
 protected:
-
-	void paintEvent(QPaintEvent* e) override;
-
+    void paintEvent(QPaintEvent*) override;
+    void mousePressEvent(QMouseEvent*) override;
+    void mouseMoveEvent(QMouseEvent*) override;
 public:
-	cMapView( QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
-	~cMapView();
-
-	void RenderTiles();
-
+    explicit cMapView(QWidget* parent = nullptr);
+    void RenderTiles();
 };

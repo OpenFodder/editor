@@ -6,6 +6,10 @@
 #include <QPainter>
 #include <QScreen>
 #include <QFileDialog>
+#include <QToolBar>
+#include <QMoveEvent>
+#include <QResizeEvent>
+#include <QShowEvent>
 #include <chrono>
 
 int32 g_SpriteAnim[118] = {};
@@ -20,6 +24,7 @@ cOFED::~cOFED() {
 
 cOFED::cOFED(QWidget *parent) : QMainWindow(parent) {
 	ui.setupUi(this);
+    ui.centralWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     mToolboxCampaigns = 0;
 	mToolboxTiles = 0;
@@ -41,6 +46,27 @@ cOFED::cOFED(QWidget *parent) : QMainWindow(parent) {
 
     statusBar()->addWidget(mMissionLabel);
     statusBar()->addWidget(mPhaseLabel);
+    mZoomLabel = new QLabel();
+    statusBar()->addPermanentWidget(mZoomLabel);
+    auto window = std::dynamic_pointer_cast<cWindowQT>(g_Window);
+    connect(window.get(), &cWindowQT::viewChanged, this, [this, window]() {
+        mZoomLabel->setText(tr("%1%").arg(qRound(window->Zoom() * 100)));
+    });
+    auto navigation = addToolBar(tr("Map navigation"));
+    navigation->setObjectName("mapNavigation");
+    auto zoomOut = navigation->addAction(tr("Zoom out"));
+    zoomOut->setShortcut(QKeySequence(Qt::Key_Minus));
+    connect(zoomOut, &QAction::triggered, this, [window]() { window->SetViewZoom(window->Zoom() / 1.25, window->rect().center()); });
+    auto zoomIn = navigation->addAction(tr("Zoom in"));
+    zoomIn->setShortcut(QKeySequence(Qt::Key_Plus));
+    connect(zoomIn, &QAction::triggered, this, [window]() { window->SetViewZoom(window->Zoom() * 1.25, window->rect().center()); });
+    auto fit = navigation->addAction(tr("Fit map"));
+    fit->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_0));
+    connect(fit, &QAction::triggered, window.get(), &cWindowQT::FitMap);
+    auto actual = navigation->addAction(tr("100%"));
+    connect(actual, &QAction::triggered, this, [window]() { window->SetViewZoom(1.0, window->rect().center()); });
+    navigation->addSeparator();
+    navigation->addAction(ui.actionMap_Overview);
 
 	// Menu Items
     QObject::connect(ui.actionCampaign_New, &QAction::triggered, this, &cOFED::ShowDialog_NewCampaign);
@@ -66,7 +92,10 @@ cOFED::cOFED(QWidget *parent) : QMainWindow(parent) {
     QObject::connect(ui.actionNew_Mission, &QAction::triggered, this, &cOFED::Mission_AddNew);
     QObject::connect(ui.actionNew_Phase, &QAction::triggered, this, &cOFED::Phase_AddNew);
 
-	QObject::connect(ui.actionMap_Overview, &QAction::triggered, this, &cOFED::ShowDialog_MapOverview);
+	QObject::connect(ui.actionMap_Overview, &QAction::triggered, this, [this](bool checked) {
+        if (mOverviewTool && !checked) mOverviewTool->hide();
+        else ShowDialog_MapOverview();
+    });
 
 	g_Debugger = std::make_shared<cDebugger>();
     g_Fodder = std::make_shared<cFodder>(g_Window);
@@ -84,7 +113,7 @@ cOFED::cOFED(QWidget *parent) : QMainWindow(parent) {
     g_Fodder->mVersionDefault = g_Fodder->mVersionCurrent;
 
     g_Fodder->Mouse_Setup();
-    g_Fodder->Mouse_Inputs_Get();
+    g_Fodder->Mouse_ReadInputs();
 
     ShowDialog_ToolboxTiles();
     ShowDialog_ToolboxSprites();
@@ -96,15 +125,23 @@ cOFED::cOFED(QWidget *parent) : QMainWindow(parent) {
     CursorReset();
     ui.mSurface->CameraUpdate();
 
-	setGeometry(
-		QStyle::alignedRect(
-			Qt::LeftToRight,
-			Qt::AlignCenter,
-			size(),
-			qApp->screens().at(0)->availableGeometry()
-		)
-	);
-
+    ShowDialog_MapOverview();
+    // Center the complete group rather than putting the side tools off-screen.
+    const QRect available = screen()->availableGeometry();
+    const int gap = 8;
+    const int leftWidth = qMax(mOverviewTool->frameGeometry().width(),
+                              mToolboxCampaigns->frameGeometry().width()) + gap;
+    const int groupWidth = leftWidth + frameGeometry().width() + gap +
+                           mToolboxTiles->frameGeometry().width();
+    const int groupHeight = qMax(mOverviewTool->frameGeometry().height() + gap +
+                                mToolboxCampaigns->frameGeometry().height(),
+                                frameGeometry().height() + gap + mToolboxSprites->frameGeometry().height());
+    const int mainX = groupWidth <= available.width()
+        ? available.left() + (available.width() - groupWidth) / 2 + leftWidth
+        : available.left() + (available.width() - frameGeometry().width()) / 2;
+    const QPoint framePosition(mainX, available.top() + qMax(0, (available.height() - groupHeight) / 2));
+    move(pos() + framePosition - frameGeometry().topLeft());
+    ScheduleToolWindowLayout();
 }
 
 void cOFED::OpenFodder_Prepare() {
@@ -129,51 +166,126 @@ void cOFED::OpenFodder_Prepare() {
 
 }
 
-void cOFED::moveEvent(QMoveEvent *) {
-	 
-	if(mToolboxTiles)
-		mToolboxTiles->move(x() + width(), y());
+void cOFED::moveEvent(QMoveEvent* event) {
+    QMainWindow::moveEvent(event);
+    ScheduleToolWindowLayout();
+}
 
-	if(mToolboxSprites)
-		mToolboxSprites->move(x() - 90, y() + height() + 35);
+void cOFED::resizeEvent(QResizeEvent* event) {
+    QMainWindow::resizeEvent(event);
+    ScheduleToolWindowLayout();
+}
 
-    if(mToolboxCampaigns)
-        mToolboxCampaigns->move(x() - mToolboxCampaigns->width(), y());
+void cOFED::showEvent(QShowEvent* event) {
+    QMainWindow::showEvent(event);
+    ScheduleToolWindowLayout();
+}
+
+bool cOFED::eventFilter(QObject* watched, QEvent* event) {
+    if (watched == mOverviewTool || watched == mToolboxCampaigns ||
+        watched == mToolboxTiles || watched == mToolboxSprites) {
+        switch (event->type()) {
+        case QEvent::Show:
+        case QEvent::Hide:
+        case QEvent::Resize:
+            ScheduleToolWindowLayout();
+            break;
+        default:
+            break;
+        }
+    }
+    return QMainWindow::eventFilter(watched, event);
+}
+
+void cOFED::PrepareToolWindow(QDialog* window, const QString& title) {
+    window->setWindowTitle(title);
+    window->installEventFilter(this);
+}
+
+void cOFED::ScheduleToolWindowLayout() {
+    if (mToolLayoutPending || mLayingOutTools) return;
+    mToolLayoutPending = true;
+    // Wait for native frame sizes to settle after showing, resizing or
+    // maximizing a window, and coalesce a burst of move/resize events.
+    QTimer::singleShot(0, this, [this]() {
+        mToolLayoutPending = false;
+        LayoutToolWindows();
+    });
+}
+
+void cOFED::LayoutToolWindows() {
+    if (mLayingOutTools || !isVisible() || isMinimized()) return;
+    mLayingOutTools = true;
+    const int gap = 8;
+    const QRect main = frameGeometry();
+    const QRect available = screen()->availableGeometry();
+    const auto shown = [](QWidget* window) { return window && window->isVisible(); };
+    const auto place = [&](QWidget* window, QPoint framePosition) {
+        const QRect frame = window->frameGeometry();
+        // Keep tools reachable when the main window reaches a monitor edge.
+        framePosition.setX(qBound(available.left(), framePosition.x(),
+                                 qMax(available.left(), available.right() - frame.width() + 1)));
+        framePosition.setY(qBound(available.top(), framePosition.y(),
+                                 qMax(available.top(), available.bottom() - frame.height() + 1)));
+        window->move(window->pos() + framePosition - frame.topLeft());
+    };
+
+    const bool overviewShown = shown(mOverviewTool);
+    const bool campaignsShown = shown(mToolboxCampaigns);
+    // Leave room for the campaign toolbox below the overview on short screens.
+    if (overviewShown && campaignsShown) {
+        const int border = mOverviewTool->frameGeometry().height() - mOverviewTool->height();
+        const int room = available.height() - mToolboxCampaigns->frameGeometry().height() - gap - border;
+        const int height = qMax(mOverviewTool->minimumSizeHint().height(), room);
+        if (mOverviewTool->height() > height) mOverviewTool->resize(mOverviewTool->width(), height);
+    }
+    const int leftHeight = (overviewShown ? mOverviewTool->frameGeometry().height() : 0) +
+                           (campaignsShown ? mToolboxCampaigns->frameGeometry().height() : 0) +
+                           (overviewShown && campaignsShown ? gap : 0);
+    int leftY = qBound(available.top(), main.top(),
+                       qMax(available.top(), available.bottom() - leftHeight + 1));
+    if (overviewShown) {
+        place(mOverviewTool, QPoint(main.left() - gap - mOverviewTool->frameGeometry().width(), leftY));
+        leftY += mOverviewTool->frameGeometry().height() + gap;
+    }
+    if (campaignsShown)
+        place(mToolboxCampaigns, QPoint(main.left() - gap - mToolboxCampaigns->frameGeometry().width(), leftY));
+    if (shown(mToolboxTiles))
+        place(mToolboxTiles, QPoint(main.right() + gap + 1, main.top()));
+    if (shown(mToolboxSprites))
+        place(mToolboxSprites, QPoint(main.left(), main.bottom() + gap + 1));
+    mLayingOutTools = false;
 }
 
 /**
  * Launch the Tile Toobox dialog 
  */
 void cOFED::ShowDialog_ToolboxTiles() {
-
-	mToolboxTiles = new cToolboxTiles(this);
-
-	// Position to the right of map editor
-	mToolboxTiles->move(x() + width(), y());
-
-	mToolboxTiles->show();
+    if (!mToolboxTiles) {
+        mToolboxTiles = new cToolboxTiles(this, Qt::Tool);
+        mToolboxTiles->resize(360, 452);
+        PrepareToolWindow(mToolboxTiles, tr("Toolbox: Tiles"));
+    }
+    mToolboxTiles->show();
+    ScheduleToolWindowLayout();
 }
 
 void cOFED::ShowDialog_ToolboxSprites() {
-	
-	mToolboxSprites = new cToolboxSprites(this);
-
-	// Position to the bottom of map editor
-	mToolboxSprites->move(x(), y() + height() + 30);
-
-	mToolboxSprites->show();
+    if (!mToolboxSprites) {
+        mToolboxSprites = new cToolboxSprites(this, Qt::Tool);
+        PrepareToolWindow(mToolboxSprites, tr("Toolbox: Sprites"));
+    }
+    mToolboxSprites->show();
+    ScheduleToolWindowLayout();
 }
 
 void cOFED::ShowDialog_ToolboxCampaigns() {
     if (!mToolboxCampaigns) {
-        mToolboxCampaigns = new cCampaignDialog(this);
-
-        mToolboxCampaigns->move(x() - mToolboxCampaigns->width(), y());
-        mToolboxCampaigns->show();
+        mToolboxCampaigns = new cCampaignDialog(this, Qt::Tool);
+        PrepareToolWindow(mToolboxCampaigns, tr("Toolbox: Campaign"));
     }
-    else
-        mToolboxCampaigns->show();
-
+    mToolboxCampaigns->show();
+    ScheduleToolWindowLayout();
 }
 
 void cOFED::CloseDialog_ToolboxCampaigns() {
@@ -211,7 +323,7 @@ void cOFED::ShowDialog_NewMap() {
 
         NewPhase->mMapFilename = fileName.toStdString().substr(0, fileName.size() - 4);
 
-        g_Fodder->mMapLoaded->save(fileName.toStdString(), true);
+        SaveMapTo(fileName.toStdString());
         mToolboxCampaigns->LoadCampaign(&g_Fodder->mGame_Data.mCampaign);
     }
     else {
@@ -536,8 +648,25 @@ void cOFED::Phase_AddNew() {
 }
 
 void cOFED::Sprite_AddNew() {
+    if (mToolboxCampaigns) mToolboxCampaigns->Refresh();
+    auto window = std::dynamic_pointer_cast<cWindowQT>(g_Window);
+    window->mapEdited();
+    window->update();
+}
 
-    mToolboxCampaigns->Refresh();
+// The runtime owns edited sprites separately from the map's original sprite list.
+// Serialize a snapshot so placements and deletions are included in the saved map.
+bool cOFED::SaveMapTo(const std::string& path) {
+    class cEditorMapSnapshot : public cOriginalMap {
+    public:
+        cEditorMapSnapshot(const std::shared_ptr<cMapData>& map, const std::vector<sSprite>& sprites) {
+            mParams = *map->getMapParams();
+            mData = map->getData();
+            mSprites = sprites;
+        }
+    };
+    cEditorMapSnapshot snapshot(g_Fodder->mMapLoaded, g_Fodder->mSprites);
+    return snapshot.save(path, true);
 }
 
 void cOFED::Save_Map(std::shared_ptr<cPhase> pPhase) {
@@ -549,7 +678,7 @@ void cOFED::Save_Map(std::shared_ptr<cPhase> pPhase) {
 
     //std::experimental::filesystem::create_directory(g_Fodder->mGame_Data.mCampaign.GetPath());
 
-    g_Fodder->mMapLoaded->save(g_Fodder->mGame_Data.mCampaign.GetPathToFile(pPhase->mMapFilename + ".map"), true);
+    SaveMapTo(g_Fodder->mGame_Data.mCampaign.GetPathToFile(pPhase->mMapFilename + ".map"));
 }
 
 void cOFED::AddHut_With_Soldier() {
@@ -670,23 +799,23 @@ void cOFED::AddBunker_With_Soldier() {
 	sTiles Tiles = SetupBunker();
 
 	if (g_Fodder->mMapLoaded->getTileType()  == eTileTypes_Jungle) {
-		Tiles.mSprites.push_back(sRangeSprite(23, 32, eSprite_BuildingDoor3));
+		Tiles.mSprites.push_back(sRangeSprite(23, 32, eSprite_BunkerDoor_HeavyExplosionOnly));
 	}
 
 	if (g_Fodder->mMapLoaded->getTileType()  == eTileTypes_Desert) {
-		Tiles.mSprites.push_back(sRangeSprite(23, 32, eSprite_BuildingDoor3));
+		Tiles.mSprites.push_back(sRangeSprite(23, 32, eSprite_BunkerDoor_HeavyExplosionOnly));
 	}
 
 	if (g_Fodder->mMapLoaded->getTileType()  == eTileTypes_Ice) {
-		Tiles.mSprites.push_back(sRangeSprite(23, 32, eSprite_BuildingDoor3));
+		Tiles.mSprites.push_back(sRangeSprite(23, 32, eSprite_BunkerDoor_HeavyExplosionOnly));
 	}
 
 	if (g_Fodder->mMapLoaded->getTileType()  == eTileTypes_Moors) {
-		Tiles.mSprites.push_back(sRangeSprite(23, 32, eSprite_BuildingDoor3));
+		Tiles.mSprites.push_back(sRangeSprite(23, 32, eSprite_BunkerDoor_HeavyExplosionOnly));
 	}
 
 	if (g_Fodder->mMapLoaded->getTileType()  == eTileTypes_Int) {
-		Tiles.mSprites.push_back(sRangeSprite(3, 3, eSprite_BuildingDoor3));
+		Tiles.mSprites.push_back(sRangeSprite(3, 3, eSprite_BunkerDoor_HeavyExplosionOnly));
 	}
 
 	setCursorTiles(Tiles);
@@ -696,23 +825,23 @@ void cOFED::AddBunker_With_SoldierReinforced() {
 	sTiles Tiles = SetupBunker();
 
 	if (g_Fodder->mMapLoaded->getTileType()  == eTileTypes_Jungle) {
-		Tiles.mSprites.push_back(sRangeSprite(23, 32, eSprite_BuildingDoor_Reinforced));
+		Tiles.mSprites.push_back(sRangeSprite(23, 32, eSprite_BunkerDoor_ReinforcedHeavyExplosionOnly));
 	}
 
 	if (g_Fodder->mMapLoaded->getTileType()  == eTileTypes_Desert) {
-		Tiles.mSprites.push_back(sRangeSprite(23, 32, eSprite_BuildingDoor_Reinforced));
+		Tiles.mSprites.push_back(sRangeSprite(23, 32, eSprite_BunkerDoor_ReinforcedHeavyExplosionOnly));
 	}
 
 	if (g_Fodder->mMapLoaded->getTileType()  == eTileTypes_Ice) {
-		Tiles.mSprites.push_back(sRangeSprite(23, 32, eSprite_BuildingDoor_Reinforced));
+		Tiles.mSprites.push_back(sRangeSprite(23, 32, eSprite_BunkerDoor_ReinforcedHeavyExplosionOnly));
 	}
 
 	if (g_Fodder->mMapLoaded->getTileType()  == eTileTypes_Moors) {
-		Tiles.mSprites.push_back(sRangeSprite(23, 32, eSprite_BuildingDoor_Reinforced));
+		Tiles.mSprites.push_back(sRangeSprite(23, 32, eSprite_BunkerDoor_ReinforcedHeavyExplosionOnly));
 	}
 
 	if (g_Fodder->mMapLoaded->getTileType()  == eTileTypes_Int) {
-		Tiles.mSprites.push_back(sRangeSprite(3, 3, eSprite_BuildingDoor_Reinforced));
+		Tiles.mSprites.push_back(sRangeSprite(3, 3, eSprite_BunkerDoor_ReinforcedHeavyExplosionOnly));
 	}
 
 	setCursorTiles(Tiles);
@@ -886,8 +1015,25 @@ void cOFED::AddCliff() {
 }
 
 void cOFED::ShowDialog_MapOverview() {
-	mMapView = new cMapView(this);
-	mMapView->show();
+    if (!mOverviewTool) {
+        mOverviewTool = new QDialog(this, Qt::Tool);
+        mOverviewTool->setWindowTitle(tr("Map overview"));
+        mOverviewTool->setObjectName("mapOverviewTool");
+        auto layout = new QVBoxLayout(mOverviewTool);
+        layout->setContentsMargins(0, 0, 0, 0);
+        mMapView = new cMapView(mOverviewTool);
+        layout->addWidget(mMapView);
+        mOverviewTool->resize(280, 280);
+        PrepareToolWindow(mOverviewTool, tr("Map overview"));
+        ui.actionMap_Overview->setCheckable(true);
+        connect(mOverviewTool, &QDialog::finished, this, [this]() {
+            ui.actionMap_Overview->setChecked(false);
+        });
+    }
+    mOverviewTool->show();
+    mOverviewTool->raise();
+    ui.actionMap_Overview->setChecked(true);
+    ScheduleToolWindowLayout();
 }
 
 void cOFED::ShowDialog_NewCampaign() {
@@ -988,7 +1134,7 @@ void cOFED::ShowDialog_SaveMap() {
         if (!fileName.size())
             return;
 
-        g_Fodder->mMapLoaded->save(fileName.toStdString(), true);
+        SaveMapTo(fileName.toStdString());
     }
     else {
         // Campaign maps have to keep the filename
@@ -1024,7 +1170,7 @@ void cOFED::Create_NewMap(const std::string& pTileSet, const std::string& pTileS
 
 			// Editor needs to render the surface now
 			// Draw the tiles
-			g_Fodder->MapTiles_Draw();
+			g_Fodder->MapTiles_ResetScrollState();
 
 			g_Fodder->Mission_Sprites_Handle();
 
@@ -1033,6 +1179,8 @@ void cOFED::Create_NewMap(const std::string& pTileSet, const std::string& pTileS
 			g_Fodder->mSurface->surfaceSetToPaletteNew();
 
 			g_Fodder->mWindow->FrameEnd();
+
+			std::dynamic_pointer_cast<cWindowQT>(g_Window)->RefreshMap();
 
 			// Update the Toolboxes
 			mToolboxSprites->RenderSprites();
@@ -1067,13 +1215,13 @@ void cOFED::LoadMap() {
     g_Fodder->Phase_Soldiers_Prepare(false);
     g_Fodder->Phase_Soldiers_AttachToSprites();
 
-    g_Fodder->Squad_Troops_Count();
+    g_Fodder->Squad_Rebuild();
 
     g_Fodder->mSquad_Selected = 0;
-    g_Fodder->sub_305D5(Sprite);
+    g_Fodder->Squad_UpdateLeader(Sprite);
     g_Fodder->Sprite_Handle_Loop();
 
-    g_Fodder->MapTiles_Draw();
+    g_Fodder->MapTiles_ResetScrollState();
 
     // This has to happen now, as the map tiles x/y is currently 0
     if (mToolboxSprites)
@@ -1106,6 +1254,7 @@ void cOFED::LoadMap() {
     g_Fodder->Mission_Sprites_Handle();
     g_Fodder->mWindow->FrameEnd(); 
 
+	std::dynamic_pointer_cast<cWindowQT>(g_Window)->RefreshMap();
 	if(mMapView)
 		mMapView->RenderTiles();
 }
@@ -1125,29 +1274,9 @@ void cOFED::CursorReset() {
  * Refresh the drawn cursor
  */
 void cOFED::CursorUpdate() {
-
-    auto Window = std::dynamic_pointer_cast<cWindowQT>(g_Window);
-    Window->CameraTilesUpdate();
-	double ScaleWidth = Window->mScaleWidth;
-	double ScaleHeight = Window->mScaleHeight;
-
-	// Tile Mode?
-	if (mCursorRangeTiles.mTiles.size() || mCursorSprite != -1) {
-		mCursorImageFinal = QImage(mCursorImage.width() * ScaleWidth, mCursorImage.height() * ScaleHeight, QImage::Format_RGB32);
-		
-		QPainter painter(&mCursorImageFinal);
-		QRectF Dest(0, 0, mCursorImageFinal.width(), mCursorImageFinal.height());
-		QRectF Src(0, 0, mCursorImage.width(), mCursorImage.height());
-		painter.drawImage(Dest, mCursorImage, Src);
-	}
-	else {
-		this->setCursor(Qt::ArrowCursor);
-		return;
-	}
-
-	// Set the actual cursor
-	if(!mCursorImageFinal.isNull())
-		setCursor(QCursor(QPixmap::fromImage(mCursorImageFinal)));
+    auto window = std::dynamic_pointer_cast<cWindowQT>(g_Window);
+    window->setCursor((!mCursorRangeTiles.mTiles.empty() || mCursorSprite >= 0) ? Qt::CrossCursor : Qt::ArrowCursor);
+    window->update();
 }
 
 /**
@@ -1178,7 +1307,7 @@ void cOFED::setCursorTiles( sTiles& pTiles) {
 	mCursorRangeTiles = pTiles;
     mCursorSprite = -1;
 
-	//CursorUpdate();
+	CursorUpdate();
 }
 
 void cOFED::SetCursorSprite(const size_t pSpriteID) {
@@ -1192,10 +1321,10 @@ void cOFED::SetCursorSprite(const size_t pSpriteID) {
     size_t SpriteHeight = g_Fodder->mSprite_SheetPtr[AnimID][0].mRowCount;
 
     sSprite Sprite;
-    Sprite.field_0 = -0x40 + g_Fodder->mMapTile_DrawX;
-    Sprite.field_4 = SpriteHeight - 0x10 + g_Fodder->mMapTile_DrawY;
-    Sprite.field_52 = 0;
-    Sprite.field_20 = 0;
+    Sprite.mPosX = -0x40 + g_Fodder->mMapTile_DrawX;
+    Sprite.mPosY = SpriteHeight - 0x10 + g_Fodder->mMapTile_DrawY;
+    Sprite.mRowsToSkip = 0;
+    Sprite.mHeight = 0;
 
     std::shared_ptr<cSurface> NewCursor = std::make_shared<cSurface>(SpriteWidth * 10, SpriteHeight);
     g_Fodder->mGraphics->PaletteSet(&*NewCursor);
@@ -1209,7 +1338,7 @@ void cOFED::SetCursorSprite(const size_t pSpriteID) {
     */
     mCursorRangeTiles = sTiles();
     mCursorSprite = pSpriteID;
-   // CursorUpdate();
+   CursorUpdate();
 
     //mCursorSurface = NewCursor;
 }
@@ -1284,7 +1413,7 @@ void cOFED::SetupSprites() {
 
 	g_SpriteAnim[eSprite_Turret_Missile_Enemy] = 0xD2;
 	g_SpriteAnim[eSprite_Turret_Missile2_Enemy] = 0xD2;
-	g_SpriteAnim[eSprite_BuildingDoor3] = 0xE0;
+	g_SpriteAnim[eSprite_BunkerDoor_HeavyExplosionOnly] = 0xE0;
 
 	g_SpriteAnim[eSprite_Door_Civilian_Rescue] = 0x9B;
 	g_SpriteAnim[eSprite_Seal_Mine] = 0xD5;
@@ -1298,7 +1427,7 @@ void cOFED::SetupSprites() {
 	g_SpriteAnim[eSprite_Bonus_RankHomingInvin_Squad] = 0xE6;
 	g_SpriteAnim[eSprite_Helicopter_CallPad] = 0xE7;
 
-	g_SpriteAnim[eSprite_BuildingDoor_Reinforced] = 0xE0;
+	g_SpriteAnim[eSprite_BunkerDoor_ReinforcedHeavyExplosionOnly] = 0xE0;
 	g_SpriteAnim[eSprite_Helicopter_Grenade_Human_Called] = 0x8B;
 	g_SpriteAnim[eSprite_Helicopter_Unarmed_Human_Called] = 0x8B;
 	g_SpriteAnim[eSprite_Helicopter_Missile_Human_Called] = 0x8B;
@@ -1384,7 +1513,7 @@ void cOFED::SetupSprites() {
 
 	g_SpriteName[eSprite_Turret_Missile_Enemy] = "Enemy Turret: Missile";
 	g_SpriteName[eSprite_Turret_Missile2_Enemy] = "Enemy Turret: Missile 2";
-	g_SpriteName[eSprite_BuildingDoor3] = "Building Door3";
+	g_SpriteName[eSprite_BunkerDoor_HeavyExplosionOnly] = "Building Door3";
 
 	g_SpriteName[eSprite_Door_Civilian_Rescue] = "Building Door: In";
 	g_SpriteName[eSprite_Seal_Mine] = "Seal Mine";
@@ -1396,7 +1525,7 @@ void cOFED::SetupSprites() {
 	g_SpriteName[eSprite_Bonus_RankHomingInvin_SquadLeader] = "Bonus: Rockets and General";
 	g_SpriteName[eSprite_Bonus_RankHomingInvin_Squad] = "Bonus: Squad General and Rockets";
 	g_SpriteName[eSprite_Helicopter_CallPad] = "Helicopter Callpad";
-	g_SpriteName[eSprite_BuildingDoor_Reinforced] = "Building Door: Reinforced";
+	g_SpriteName[eSprite_BunkerDoor_ReinforcedHeavyExplosionOnly] = "Building Door: Reinforced";
 	g_SpriteName[eSprite_Helicopter_Grenade_Human_Called] = "Human Helicopter: Grenade Callable";
 	g_SpriteName[eSprite_Helicopter_Unarmed_Human_Called] = "Human Helicopter: Unarmed Callable";
 	g_SpriteName[eSprite_Helicopter_Missile_Human_Called] = "Human Helicopter: Missile Callable";

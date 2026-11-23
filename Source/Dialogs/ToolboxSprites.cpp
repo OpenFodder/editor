@@ -1,5 +1,6 @@
 #include "stdafx_ofed.hpp"
 #include "ofed.hpp"
+#include "SurfaceImage.hpp"
 #include "ui_ToolboxSprites.h"
 
 #include <QPixmap>
@@ -44,10 +45,10 @@ void cToolboxSprites::RenderSprites() {
 			SpriteWidth <<= 1;
 			SpriteWidth *= MultiplierX;
 		}
-		Sprite.field_0 = 0;
-		Sprite.field_4 = SpriteHeight - 0x10;
-		Sprite.field_52 = 0;
-		Sprite.field_20 = 0;
+		Sprite.mPosX = 0;
+		Sprite.mPosY = SpriteHeight - 0x10;
+		Sprite.mRowsToSkip = 0;
+		Sprite.mHeight = 0;
 
 		cSurface *Surface = new cSurface(SpriteWidth , SpriteHeight );
 		Surface->clearBuffer(0);
@@ -97,7 +98,7 @@ void cToolboxSprites::RenderSprites() {
 
 	// Copy the image into a QImage
 	SDL_Surface* Source = mSpriteSurface->GetSurface();
-	mImage = QImage(static_cast<uchar*>(Source->pixels), Source->w, Source->h, QImage::Format_RGB32);
+	mImage = ImageFromSDLSurface(*Source);
 
 	this->repaint();
 }

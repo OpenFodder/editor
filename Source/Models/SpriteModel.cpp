@@ -22,20 +22,29 @@ QVariant cSpriteModel::data(const QModelIndex& index, int role) const
     size_t Row = (size_t)index.row();
     int Column = index.column();
 
-    if (Row >= g_Fodder->mSprites.size())
+    sSprite* Sprite = nullptr;
+    size_t Count = 0;
+    for (auto& Candidate : g_Fodder->mSprites) {
+        if (Candidate.mPosX == -32768 || Candidate.mPosX == -1)
+            continue;
+        if (Count == Row) {
+            Sprite = &Candidate;
+            break;
+        }
+        ++Count;
+    }
+    if (!Sprite)
         return "";
-
-    auto Sprite = &g_Fodder->mSprites[Row];
 
     switch (Column) {
     case 0:		// Mission Name
-        return QString::fromStdString(g_SpriteName[Sprite->field_18]);
+        return QString::fromStdString(g_SpriteName[Sprite->mSpriteType]);
 
     case 1:
-        return QString::fromStdString(std::to_string(Sprite->field_0));
+        return QString::fromStdString(std::to_string(Sprite->mPosX));
 
     case 2:
-        return QString::fromStdString(std::to_string(Sprite->field_4));
+        return QString::fromStdString(std::to_string(Sprite->mPosY));
 
     }
 

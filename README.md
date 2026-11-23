@@ -14,7 +14,7 @@ Windows (Visual Studio + vcpkg):
 2. The output is placed in `Run\` (exe + required DLLs/plugins).
 
 Linux (Ubuntu/Debian):
-1. Install deps: `sudo apt-get install cmake ninja-build qt6-base-dev build-essential git pkg-config`
+1. Install deps: `sudo apt-get install cmake ninja-build qt6-base-dev build-essential git pkg-config libcurl4-openssl-dev`
 2. If SDL3 packages are available: `sudo apt-get install libsdl3-dev libsdl3-mixer-dev`
 3. If SDL3 packages are not available, build from source:
    - `git clone https://github.com/libsdl-org/SDL.git`
@@ -28,10 +28,23 @@ Linux (Ubuntu/Debian):
 
 Notes:
 * Dependencies are fetched with vcpkg via `Project\build_vs.cmd`.
-* The build uses Qt6, SDL3, and SDL3_mixer.
-* Run folder is the debugger working directory.
+* The build uses C++17, Qt6 Widgets, SDL3, SDL3_mixer, and libcurl.
+* Initialize engine and runtime dependencies with `git submodule update --init --recursive`.
+* Run folder is the debugger working directory; the build deploys matching scripts, campaigns, and UI artwork there.
 
 #### Requirements
 
 * Installed/Working Open Fodder
 * Works with any data supported by Open Fodder
+
+#### Map navigation
+
+* Scroll the mouse wheel to zoom in or out around the pointer.
+* Drag with the middle mouse button to pan.
+* Use **Fit map** (Ctrl+0), **100%**, or the zoom buttons on the toolbar.
+* The floating **Map overview** tool window shows the visible area. Click or drag
+  inside it to navigate, and reopen it from the toolbar or File menu. It stacks
+  on the left above the campaign toolbox. Attached tool windows follow the main
+  window when it moves or resizes, including maximize and restore.
+* Left click/drag paints selected tiles; left click places a selected sprite.
+  Placement previews follow the pointer at every zoom level.

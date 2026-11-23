@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(openfodder_editor LANGUAGES CXX)
+project(openfodder_editor LANGUAGES C CXX)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_AUTOMOC ON)
@@ -32,7 +32,7 @@ if(WIN32)
     set(SDLMIXER_INSTALL OFF CACHE BOOL "" FORCE)
 
     set(SDL3_GIT_TAG "release-3.4.0")
-    set(SDL3_MIXER_GIT_TAG "3045b35335113e5e5ba258858cb403d8803bfbeb")
+    set(SDL3_MIXER_GIT_TAG "release-3.2.0")
 
     FetchContent_Declare(
         SDL3
@@ -51,27 +51,17 @@ if(WIN32)
     FetchContent_MakeAvailable(SDL3)
     FetchContent_MakeAvailable(SDL3_mixer)
 
-    set(_sdl_mixer_compat_header
-        "${CMAKE_CURRENT_LIST_DIR}/Dependencies/OpenFodder/cmake/sdl3_mixer_compat.h")
-    foreach(_sdl_mixer_target IN ITEMS SDL3_mixer SDL3_mixer-shared SDL3_mixer-static)
-        if(TARGET ${_sdl_mixer_target})
-            if(MSVC)
-                target_compile_options(${_sdl_mixer_target} PRIVATE "/FI${_sdl_mixer_compat_header}")
-            else()
-                target_compile_options(${_sdl_mixer_target} PRIVATE "-include" "${_sdl_mixer_compat_header}")
-            endif()
-        endif()
-    endforeach()
+
 else()
-    find_package(SDL3 CONFIG QUIET)
-    find_package(SDL3_mixer CONFIG QUIET)
+    find_package(SDL3 3.4 CONFIG QUIET)
+    find_package(SDL3_mixer 3.2 CONFIG QUIET)
 
     if(NOT SDL3_FOUND OR NOT SDL3_mixer_FOUND)
         find_package(PkgConfig REQUIRED)
     endif()
 
     if(NOT SDL3_FOUND)
-        pkg_check_modules(SDL3 REQUIRED sdl3)
+        pkg_check_modules(SDL3 REQUIRED sdl3>=3.4)
         add_library(SDL3::SDL3 INTERFACE IMPORTED)
         target_include_directories(SDL3::SDL3 INTERFACE ${SDL3_INCLUDE_DIRS})
         target_link_libraries(SDL3::SDL3 INTERFACE ${SDL3_LINK_LIBRARIES})
@@ -79,7 +69,7 @@ else()
     endif()
 
     if(NOT SDL3_mixer_FOUND)
-        pkg_check_modules(SDL3_MIXER REQUIRED sdl3_mixer)
+        pkg_check_modules(SDL3_MIXER REQUIRED sdl3_mixer>=3.2)
         add_library(SDL3_mixer::SDL3_mixer INTERFACE IMPORTED)
         target_include_directories(SDL3_mixer::SDL3_mixer INTERFACE ${SDL3_MIXER_INCLUDE_DIRS})
         target_link_libraries(SDL3_mixer::SDL3_mixer INTERFACE ${SDL3_MIXER_LINK_LIBRARIES})
@@ -87,80 +77,16 @@ else()
     endif()
 endif()
 
-set(EDITOR_HEADERS
-    Source/ofed.hpp
-    Source/stdafx_ofed.hpp
-    Source/WindowQT.hpp
-    Source/Dialogs/CampaignDialog.hpp
-    Source/Dialogs/NewMapDialog.hpp
-    Source/Dialogs/ToolboxSprites.hpp
-    Source/Dialogs/ToolboxTiles.hpp
-    Source/Dialogs/MapView.hpp
-    Source/Models/CampaignModel.hpp
-    Source/Models/MissionModel.hpp
-    Source/Models/SpriteModel.hpp
-    Source/gitver.hpp
-    Dependencies/OpenFodder/Source/About.hpp
-    Dependencies/OpenFodder/Source/Campaign.hpp
-    Dependencies/OpenFodder/Source/CopyProtection.hpp
-    Dependencies/OpenFodder/Source/Debugger.hpp
-    Dependencies/OpenFodder/Source/Dimension.hpp
-    Dependencies/OpenFodder/Source/Event.hpp
-    Dependencies/OpenFodder/Source/Fodder.hpp
-    Dependencies/OpenFodder/Source/FontData.hpp
-    Dependencies/OpenFodder/Source/GameData.hpp
-    Dependencies/OpenFodder/Source/Graphics.hpp
-    Dependencies/OpenFodder/Source/GUI_Element.hpp
-    Dependencies/OpenFodder/Source/IntroData.hpp
-    Dependencies/OpenFodder/Source/Utils/ini.hpp
-    Dependencies/OpenFodder/Source/Utils/md5.hpp
-    Dependencies/OpenFodder/Source/Utils/SimplexNoise.hpp
-    Dependencies/OpenFodder/Source/Utils/pseudorand.hpp
-    Dependencies/OpenFodder/Source/Position.hpp
-    Dependencies/OpenFodder/Source/Parameters.hpp
-    Dependencies/OpenFodder/Source/Recruits.hpp
-    Dependencies/OpenFodder/Source/Resources.hpp
-    Dependencies/OpenFodder/Source/ResourceMan.hpp
-    Dependencies/OpenFodder/Source/Sound.hpp
-    Dependencies/OpenFodder/Source/Sprites.hpp
-    Dependencies/OpenFodder/Source/SpriteSheet.hpp
-    Dependencies/OpenFodder/Source/stdafx.hpp
-    Dependencies/OpenFodder/Source/ScriptingEngine.hpp
-    Dependencies/OpenFodder/Source/Surface.hpp
-    Dependencies/OpenFodder/Source/Tiles.hpp
-    Dependencies/OpenFodder/Source/Types.hpp
-    Dependencies/OpenFodder/Source/UnitTesting.hpp
-    Dependencies/OpenFodder/Source/Versions.hpp
-    Dependencies/OpenFodder/Source/Versions_Files.hpp
-    Dependencies/OpenFodder/Source/Window.hpp
-    Dependencies/OpenFodder/Source/Map/Map.hpp
-    Dependencies/OpenFodder/Source/Map/Original.hpp
-    Dependencies/OpenFodder/Source/Map/Random.hpp
-    Dependencies/OpenFodder/Projects/resource.h
-    Dependencies/OpenFodder/Source/Amiga/audiostream.hpp
-    Dependencies/OpenFodder/Source/Amiga/dernc.hpp
-    Dependencies/OpenFodder/Source/Amiga/Graphics_Amiga.hpp
-    Dependencies/OpenFodder/Source/Amiga/Graphics_Amiga2.hpp
-    Dependencies/OpenFodder/Source/Amiga/paula.hpp
-    Dependencies/OpenFodder/Source/Amiga/Resource_Amiga_File.hpp
-    Dependencies/OpenFodder/Source/Amiga/rjp1.hpp
-    Dependencies/OpenFodder/Source/Amiga/Sound_Amiga.hpp
-    Dependencies/OpenFodder/Source/Amiga/SpriteData_Amiga.hpp
-    Dependencies/OpenFodder/Source/PC/Graphics_PC.hpp
-    Dependencies/OpenFodder/Source/PC/Resource_PC_CD.hpp
-    Dependencies/OpenFodder/Source/PC/Sound_PC.hpp
-    Dependencies/OpenFodder/Source/PC/Sound_PC2.hpp
-    Dependencies/OpenFodder/Source/PC/SpriteData_PC.hpp
-    Dependencies/OpenFodder/Source/PC/VocTable.hpp
-    Dependencies/OpenFodder/Source/Structures/Barracks.hpp
-    Dependencies/OpenFodder/Source/Utils/cxxopts.hpp
-    Dependencies/OpenFodder/Source/Utils/diamondsquare.hpp
-    Dependencies/OpenFodder/Source/Utils/json.hpp
-    Dependencies/OpenFodder/Source/Utils/SimplexIslands.hpp
-    Dependencies/OpenFodder/Source/Utils/micropather.h
-    Dependencies/OpenFodder/Source/Utils/duktape.h
-    Dependencies/OpenFodder/Source/Utils/duk_config.h
-)
+# Keep the editor in step with upstream engine source splits and renames.
+file(GLOB_RECURSE ENGINE_HEADERS CONFIGURE_DEPENDS RELATIVE "${CMAKE_CURRENT_LIST_DIR}"
+    "Dependencies/OpenFodder/Source/*.hpp" "Dependencies/OpenFodder/Source/*.h")
+file(GLOB_RECURSE ENGINE_SOURCES CONFIGURE_DEPENDS RELATIVE "${CMAKE_CURRENT_LIST_DIR}"
+    "Dependencies/OpenFodder/Source/*.cpp")
+list(APPEND ENGINE_SOURCES Dependencies/OpenFodder/Source/Utils/miniz.c)
+# The editor supplies start(); browser entry points are not part of this build.
+list(FILTER ENGINE_SOURCES EXCLUDE REGEX "Start_Emscripten.cpp$")
+file(GLOB_RECURSE EDITOR_HEADERS CONFIGURE_DEPENDS RELATIVE "${CMAKE_CURRENT_LIST_DIR}" "Source/*.hpp")
+list(APPEND EDITOR_HEADERS ${ENGINE_HEADERS})
 
 set(EDITOR_FORMS
     Project/Qt/ofed.ui
@@ -183,54 +109,45 @@ set(EDITOR_SOURCES
     Source/Models/CampaignModel.cpp
     Source/Models/MissionModel.cpp
     Source/Models/SpriteModel.cpp
-    Dependencies/OpenFodder/Source/About.cpp
-    Dependencies/OpenFodder/Source/Campaign.cpp
-    Dependencies/OpenFodder/Source/CopyProtection.cpp
-    Dependencies/OpenFodder/Source/Debugger.cpp
-    Dependencies/OpenFodder/Source/Event.cpp
-    Dependencies/OpenFodder/Source/Fodder.cpp
-    Dependencies/OpenFodder/Source/FontData.cpp
-    Dependencies/OpenFodder/Source/GameData.cpp
-    Dependencies/OpenFodder/Source/Graphics.cpp
-    Dependencies/OpenFodder/Source/GUI_Element.cpp
-    Dependencies/OpenFodder/Source/Utils/md5.cpp
-    Dependencies/OpenFodder/Source/Utils/SimplexNoise.cpp
-    Dependencies/OpenFodder/Source/Parameters.cpp
-    Dependencies/OpenFodder/Source/Recruits.cpp
-    Dependencies/OpenFodder/Source/Resources.cpp
-    Dependencies/OpenFodder/Source/ResourceMan.cpp
-    Dependencies/OpenFodder/Source/Sound.cpp
-    Dependencies/OpenFodder/Source/Sprites.cpp
-    Dependencies/OpenFodder/Source/SpriteSheet.cpp
-    Dependencies/OpenFodder/Source/ScriptingEngine.cpp
-    Dependencies/OpenFodder/Source/stdafx.cpp
-    Dependencies/OpenFodder/Source/Surface.cpp
-    Dependencies/OpenFodder/Source/Tiles.cpp
-    Dependencies/OpenFodder/Source/UnitTesting.cpp
-    Dependencies/OpenFodder/Source/Versions.cpp
-    Dependencies/OpenFodder/Source/Window.cpp
-    Dependencies/OpenFodder/Source/Amiga/dernc.cpp
-    Dependencies/OpenFodder/Source/Amiga/Graphics_Amiga.cpp
-    Dependencies/OpenFodder/Source/Amiga/Graphics_Amiga2.cpp
-    Dependencies/OpenFodder/Source/Amiga/IntroData_Amiga.cpp
-    Dependencies/OpenFodder/Source/Amiga/paula.cpp
-    Dependencies/OpenFodder/Source/Amiga/Resource_Amiga_File.cpp
-    Dependencies/OpenFodder/Source/Amiga/rjp1.cpp
-    Dependencies/OpenFodder/Source/Amiga/Sound_Amiga.cpp
-    Dependencies/OpenFodder/Source/PC/Graphics_PC.cpp
-    Dependencies/OpenFodder/Source/PC/IntroData_PC.cpp
-    Dependencies/OpenFodder/Source/MapData.cpp
-    Dependencies/OpenFodder/Source/PC/Resource_PC_CD.cpp
-    Dependencies/OpenFodder/Source/PC/Sound_PC.cpp
-    Dependencies/OpenFodder/Source/PC/Sound_PC2.cpp
-    Dependencies/OpenFodder/Source/Structures/Barracks.cpp
-    Dependencies/OpenFodder/Source/Map/Map.cpp
-    Dependencies/OpenFodder/Source/Map/Original.cpp
-    Dependencies/OpenFodder/Source/Map/Random.cpp
-    Dependencies/OpenFodder/Source/Utils/duktape.cpp
-    Dependencies/OpenFodder/Source/Utils/SimplexIslands.cpp
-    Dependencies/OpenFodder/Source/Utils/micropather.cpp
+    ${ENGINE_SOURCES}
 )
+
+if(WIN32)
+    # libcurl — used by the setup wizard / updater for HTTPS downloads of
+    # retail-data manifests, scripts, and engine update archives. On Windows
+    # we vendor it via FetchContent and pin TLS to Schannel so we don't
+    # have to ship an OpenSSL CA bundle. HTTP_ONLY plus the per-protocol
+    # disables strip out everything we don't need (LDAP, SMTP, etc.).
+    set(BUILD_CURL_EXE OFF CACHE BOOL "" FORCE)
+    set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+    set(BUILD_TESTING OFF CACHE BOOL "" FORCE)
+    set(CURL_USE_LIBPSL OFF CACHE BOOL "" FORCE)
+    set(CURL_USE_SCHANNEL ON CACHE BOOL "" FORCE)
+    set(CURL_USE_OPENSSL OFF CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_LDAP ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_LDAPS ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_TELNET ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_DICT ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_FILE ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_TFTP ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_RTSP ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_POP3 ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_IMAP ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_SMTP ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_GOPHER ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_MQTT ON CACHE BOOL "" FORCE)
+    set(HTTP_ONLY ON CACHE BOOL "" FORCE)
+
+    set(LIBCURL_GIT_TAG "curl-8_5_0")
+    FetchContent_Declare(libcurl
+        GIT_REPOSITORY https://github.com/curl/curl.git
+        GIT_TAG ${LIBCURL_GIT_TAG}
+        GIT_SHALLOW TRUE)
+    FetchContent_MakeAvailable(libcurl)
+else()
+    find_package(CURL REQUIRED)
+endif()
+find_package(Threads REQUIRED)
 
 set(EDITOR_RESOURCES
     Project/Qt/ofed.qrc
@@ -275,6 +192,10 @@ if(WIN32)
     set_property(TARGET editor PROPERTY VS_GLOBAL_VcpkgApplocalDeps "false")
 endif()
 
+if(MSVC)
+    target_compile_options(editor PRIVATE /MP)
+endif()
+
 target_include_directories(editor PRIVATE
     .
     Source
@@ -293,7 +214,22 @@ target_link_libraries(editor PRIVATE
     Qt6::Widgets
     SDL3::SDL3
     SDL3_mixer::SDL3_mixer
+    Threads::Threads
 )
+if(WIN32)
+    target_link_libraries(editor PRIVATE libcurl)
+    set_property(TARGET editor PROPERTY VS_GLOBAL_VcpkgAutoLink false)
+else()
+    target_link_libraries(editor PRIVATE CURL::libcurl)
+endif()
+
+add_custom_command(TARGET editor POST_BUILD
+    COMMAND ${CMAKE_COMMAND}
+        "-DENGINE_RUN=${CMAKE_CURRENT_LIST_DIR}/Dependencies/OpenFodder/Run"
+        "-DRUN_DIR=${CMAKE_CURRENT_LIST_DIR}/Run"
+        "-DDEPENDENCY_BIN=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/$<$<CONFIG:Debug>:debug/>bin"
+        -P "${CMAKE_CURRENT_LIST_DIR}/cmake/deploy_runtime.cmake"
+    COMMENT "Deploy matching engine scripts, campaigns and overview artwork")
 
 if(WIN32)
     set(_runtime_dlls "")
@@ -317,11 +253,12 @@ if(WIN32)
             COMMENT "Copy runtime DLLs to Run")
     endif()
 
-    add_custom_command(TARGET editor POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    # Keep installed data paths and other user settings across rebuilds.
+    if(NOT EXISTS "${CMAKE_CURRENT_LIST_DIR}/Run/openfodder.ini")
+        configure_file(
             "${CMAKE_CURRENT_LIST_DIR}/Dependencies/OpenFodder/openfodder.ini.example"
-            "${CMAKE_CURRENT_LIST_DIR}/Run/openfodder.ini"
-        COMMENT "Copy openfodder.ini into Run")
+            "${CMAKE_CURRENT_LIST_DIR}/Run/openfodder.ini" COPYONLY)
+    endif()
 
     if(TARGET Qt6::qmake)
         get_target_property(_qt6_qmake Qt6::qmake IMPORTED_LOCATION)

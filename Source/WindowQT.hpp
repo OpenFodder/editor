@@ -1,71 +1,68 @@
-/*
- *  Open Fodder
- *  ------------------------
- *
- *  Copyright (C) 2008-2017 Robert Crossfield
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License along
- *  with this program; if not, write to the Free Software Foundation, Inc.,
- *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- *
- */
-
-class QEvent;
-class QEnterEvent;
+#pragma once
+#include "stdafx_ofed.hpp"
+#include <QPointF>
+#include <QRectF>
+#include <map>
+#include <tuple>
 
 class cWindowQT : public QWidget, public cWindow {
+    Q_OBJECT
+    QTimer mRedrawTimer;
+    QImage mTileAtlas;
+    QImage mTerrain;
+    struct sSpritePreview { QImage image; QPoint offset; };
+    std::map<std::tuple<int, int, int>, sSpritePreview> mSpritePreviews;
+    QPointF mViewOrigin;
+    QPointF mLastMouse;
+    QPoint mLastPaintTile = QPoint(-1, -1);
+    double mZoom = 2.0;
+    bool mPanning = false;
+    bool mPainting = false;
+    bool mHasMouse = false;
+    int16 mCameraTilesX = 0, mCameraTilesY = 0;
 
-	QImage				mSurface;
-	QTimer				mMouseInTimer;
-	QTimer				mRedrawTimer;
-
-	int16				mCameraTilesX;
-	int16				mCameraTilesY;
-
-	int16				mMouseX;
-	int16				mMouseY;
-
-public:
-	double				mScaleWidth, mScaleHeight;
+    void ClampView();
+    void PaintAt(const QPointF& position, bool first);
+    int TileAt(int x, int y) const;
+    void SetTileAt(int x, int y, int tile);
+    const sSpritePreview& SpritePreview(int type, int sheet = -1, int frame = 0);
+    void DrawTerrain(QPainter& painter, const QRectF& visible);
 
 protected:
-	void				paintEvent(QPaintEvent* e);
-
-	void				mouseMoveEvent(QMouseEvent *eventMove);
-	void				mousePressEvent(QMouseEvent *eventPress);
-	void				mouseReleaseEvent(QMouseEvent *releaseEvent);
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-	void				enterEvent(QEnterEvent* pEvent) override;
-	void				leaveEvent(QEvent* pEvent) override;
-#else
-	void				enterEvent(QEvent* pEvent) override;
-	void				leaveEvent(QEvent* pEvent) override;
-#endif
+    void paintEvent(QPaintEvent*) override;
+    void resizeEvent(QResizeEvent*) override;
+    void wheelEvent(QWheelEvent*) override;
+    void mouseMoveEvent(QMouseEvent*) override;
+    void mousePressEvent(QMouseEvent*) override;
+    void mouseReleaseEvent(QMouseEvent*) override;
+    void enterEvent(QEnterEvent*) override;
+    void leaveEvent(QEvent*) override;
 
 public:
-						cWindowQT(QWidget* pParent);
+    double mScaleWidth = 2.0, mScaleHeight = 2.0;
+    explicit cWindowQT(QWidget* parent);
+    void EventCheck() override;
+    void FrameEnd() override;
+    bool InitWindow(const std::string&) override;
+    void PositionWindow() override;
+    void RenderAt(cSurface*) override;
+    void RenderShrunk(cSurface*) override;
+    void CameraSetTiles();
+    void CameraTilesUpdate();
+    void CameraUpdate();
+    int16 getCameraTilesX() const { return mCameraTilesX; }
+    int16 getCameraTilesY() const { return mCameraTilesY; }
 
-	virtual void		EventCheck();
-	virtual void		FrameEnd();
+    void RefreshMap(bool resetView = true);
+    QImage OverviewImage();
+    QPointF MapAt(const QPointF& position) const { return mViewOrigin + position / mZoom; }
+    QRectF Viewport() const { return QRectF(mViewOrigin, QSizeF(width() / mZoom, height() / mZoom)); }
+    double Zoom() const { return mZoom; }
+    void SetViewZoom(double zoom, const QPointF& anchor);
+    void CenterOnMap(const QPointF& point);
+    void FitMap();
 
-	virtual bool		InitWindow(const std::string& pWindowTitle);
-
-	virtual void		PositionWindow();
-
-	virtual void		RenderAt(cSurface* pImage);
-	virtual void		RenderShrunk(cSurface* pImage);
-
-	void				CameraSetTiles();
-	void				CameraTilesUpdate();
-	void				CameraUpdate();
+signals:
+    void viewChanged();
+    void mapEdited();
 };

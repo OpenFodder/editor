@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ui_ofed.h"
+#include <QDialog>
 
 struct sRangeTile {
 	int16 mX;
@@ -47,7 +48,10 @@ class cOFED : public QMainWindow
 
 
 protected:
-	void moveEvent(QMoveEvent *event);
+	void moveEvent(QMoveEvent *event) override;
+    void resizeEvent(QResizeEvent *event) override;
+    void showEvent(QShowEvent *event) override;
+    bool eventFilter(QObject* watched, QEvent* event) override;
 
 public:
 	cOFED(QWidget *parent = nullptr);
@@ -95,6 +99,7 @@ public:
     void LoadMap();
 
 	void Create_NewMap(const std::string& pTileSet, const std::string& pTileSub, size_t pWidth, size_t pHeight, const bool pRandom);
+    bool SaveMapTo(const std::string& path);
     void Save_Map(std::shared_ptr<cPhase> pPhase);
 
 	void SetCursorTileID(const size_t pCursorTile);
@@ -111,6 +116,12 @@ public:
     int16 GetCursorSpriteID() { return mCursorSprite; }
 
 private:
+    void ScheduleToolWindowLayout();
+    void LayoutToolWindows();
+    void PrepareToolWindow(QDialog* window, const QString& title);
+    bool mToolLayoutPending = false;
+    bool mLayingOutTools = false;
+
 	Ui::mOFED ui;
 	cMapView* mMapView;
     cCampaignDialog* mToolboxCampaigns;
@@ -119,6 +130,8 @@ private:
 
     QLabel* mMissionLabel;
     QLabel* mPhaseLabel;
+    QLabel* mZoomLabel;
+    QDialog* mOverviewTool = nullptr;
 
 	int16	mCursorSprite;
 	sTiles	mCursorRangeTiles;

@@ -50,27 +50,17 @@ cCampaignDialog::cCampaignDialog(QWidget *parent, Qt::WindowFlags f) : QDialog(p
 }
 
 void cCampaignDialog::SpriteDelete() {
-
-    auto Row = mUi->mSpritesTable->currentIndex().row();
-    if (Row >= g_Fodder->mSprites.size())
-        return;
-
-    auto Sprite = &g_Fodder->mSprites[Row];
-	Sprite->Clear();
-
-    sSprite* Last = &g_Fodder->mSprites[g_Fodder->mSprites.size()-2];
-    sSprite* Next = &g_Fodder->mSprites[0];
-
-    for (; Next != Last; ++Next) {
-        
-        if (Next->field_0 == -32768 || Next->field_0 == -1) {
-            *Next = *(Next+1);
-             (Next+1)->Clear();
-             continue;
+    const int row = mUi->mSpritesTable->currentIndex().row();
+    if (row < 0) return;
+    int active = 0;
+    for (auto& sprite : g_Fodder->mSprites) {
+        if (sprite.mPosX == -32768 || sprite.mPosX == -1) continue;
+        if (active++ == row) {
+            sprite.Clear();
+            g_OFED->Sprite_AddNew();
+            return;
         }
     }
-
-    mPhaseSpriteModel.DataUpdated();
 }
 
 cCampaignDialog::~cCampaignDialog() {
@@ -144,42 +134,18 @@ void cCampaignDialog::SpriteClicked(QModelIndex pIndex) {
     int Count = 0;
 
     for (auto& Sprite : g_Fodder->mSprites) {
-        if (Sprite.field_0 != -32768 && Sprite.field_0 != -1) {
-            if (Count == pIndex.row()) {
+        if (Sprite.mPosX == -32768 || Sprite.mPosX == -1)
+            continue;
 
-                g_Fodder->mCamera_Scroll_Speed = 0x10;
-
-                g_Fodder->mCamera_PanTargetX = Sprite.field_0;
-                g_Fodder->mCamera_PanTargetY = Sprite.field_4;
-                g_Fodder->mCamera_Speed_Reset_X = false;
-                g_Fodder->mCamera_AccelerationX &= 0x0000FFFF;
-                g_Fodder->mCamera_Speed_Reset_Y = false;
-                g_Fodder->mCamera_AccelerationY &= 0x0000FFFF;
-
-                for (;;) {
-                    g_Fodder->Camera_Pan_To_Target();
-                    g_Fodder->Camera_Pan_To_Target();
-
-                    if (!g_Fodder->mCamera_Reached_Target)
-                        break;
-                }
-
-
-                g_Fodder->Sprite_Sort_DrawList();
-                g_Fodder->MapTile_UpdateFromCamera();
-                g_Fodder->Sprites_Draw();
-
-                g_Fodder->Camera_Prepare();
-
-                g_Fodder->Video_Sleep();
-
-                std::dynamic_pointer_cast<cWindowQT>(g_Window)->CameraUpdate();
-                return;
-            }
+        if (Count != pIndex.row()) {
             ++Count;
+            continue;
         }
-    }
 
+        auto Window = std::dynamic_pointer_cast<cWindowQT>(g_Window);
+        Window->CenterOnMap(QPointF(Sprite.mPosX, Sprite.mPosY));
+        return;
+    }
 }
 
 void cCampaignDialog::LoadPhase(const size_t pNumber) {
