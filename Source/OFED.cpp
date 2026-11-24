@@ -1410,16 +1410,16 @@ void cOFED::SetupSprites() {
 	g_SpriteAnim[eSprite_Door_Civilian_Spear] = 0x9B;
 	g_SpriteAnim[eSprite_Cannon] = 0x96;
 
+	g_SpriteAnim[eSprite_Turret_Cannon_Human] = 0xD2;
 	g_SpriteAnim[eSprite_Turret_Missile_Human] = 0xD2;
-	g_SpriteAnim[eSprite_Turret_Missile2_Human] = 0xD2;
 
 	g_SpriteAnim[eSprite_VehicleNoGun_Enemy] = 0xA5;
 	g_SpriteAnim[eSprite_VehicleGun_Enemy] = 0xA5;
 	g_SpriteAnim[eSprite_Vehicle_Unk_Enemy] = 0xA5;
 	g_SpriteAnim[eSprite_Civilian_Invisible] = 0xD6;
 
+	g_SpriteAnim[eSprite_Turret_Cannon_Enemy] = 0xD2;
 	g_SpriteAnim[eSprite_Turret_Missile_Enemy] = 0xD2;
-	g_SpriteAnim[eSprite_Turret_Missile2_Enemy] = 0xD2;
 	g_SpriteAnim[eSprite_BunkerDoor_HeavyExplosionOnly] = 0xE0;
 
 	g_SpriteAnim[eSprite_Door_Civilian_Rescue] = 0x9B;
@@ -1511,16 +1511,16 @@ void cOFED::SetupSprites() {
 	g_SpriteName[eSprite_Door_Civilian_Spear] = "Building Door: Indigenous Spear";
 	g_SpriteName[eSprite_Cannon] = "Cannon";
 
+	g_SpriteName[eSprite_Turret_Cannon_Human] = "Human Turret: Cannon";
 	g_SpriteName[eSprite_Turret_Missile_Human] = "Human Turret: Missile";
-	g_SpriteName[eSprite_Turret_Missile2_Human] = "Human Turret: Missile 2";
 
 	g_SpriteName[eSprite_VehicleNoGun_Enemy] = "Enemy Vehicle: No Weapon";
 	g_SpriteName[eSprite_VehicleGun_Enemy] = "Enemy Vehicle: Weapon";
 	g_SpriteName[eSprite_Vehicle_Unk_Enemy] = "Enemy Vehicle: Unknown";
 	g_SpriteName[eSprite_Civilian_Invisible] = "Indigenous: Invisible?";
 
+	g_SpriteName[eSprite_Turret_Cannon_Enemy] = "Enemy Turret: Cannon";
 	g_SpriteName[eSprite_Turret_Missile_Enemy] = "Enemy Turret: Missile";
-	g_SpriteName[eSprite_Turret_Missile2_Enemy] = "Enemy Turret: Missile 2";
 	g_SpriteName[eSprite_BunkerDoor_HeavyExplosionOnly] = "Bunker Door: Heavy Explosion Only";
 
 	g_SpriteName[eSprite_Door_Civilian_Rescue] = "Building Door: In";
