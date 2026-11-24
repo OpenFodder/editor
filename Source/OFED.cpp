@@ -1188,6 +1188,8 @@ void cOFED::Create_NewMap(const std::string& pTileSet, const std::string& pTileS
 
 			if (mMapView)
 				mMapView->RenderTiles();
+			if (mToolboxCampaigns)
+				mToolboxCampaigns->Refresh();
 			return;
 		}
 	}
@@ -1257,6 +1259,11 @@ void cOFED::LoadMap() {
 	std::dynamic_pointer_cast<cWindowQT>(g_Window)->RefreshMap();
 	if(mMapView)
 		mMapView->RenderTiles();
+
+    // Loading replaces the runtime sprites; notify the sidebar even when the
+    // map was opened directly rather than selected through the phase table.
+    if (mToolboxCampaigns)
+        mToolboxCampaigns->Refresh();
 }
 
 /**
@@ -1442,12 +1449,12 @@ void cOFED::SetupSprites() {
 
 
     g_SpriteAnim[eSprite_UFO_Callpad] = 0x7C;
-    g_SpriteAnim[112] = 0xD2;
-    g_SpriteAnim[113] = 0xD2;
-    g_SpriteAnim[114] = 0xA5;
-    g_SpriteAnim[115] = 0xA5;
-    g_SpriteAnim[116] = 0xA5;
-    g_SpriteAnim[117] = 0xA5;
+    g_SpriteAnim[eSprite_Turret_Cannon_Invulnerable] = 0xD2;
+    g_SpriteAnim[eSprite_Turret_Missile_Invulnerable] = 0xD2;
+    g_SpriteAnim[eSprite_Looping_Vehicle_Left] = 0xA5;
+    g_SpriteAnim[eSprite_Looping_Vehicle_Right] = 0xA5;
+    g_SpriteAnim[eSprite_Looping_Vehicle_Up] = 0xA5;
+    g_SpriteAnim[eSprite_Looping_Vehicle_Down] = 0xA5;
 
     g_SpriteName[eSprite_Player] = "Human Soldier";
 	g_SpriteName[eSprite_Enemy] = "Enemy Soldier";
@@ -1502,6 +1509,7 @@ void cOFED::SetupSprites() {
 	g_SpriteName[eSprite_Door_Civilian] = "Building Door: Indigenous";
 	g_SpriteName[eSprite_Door2_Civilian] = "Building Door: Indigenous 2";
 	g_SpriteName[eSprite_Door_Civilian_Spear] = "Building Door: Indigenous Spear";
+	g_SpriteName[eSprite_Cannon] = "Cannon";
 
 	g_SpriteName[eSprite_Turret_Missile_Human] = "Human Turret: Missile";
 	g_SpriteName[eSprite_Turret_Missile2_Human] = "Human Turret: Missile 2";
@@ -1513,7 +1521,7 @@ void cOFED::SetupSprites() {
 
 	g_SpriteName[eSprite_Turret_Missile_Enemy] = "Enemy Turret: Missile";
 	g_SpriteName[eSprite_Turret_Missile2_Enemy] = "Enemy Turret: Missile 2";
-	g_SpriteName[eSprite_BunkerDoor_HeavyExplosionOnly] = "Building Door3";
+	g_SpriteName[eSprite_BunkerDoor_HeavyExplosionOnly] = "Bunker Door: Heavy Explosion Only";
 
 	g_SpriteName[eSprite_Door_Civilian_Rescue] = "Building Door: In";
 	g_SpriteName[eSprite_Seal_Mine] = "Seal Mine";
@@ -1525,25 +1533,25 @@ void cOFED::SetupSprites() {
 	g_SpriteName[eSprite_Bonus_RankHomingInvin_SquadLeader] = "Bonus: Rockets and General";
 	g_SpriteName[eSprite_Bonus_RankHomingInvin_Squad] = "Bonus: Squad General and Rockets";
 	g_SpriteName[eSprite_Helicopter_CallPad] = "Helicopter Callpad";
-	g_SpriteName[eSprite_BunkerDoor_ReinforcedHeavyExplosionOnly] = "Building Door: Reinforced";
+	g_SpriteName[eSprite_BunkerDoor_ReinforcedHeavyExplosionOnly] = "Bunker Door: Reinforced, Heavy Explosion Only";
 	g_SpriteName[eSprite_Helicopter_Grenade_Human_Called] = "Human Helicopter: Grenade Callable";
 	g_SpriteName[eSprite_Helicopter_Unarmed_Human_Called] = "Human Helicopter: Unarmed Callable";
 	g_SpriteName[eSprite_Helicopter_Missile_Human_Called] = "Human Helicopter: Missile Callable";
 	g_SpriteName[eSprite_Helicopter_Homing_Human_Called] = "Human Helicopter: Homing Missile Callable";
 
-	g_SpriteName[eSprite_Turret_HomingMissile_Enemy] = "Enemey Turret: Homing Missile";
-	g_SpriteName[eSprite_Enemy_Leader] = "Hostage 2";
+	g_SpriteName[eSprite_Turret_HomingMissile_Enemy] = "Enemy Turret: Homing Missile";
+	g_SpriteName[eSprite_Enemy_Leader] = "Enemy Leader";
 	g_SpriteName[eSprite_Helicopter_Homing_Enemy2] = "Enemy Helicopter: Homing Missile2";
 	g_SpriteName[eSprite_Computer_1] = "Computer 1";
 	g_SpriteName[eSprite_Computer_2] = "Computer 2";
 	g_SpriteName[eSprite_Computer_3] = "Computer 3";
 
     g_SpriteName[eSprite_UFO_Callpad] = "UFO Callpad";
-    g_SpriteName[112] = "Unk AI Turret Cannon";
-    g_SpriteName[113] = "Unk AI Turret Missile";
-    g_SpriteName[114] = "Unk AI Vehicle Cannon";
-    g_SpriteName[115] = "Unk AI Vehicle";
-    g_SpriteName[116] = "Unk Vehicle";
-    g_SpriteName[117] = "Unk Vehicle";
+    g_SpriteName[eSprite_Turret_Cannon_Invulnerable] = "Invulnerable Turret: Cannon";
+    g_SpriteName[eSprite_Turret_Missile_Invulnerable] = "Invulnerable Turret: Missile";
+    g_SpriteName[eSprite_Looping_Vehicle_Left] = "Looping Vehicle: Left";
+    g_SpriteName[eSprite_Looping_Vehicle_Right] = "Looping Vehicle: Right";
+    g_SpriteName[eSprite_Looping_Vehicle_Up] = "Looping Vehicle: Up";
+    g_SpriteName[eSprite_Looping_Vehicle_Down] = "Looping Vehicle: Down";
 
 }
