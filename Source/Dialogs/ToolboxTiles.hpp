@@ -1,24 +1,14 @@
-class Ui_ToolboxTiles;
+#pragma once
 
-class cToolboxTiles : public QDialog {
-	Ui_ToolboxTiles *mUi;
+#include <QWidget>
 
-	cSurface		*mTileSurface;
+class cTilePalette;
 
-	QImage			 mImage;
-
-	double			 mScaleWidth, mScaleHeight;
-
-protected:
-
-	void paintEvent(QPaintEvent* e) override;
-	void mousePressEvent(QMouseEvent *eventPress) override;
-    void mouseMoveEvent(QMouseEvent *eventMove) override;
+class cToolboxTiles : public QWidget {
+    cTilePalette* mPalette;
 
 public:
-	cToolboxTiles( QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
-	~cToolboxTiles();
-
-	void RenderTiles();
-
+    explicit cToolboxTiles(QWidget* parent = nullptr);
+    void RenderTiles();
+    void ClearSelection();
 };

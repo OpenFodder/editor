@@ -176,10 +176,14 @@ void cWindowQT::paintEvent(QPaintEvent*) {
         const int x = int(std::floor(world.x() / 16)), y = int(std::floor(world.y() / 16));
         if (TileAt(x, y) >= 0) {
             painter.setOpacity(0.55);
+            painter.save();
+            painter.setClipRect(QRect(0, 0, g_Fodder->mMapLoaded->getWidthPixels(),
+                                      g_Fodder->mMapLoaded->getHeightPixels()), Qt::IntersectClip);
             for (const auto& tile : g_OFED->GetCursorRangeTiles().mTiles) {
                 if (tile.mTileID < 480) painter.drawImage(QRect((x + tile.mX) * 16, (y + tile.mY) * 16, 16, 16), mTileAtlas,
                     QRect(tile.mTileID % 20 * 16, tile.mTileID / 20 * 16, 16, 16));
             }
+            painter.restore();
             if (g_OFED->GetCursorSpriteID() >= 0) painter.drawImage(world, SpritePreview(g_OFED->GetCursorSpriteID()).image);
             painter.setOpacity(1);
             painter.setPen(QPen(QColor(255, 220, 90), 1 / mZoom));

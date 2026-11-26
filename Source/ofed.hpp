@@ -90,7 +90,6 @@ public:
 
 	void ShowDialog_NewMap();
 
-	void ShowDialog_ToolboxTiles();
 	void ShowDialog_ToolboxSprites();
     void ShowDialog_ToolboxCampaigns();
 
@@ -102,8 +101,7 @@ public:
     bool SaveMapTo(const std::string& path);
     void Save_Map(std::shared_ptr<cPhase> pPhase);
 
-	void SetCursorTileID(const size_t pCursorTile);
-	void setCursorTiles( sTiles& pTiles);
+	void setCursorTiles(const sTiles& pTiles, bool fromPalette = false);
 
     void SetCursorSprite( const size_t pSpriteID );
 
@@ -112,7 +110,7 @@ public:
 
 	void SetupSprites();
 
-	sTiles GetCursorRangeTiles() { return mCursorRangeTiles; }
+	const sTiles& GetCursorRangeTiles() const { return mCursorRangeTiles; }
     int16 GetCursorSpriteID() { return mCursorSprite; }
 
 private:

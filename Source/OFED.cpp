@@ -1,6 +1,5 @@
 #include "ofed.hpp"
 #include "ui_NewMapDialog.h"
-#include "ui_ToolboxTiles.h"
 #include "ui_CampaignDialog.h"
 
 #include <QPainter>
@@ -10,6 +9,7 @@
 #include <QMoveEvent>
 #include <QResizeEvent>
 #include <QShowEvent>
+#include <QSplitter>
 #include <chrono>
 
 int32 g_SpriteAnim[118] = {};
@@ -33,9 +33,12 @@ cOFED::cOFED(QWidget *parent) : QMainWindow(parent) {
 	mMapView = 0;
 
     delete ui.mSurface;
-    g_Window = std::make_shared<cWindowQT> (ui.centralWidget);
+    auto* editorPanes = new QSplitter(Qt::Horizontal, ui.centralWidget);
+    editorPanes->setChildrenCollapsible(false);
+    ui.verticalLayout->addWidget(editorPanes);
+    g_Window = std::make_shared<cWindowQT>(editorPanes);
     ui.mSurface = (cWindowQT*) &(*g_Window);
-    ui.verticalLayout->addWidget(ui.mSurface);
+    editorPanes->addWidget(ui.mSurface);
 
 	mCursorSurface = std::make_shared<cSurface>(16, 16);
 
@@ -115,7 +118,9 @@ cOFED::cOFED(QWidget *parent) : QMainWindow(parent) {
     g_Fodder->Mouse_Setup();
     g_Fodder->Mouse_ReadInputs();
 
-    ShowDialog_ToolboxTiles();
+    mToolboxTiles = new cToolboxTiles(editorPanes);
+    editorPanes->addWidget(mToolboxTiles);
+    editorPanes->setSizes({700, 480});
     ShowDialog_ToolboxSprites();
 
 	OpenFodder_Prepare();
@@ -131,8 +136,9 @@ cOFED::cOFED(QWidget *parent) : QMainWindow(parent) {
     const int gap = 8;
     const int leftWidth = qMax(mOverviewTool->frameGeometry().width(),
                               mToolboxCampaigns->frameGeometry().width()) + gap;
-    const int groupWidth = leftWidth + frameGeometry().width() + gap +
-                           mToolboxTiles->frameGeometry().width();
+    resize(qMax(width(), qMin(1200, available.width() - leftWidth)),
+           qMax(height(), qMin(720, available.height() - mToolboxSprites->frameGeometry().height() - gap)));
+    const int groupWidth = leftWidth + frameGeometry().width();
     const int groupHeight = qMax(mOverviewTool->frameGeometry().height() + gap +
                                 mToolboxCampaigns->frameGeometry().height(),
                                 frameGeometry().height() + gap + mToolboxSprites->frameGeometry().height());
@@ -182,8 +188,7 @@ void cOFED::showEvent(QShowEvent* event) {
 }
 
 bool cOFED::eventFilter(QObject* watched, QEvent* event) {
-    if (watched == mOverviewTool || watched == mToolboxCampaigns ||
-        watched == mToolboxTiles || watched == mToolboxSprites) {
+    if (watched == mOverviewTool || watched == mToolboxCampaigns || watched == mToolboxSprites) {
         switch (event->type()) {
         case QEvent::Show:
         case QEvent::Hide:
@@ -250,24 +255,9 @@ void cOFED::LayoutToolWindows() {
     }
     if (campaignsShown)
         place(mToolboxCampaigns, QPoint(main.left() - gap - mToolboxCampaigns->frameGeometry().width(), leftY));
-    if (shown(mToolboxTiles))
-        place(mToolboxTiles, QPoint(main.right() + gap + 1, main.top()));
     if (shown(mToolboxSprites))
         place(mToolboxSprites, QPoint(main.left(), main.bottom() + gap + 1));
     mLayingOutTools = false;
-}
-
-/**
- * Launch the Tile Toobox dialog 
- */
-void cOFED::ShowDialog_ToolboxTiles() {
-    if (!mToolboxTiles) {
-        mToolboxTiles = new cToolboxTiles(this, Qt::Tool);
-        mToolboxTiles->resize(360, 452);
-        PrepareToolWindow(mToolboxTiles, tr("Toolbox: Tiles"));
-    }
-    mToolboxTiles->show();
-    ScheduleToolWindowLayout();
 }
 
 void cOFED::ShowDialog_ToolboxSprites() {
@@ -1273,6 +1263,7 @@ void cOFED::CursorReset() {
 
 	mCursorSprite = -1;
 	mCursorRangeTiles = sTiles();
+    if (mToolboxTiles) mToolboxTiles->ClearSelection();
 
 	CursorUpdate();
 }
@@ -1287,30 +1278,10 @@ void cOFED::CursorUpdate() {
 }
 
 /**
- * Set the cursor to a tile
+ * Set the cursor to a tile brush
  */
-void cOFED::SetCursorTileID(const size_t pCursorTileID) {
-	sTiles Tiles;
-	Tiles.mTiles.push_back(sRangeTile(0,0, pCursorTileID));
-
-	setCursorTiles(Tiles);
-}
-
-void cOFED::setCursorTiles( sTiles& pTiles) {
-    /*
-	mCursorSurface->clearBuffer();
-
-	for ( const auto& Tile : pTiles.mTiles) {
-        g_Fodder->mGraphics->Map_Tile_Draw(&*mCursorSurface, Tile.mTileID, Tile.mX, Tile.mY, 0);
-	}
-	g_Fodder->mGraphics->PaletteSet(&*mCursorSurface);
-
-	mCursorSurface->surfaceSetToPaletteNew();
-	mCursorSurface->draw();
-
-	SDL_Surface* Source = mCursorSurface->GetSurface();
-	mCursorImage = QImage(static_cast<uchar*>(Source->pixels), Source->w, Source->h, QImage::Format_RGB32);
-    */
+void cOFED::setCursorTiles(const sTiles& pTiles, bool fromPalette) {
+    if (!fromPalette && mToolboxTiles) mToolboxTiles->ClearSelection();
 	mCursorRangeTiles = pTiles;
     mCursorSprite = -1;
 
@@ -1323,6 +1294,7 @@ void cOFED::SetCursorSprite(const size_t pSpriteID) {
     int32 AnimID = g_SpriteAnim[pSpriteID];
     if (AnimID < 0)
         return;
+    if (mToolboxTiles) mToolboxTiles->ClearSelection();
     /*
     size_t SpriteWidth = g_Fodder->mSprite_SheetPtr[AnimID][0].mColCount;
     size_t SpriteHeight = g_Fodder->mSprite_SheetPtr[AnimID][0].mRowCount;

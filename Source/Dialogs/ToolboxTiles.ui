@@ -1,25 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>ToolboxTiles</class>
- <widget class="QDialog" name="ToolboxTiles">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>720</width>
-    <height>865</height>
-   </rect>
-  </property>
-  <property name="mouseTracking">
-   <bool>true</bool>
-  </property>
-  <property name="windowTitle">
-   <string>Toolbox: Tiles</string>
-  </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
-   <property name="spacing">
-    <number>0</number>
-   </property>
+ <widget class="QWidget" name="ToolboxTiles">
+  <layout class="QVBoxLayout" name="verticalLayout">
    <property name="leftMargin">
     <number>0</number>
    </property>
@@ -33,27 +16,31 @@
     <number>0</number>
    </property>
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout" stretch="1,0">
-     <property name="spacing">
-      <number>0</number>
+    <widget class="QScrollArea" name="mScrollArea">
+     <property name="widgetResizable">
+      <bool>true</bool>
      </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="controls">
      <item>
-      <widget class="QWidget" name="mSurfaceTiles" native="true">
-       <property name="mouseTracking">
-        <bool>true</bool>
+      <widget class="QLabel" name="mZoomLabel">
+       <property name="text">
+        <string>Tile zoom</string>
+       </property>
+       <property name="buddy">
+        <cstring>mZoom</cstring>
        </property>
       </widget>
      </item>
      <item>
+      <widget class="QComboBox" name="mZoom"/>
+     </item>
+     <item>
       <widget class="QLabel" name="mCurrentTile">
-       <property name="mouseTracking">
-        <bool>true</bool>
-       </property>
-       <property name="text">
-        <string>TextLabel</string>
-       </property>
        <property name="alignment">
-        <set>Qt::AlignBottom|Qt::AlignRight|Qt::AlignTrailing</set>
+        <set>Qt::AlignRight|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>
