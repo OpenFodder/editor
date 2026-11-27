@@ -144,12 +144,12 @@
   </action>
   <action name="action_Hut_Indeigenous">
    <property name="text">
-    <string>Indigenous</string>
+    <string>Civilian</string>
    </property>
   </action>
   <action name="action_Hut_Indigenous_With_Spear">
    <property name="text">
-    <string>Indigenous With Spear</string>
+    <string>Civilian with Spear</string>
    </property>
   </action>
   <action name="action_Cliff">

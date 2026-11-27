@@ -676,25 +676,25 @@ void cOFED::AddHut_With_Soldier() {
 	sTiles Tiles = SetupHut();
 
 	if (g_Fodder->mMapLoaded->getTileType()  == eTileTypes_Jungle) {
-		Tiles.mSprites.push_back(sRangeSprite(20, 27, eSprite_BuildingDoor2));
+		Tiles.mSprites.push_back(sRangeSprite(20, 27, eSprite_BuildingDoor_Hut));
 	}
 
 	if (g_Fodder->mMapLoaded->getTileType()  == eTileTypes_Desert) {
-		Tiles.mSprites.push_back(sRangeSprite(35, 40, eSprite_BuildingDoor2));
+		Tiles.mSprites.push_back(sRangeSprite(35, 40, eSprite_BuildingDoor_Hut));
 	}
 
 	if (g_Fodder->mMapLoaded->getTileType()  == eTileTypes_Ice) {
 		// In this case 'Shrub' is roof
 		Tiles.mSprites.push_back(sRangeSprite(20, 1, eSprite_Shrub));
-		Tiles.mSprites.push_back(sRangeSprite(12, 23, eSprite_BuildingDoor2));
+		Tiles.mSprites.push_back(sRangeSprite(12, 23, eSprite_BuildingDoor_Hut));
 	}
 
 	if (g_Fodder->mMapLoaded->getTileType()  == eTileTypes_Moors) {
-		Tiles.mSprites.push_back(sRangeSprite(28, 65, eSprite_BuildingDoor2));
+		Tiles.mSprites.push_back(sRangeSprite(28, 65, eSprite_BuildingDoor_Hut));
 	}
 
 	if (g_Fodder->mMapLoaded->getTileType()  == eTileTypes_Int) {
-		Tiles.mSprites.push_back(sRangeSprite(3, 5, eSprite_BuildingDoor2));
+		Tiles.mSprites.push_back(sRangeSprite(3, 5, eSprite_BuildingDoor_Hut));
 	}
 
 	setCursorTiles(Tiles);
@@ -1337,11 +1337,11 @@ void cOFED::SetupSprites() {
 	g_SpriteAnim[eSprite_Snowman] = 0x92;
 	g_SpriteAnim[eSprite_Shrub2] = 0x93;
 	g_SpriteAnim[eSprite_Waterfall] = 0x94;
-	g_SpriteAnim[eSprite_Bird2_Left] = 0x98;
+	g_SpriteAnim[eSprite_Bird_Left_Wraparound] = 0x98;
 
 	g_SpriteAnim[eSprite_BuildingDoor] = 0x99;
 	//g_SpriteAnim[eSprite_GroundHole] = ;
-	g_SpriteAnim[eSprite_BuildingDoor2] = 0x9B;
+	g_SpriteAnim[eSprite_BuildingDoor_Hut] = 0x9B;
 	g_SpriteAnim[eSprite_Floating_Dead_Soldier] = 0x9E;
 	g_SpriteAnim[eSprite_Enemy_Rocket] = 0x39;
 	g_SpriteAnim[eSprite_GrenadeBox] = 0xC2;
@@ -1358,18 +1358,18 @@ void cOFED::SetupSprites() {
 	g_SpriteAnim[eSprite_Helicopter_Homing_Human] = 0x8B;
 
 	g_SpriteAnim[eSprite_Mine] = 0xC7;
-	g_SpriteAnim[eSprite_Mine2] = 0xC8;
+	g_SpriteAnim[eSprite_Mine_SlideTrigger] = 0xC8;
 	g_SpriteAnim[eSprite_Spike] = 0xC9;
 
 	g_SpriteAnim[eSprite_BoilingPot] = 0xCD;
 	g_SpriteAnim[eSprite_Civilian] = 0xD0;
-	g_SpriteAnim[eSprite_Civilian2] = 0xD0;
+	g_SpriteAnim[eSprite_Civilian_Fast] = 0xD0;
 	g_SpriteAnim[eSprite_VehicleNoGun_Human] = 0xA5;
 	g_SpriteAnim[eSprite_VehicleGun_Human] = 0xA5;
 
 	g_SpriteAnim[eSprite_Tank_Human] = 0xD1;
-	g_SpriteAnim[eSprite_Bird_Left] = 0xD3;
-	g_SpriteAnim[eSprite_Bird_Right] = 0xD4;
+	g_SpriteAnim[eSprite_Bird_Left_CameraRespawn] = 0xD3;
+	g_SpriteAnim[eSprite_Bird_Right_CameraRespawn] = 0xD4;
 	g_SpriteAnim[eSprite_Seal] = 0xD5;
 	g_SpriteAnim[eSprite_Tank_Enemy] = 0xD1;
 
@@ -1378,7 +1378,7 @@ void cOFED::SetupSprites() {
 	g_SpriteAnim[eSprite_Hostage_Rescue_Tent] = 0xDD;
 
 	g_SpriteAnim[eSprite_Door_Civilian] = 0x9B;
-	g_SpriteAnim[eSprite_Door2_Civilian] = 0x9B;
+	g_SpriteAnim[eSprite_Door_Civilian_Fast] = 0x9B;
 	g_SpriteAnim[eSprite_Door_Civilian_Spear] = 0x9B;
 	g_SpriteAnim[eSprite_Cannon] = 0x96;
 
@@ -1414,7 +1414,7 @@ void cOFED::SetupSprites() {
 	g_SpriteAnim[eSprite_Turret_HomingMissile_Enemy] = 0xD2;
 
 	g_SpriteAnim[eSprite_Enemy_Leader] = 0xD9;
-	g_SpriteAnim[eSprite_Helicopter_Homing_Enemy2] = 0x8B;
+	g_SpriteAnim[eSprite_Helicopter_Homing_Enemy_Called] = 0x8B;
 	g_SpriteAnim[eSprite_Computer_1] = 0x8F;
 	g_SpriteAnim[eSprite_Computer_2] = 0x8F;
 	g_SpriteAnim[eSprite_Computer_3] = 0x8F;
@@ -1436,13 +1436,13 @@ void cOFED::SetupSprites() {
 	g_SpriteName[eSprite_Shrub] = "Shrub";
 	g_SpriteName[eSprite_Tree] = "Tree";
 	g_SpriteName[eSprite_BuildingRoof] = "Building Roof";
-	g_SpriteName[eSprite_Shrub2] = "Shrub2";
+	g_SpriteName[eSprite_Shrub2] = "Shrub 2";
 	g_SpriteName[eSprite_Waterfall] = "Waterfall";
-	g_SpriteName[eSprite_Bird2_Left] = "Bird2 Left";
+	g_SpriteName[eSprite_Bird_Left_Wraparound] = "Bird Left (Wraparound)";
 
 	g_SpriteName[eSprite_BuildingDoor] = "Building Door";
 	g_SpriteName[eSprite_GroundHole] = "Ground Hole";
-	g_SpriteName[eSprite_BuildingDoor2] = "Building Door 2";
+	g_SpriteName[eSprite_BuildingDoor_Hut] = "Hut Door";
 	g_SpriteName[eSprite_Floating_Dead_Soldier] = "Floating Dead Soldier";
 	g_SpriteName[eSprite_Enemy_Rocket] = "Enemy Rocket Soldier";
 	g_SpriteName[eSprite_GrenadeBox] = "Box of Grenades";
@@ -1459,28 +1459,29 @@ void cOFED::SetupSprites() {
 	g_SpriteName[eSprite_Helicopter_Homing_Human] = "Human Helicopter: Homing Missile";
 
 	g_SpriteName[eSprite_Mine] = "Mine";
-	g_SpriteName[eSprite_Mine2] = "Mine2";
+	g_SpriteName[eSprite_Mine_SlideTrigger] = "Mine (Slide Trigger)";
 	g_SpriteName[eSprite_Spike] = "Spike";
 
 	g_SpriteName[eSprite_BoilingPot] = "Boiling Pot";
-	g_SpriteName[eSprite_Civilian] = "Indigenous";
-	g_SpriteName[eSprite_Civilian2] = "Indigenous 2";
+	g_SpriteName[eSprite_Civilian] = "Civilian";
+	g_SpriteName[eSprite_Civilian_Fast] = "Fast Civilian";
 	g_SpriteName[eSprite_VehicleNoGun_Human] = "Human Vehicle: No Weapon";
 	g_SpriteName[eSprite_VehicleGun_Human] = "Human Vehicle: Weapon";
 
 	g_SpriteName[eSprite_Tank_Human] = "Human Tank";
-	g_SpriteName[eSprite_Bird_Left] = "Bird Left";
-	g_SpriteName[eSprite_Bird_Right] = "Bird Right";
+	g_SpriteName[eSprite_Bird_Left_CameraRespawn] = "Bird Left (Camera Respawn)";
+	g_SpriteName[eSprite_Bird_Right_CameraRespawn] = "Bird Right (Camera Respawn)";
 	g_SpriteName[eSprite_Seal] = "Seal";
 	g_SpriteName[eSprite_Tank_Enemy] = "Enemy Tank";
 
-	g_SpriteName[eSprite_Civilian_Spear] = "Indigenous: Spear";
+	g_SpriteName[eSprite_Civilian_Spear] = "Civilian with Spear";
+	g_SpriteName[eSprite_Civilian_Spear_Projectile] = "Civilian Spear Projectile";
 	g_SpriteName[eSprite_Hostage] = "Hostage";
 	g_SpriteName[eSprite_Hostage_Rescue_Tent] = "Hostage Rescue Tent";
 
-	g_SpriteName[eSprite_Door_Civilian] = "Building Door: Indigenous";
-	g_SpriteName[eSprite_Door2_Civilian] = "Building Door: Indigenous 2";
-	g_SpriteName[eSprite_Door_Civilian_Spear] = "Building Door: Indigenous Spear";
+	g_SpriteName[eSprite_Door_Civilian] = "Building Door: Civilian";
+	g_SpriteName[eSprite_Door_Civilian_Fast] = "Building Door: Fast Civilian";
+	g_SpriteName[eSprite_Door_Civilian_Spear] = "Building Door: Civilian with Spear";
 	g_SpriteName[eSprite_Cannon] = "Cannon";
 
 	g_SpriteName[eSprite_Turret_Cannon_Human] = "Human Turret: Cannon";
@@ -1489,36 +1490,37 @@ void cOFED::SetupSprites() {
 	g_SpriteName[eSprite_VehicleNoGun_Enemy] = "Enemy Vehicle: No Weapon";
 	g_SpriteName[eSprite_VehicleGun_Enemy] = "Enemy Vehicle: Weapon";
 	g_SpriteName[eSprite_Vehicle_Unk_Enemy] = "Enemy Vehicle: Unknown";
-	g_SpriteName[eSprite_Civilian_Invisible] = "Indigenous: Invisible?";
+	g_SpriteName[eSprite_Civilian_Invisible] = "Invisible Civilian";
 
 	g_SpriteName[eSprite_Turret_Cannon_Enemy] = "Enemy Turret: Cannon";
 	g_SpriteName[eSprite_Turret_Missile_Enemy] = "Enemy Turret: Missile";
 	g_SpriteName[eSprite_BunkerDoor_HeavyExplosionOnly] = "Bunker Door: Heavy Explosion Only";
 
-	g_SpriteName[eSprite_Door_Civilian_Rescue] = "Building Door: In";
+	g_SpriteName[eSprite_Door_Civilian_Rescue] = "Building Door: Civilian Rescue";
 	g_SpriteName[eSprite_Seal_Mine] = "Seal Mine";
 	g_SpriteName[eSprite_Spider_Mine] = "Spider Mine";
 
 	g_SpriteName[eSprite_Bonus_RankToGeneral] = "Bonus: Rank to General";
 	g_SpriteName[eSprite_Bonus_Rockets] = "Bonus: Rockets";
-	g_SpriteName[eSprite_Bonus_Armour] = "Bonus Armour";
-	g_SpriteName[eSprite_Bonus_RankHomingInvin_SquadLeader] = "Bonus: Rockets and General";
-	g_SpriteName[eSprite_Bonus_RankHomingInvin_Squad] = "Bonus: Squad General and Rockets";
-	g_SpriteName[eSprite_Helicopter_CallPad] = "Helicopter Callpad";
+	g_SpriteName[eSprite_Bonus_Armour] = "Bonus: Armour";
+	g_SpriteName[eSprite_Bonus_RankHomingInvin_SquadLeader] = "Squad Leader Bonus: General, Homing Missiles, Invincibility";
+	g_SpriteName[eSprite_MissileHoming_Human] = "Human Homing Missile";
+	g_SpriteName[eSprite_Bonus_RankHomingInvin_Squad] = "Squad Bonus: General, Homing Missiles, Invincibility";
+	g_SpriteName[eSprite_Helicopter_CallPad] = "Helicopter Call Pad";
 	g_SpriteName[eSprite_BunkerDoor_ReinforcedHeavyExplosionOnly] = "Bunker Door: Reinforced, Heavy Explosion Only";
-	g_SpriteName[eSprite_Helicopter_Grenade_Human_Called] = "Human Helicopter: Grenade Callable";
-	g_SpriteName[eSprite_Helicopter_Unarmed_Human_Called] = "Human Helicopter: Unarmed Callable";
-	g_SpriteName[eSprite_Helicopter_Missile_Human_Called] = "Human Helicopter: Missile Callable";
-	g_SpriteName[eSprite_Helicopter_Homing_Human_Called] = "Human Helicopter: Homing Missile Callable";
+	g_SpriteName[eSprite_Helicopter_Grenade_Human_Called] = "Human Helicopter: Grenade (Call Pad)";
+	g_SpriteName[eSprite_Helicopter_Unarmed_Human_Called] = "Human Helicopter: Unarmed (Call Pad)";
+	g_SpriteName[eSprite_Helicopter_Missile_Human_Called] = "Human Helicopter: Missile (Call Pad)";
+	g_SpriteName[eSprite_Helicopter_Homing_Human_Called] = "Human Helicopter: Homing Missile (Call Pad)";
 
 	g_SpriteName[eSprite_Turret_HomingMissile_Enemy] = "Enemy Turret: Homing Missile";
 	g_SpriteName[eSprite_Enemy_Leader] = "Enemy Leader";
-	g_SpriteName[eSprite_Helicopter_Homing_Enemy2] = "Enemy Helicopter: Homing Missile2";
+	g_SpriteName[eSprite_Helicopter_Homing_Enemy_Called] = "Enemy Helicopter: Homing Missile (Call Pad)";
 	g_SpriteName[eSprite_Computer_1] = "Computer 1";
 	g_SpriteName[eSprite_Computer_2] = "Computer 2";
 	g_SpriteName[eSprite_Computer_3] = "Computer 3";
 
-    g_SpriteName[eSprite_UFO_Callpad] = "UFO Callpad";
+    g_SpriteName[eSprite_UFO_Callpad] = "UFO Call Pad";
     g_SpriteName[eSprite_Turret_Cannon_Invulnerable] = "Invulnerable Turret: Cannon";
     g_SpriteName[eSprite_Turret_Missile_Invulnerable] = "Invulnerable Turret: Missile";
     g_SpriteName[eSprite_Looping_Vehicle_Left] = "Looping Vehicle: Left";
