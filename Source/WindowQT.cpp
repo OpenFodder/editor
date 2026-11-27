@@ -108,6 +108,29 @@ void cWindowQT::RefreshMap(bool resetView) {
     emit viewChanged();
     update();
 }
+namespace {
+bool AmigaSpriteFrameAvailable(const sSpriteSheet& frame) {
+    auto& graphics = *g_Fodder->mGraphics;
+    sImage* bitmap = nullptr;
+    if (frame.mLoadSegment == eGFX_IN_GAME) bitmap = &graphics.mSpriteSheet_InGame1;
+    if (frame.mLoadSegment == eGFX_IN_GAME2) bitmap = &graphics.mSpriteSheet_InGame2;
+    if (!bitmap) return false;
+
+    const auto* header = bitmap->GetHeader();
+    const size_t stride = header->mWidth >> 3;
+    if (!stride || !header->mHeight || !header->mPlanes || header->mPlanes > 8) return false;
+
+    // Match the Amiga renderer's byte stride and plane layout. Some demo
+    // sheets are shorter than the retail frame table expects.
+    const size_t rowBytes = size_t(frame.mColCount - 1) * 2;
+    const size_t planeBytes = size_t(header->mHeight) * 40;
+    const size_t frameEnd = frame.mLoadOffset + size_t(frame.mRowCount - 1) * stride + rowBytes;
+    return frame.mLoadOffset % stride + rowBytes <= stride &&
+           frameEnd <= planeBytes &&
+           (header->mPlanes - 1) * planeBytes + frameEnd <= bitmap->mData->size();
+}
+}
+
 const cWindowQT::sSpritePreview& cWindowQT::SpritePreview(int type, int sheetIndex, int frame) {
     const auto key = std::make_tuple(type, sheetIndex, frame);
     auto existing = mSpritePreviews.find(key);
@@ -117,8 +140,9 @@ const cWindowQT::sSpritePreview& cWindowQT::SpritePreview(int type, int sheetInd
         const int anim = sheetIndex >= 0 ? sheetIndex : g_SpriteAnim[type];
         auto sheet = g_Fodder->Sprite_Get_Sheet(anim, frame);
         int w = sheet->mColCount, h = sheet->mRowCount;
-        if (g_Fodder->mVersionCurrent->isAmiga()) w = (w - 1) * 16;
-        if (w > 0 && h > 0) {
+        const bool amiga = g_Fodder->mVersionCurrent->isAmiga();
+        if (amiga) w = (w - 1) * 16;
+        if (w > 0 && h > 0 && (!amiga || AmigaSpriteFrameAvailable(*sheet))) {
             cSurface surface(w, h);
             surface.clearBuffer();
             g_Fodder->mGraphics->PaletteSet(&surface);

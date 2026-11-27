@@ -163,6 +163,7 @@ void cToolboxSprites::RenderSprites() {
         if (!listed.contains(type)) addSprite(other, tr("Other"), type);
 
     ApplySearch();
+    if (selected >= 0 && !mSelected) g_OFED->CursorReset();
     if (mSelected && !mSelected->isHidden() && mSelected->parent()->isExpanded())
         mSprites->setCurrentItem(mSelected);
     mSprites->doItemsLayout();
