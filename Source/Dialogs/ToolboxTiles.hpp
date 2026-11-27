@@ -11,4 +11,5 @@ public:
     explicit cToolboxTiles(QWidget* parent = nullptr);
     void RenderTiles();
     void ClearSelection();
+    int WidthForFittedTiles() const;
 };

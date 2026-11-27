@@ -1,7 +1,9 @@
 #pragma once
 
+#include "stdafx_ofed.hpp"
 #include "ui_ofed.h"
-#include <QDialog>
+
+class QListWidget;
 
 struct sRangeTile {
 	int16 mX;
@@ -42,16 +44,12 @@ extern int32 g_SpriteAnim[118];
 extern std::string g_SpriteName[118];
 extern std::shared_ptr<sFodderParameters> g_Parameters;
 
+bool IsPlaceableSprite(size_t type);
+
 class cOFED : public QMainWindow
 {
 	Q_OBJECT
 
-
-protected:
-	void moveEvent(QMoveEvent *event) override;
-    void resizeEvent(QResizeEvent *event) override;
-    void showEvent(QShowEvent *event) override;
-    bool eventFilter(QObject* watched, QEvent* event) override;
 
 public:
 	cOFED(QWidget *parent = nullptr);
@@ -59,27 +57,9 @@ public:
 
 	void OpenFodder_Prepare();
 
-	sTiles SetupHut();
-	sTiles SetupBarracks();
-	sTiles SetupBunker();
-
     void Mission_AddNew();
     void Phase_AddNew();
     void Sprite_AddNew();
-
-	void AddHut_With_Soldier();
-	void AddHut_With_Indigenous();
-	void AddHut_With_Indigenous_Spear();
-
-	void AddBarracks_With_Soldier();
-
-	void AddBunker_With_Soldier();
-	void AddBunker_With_SoldierReinforced();
-
-	void AddCliff();
-
-
-	void ShowDialog_MapOverview();
 
     void ShowDialog_NewCampaign();
     void ShowDialog_LoadCampaign();
@@ -90,10 +70,7 @@ public:
 
 	void ShowDialog_NewMap();
 
-	void ShowDialog_ToolboxSprites();
-    void ShowDialog_ToolboxCampaigns();
 
-    void CloseDialog_ToolboxCampaigns();
 
     void LoadMap();
 
@@ -114,29 +91,34 @@ public:
     int16 GetCursorSpriteID() { return mCursorSprite; }
 
 private:
-    void ScheduleToolWindowLayout();
-    void LayoutToolWindows();
-    void PrepareToolWindow(QDialog* window, const QString& title);
-    bool mToolLayoutPending = false;
-    bool mLayingOutTools = false;
+    sTiles SetupHut();
+    sTiles SetupBarracks();
+    sTiles SetupBunker();
+    sTiles HutWithSoldier();
+    sTiles HutWithCivilian();
+    sTiles HutWithSpearCivilian();
+    sTiles Barracks();
+    sTiles Bunker();
+    sTiles ReinforcedBunker();
+    sTiles Cliff();
+    void RenderStructures();
+    void ClearStructureSelection();
+    void UpdateMapStatus();
 
 	Ui::mOFED ui;
-	cMapView* mMapView;
-    cCampaignDialog* mToolboxCampaigns;
-	cToolboxTiles*	mToolboxTiles;
-	cToolboxSprites* mToolboxSprites;
+    cWindowQT* mMapWindow;
+	cMapView* mMapView = nullptr;
+    cCampaignDialog* mToolboxCampaigns = nullptr;
+	cToolboxTiles* mToolboxTiles = nullptr;
+	cToolboxSprites* mToolboxSprites = nullptr;
+    QListWidget* mStructurePalette = nullptr;
+    std::vector<sTiles> mStructureBrushes;
 
     QLabel* mMissionLabel;
     QLabel* mPhaseLabel;
     QLabel* mZoomLabel;
-    QDialog* mOverviewTool = nullptr;
 
-	int16	mCursorSprite;
+	int16	mCursorSprite = -1;
 	sTiles	mCursorRangeTiles;
 
-	std::shared_ptr<cSurface> mCursorSurface;
-	QImage			 mCursorImage;
-	QImage			 mCursorImageFinal;
-
-	size_t			 mMapSub;
 };

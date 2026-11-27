@@ -1,290 +1,203 @@
 #include "stdafx_ofed.hpp"
 #include "ofed.hpp"
-#include <QLineEdit>
-
 #include "ui_CampaignDialog.h"
-#include <QEvent>
+
+#include <QAction>
+#include <QHeaderView>
+#include <QMessageBox>
+#include <QScopedValueRollback>
 #include <QShortcut>
+#include <QSignalBlocker>
 
-cCampaignDialog::cCampaignDialog(QWidget *parent, Qt::WindowFlags f) : QDialog(parent, f) {
-
-    mLoadingMission = false;
-    mUi = new Ui_CampaignDialog();
+cCampaignDialog::cCampaignDialog(QWidget* parent) : QWidget(parent), mUi(new Ui_CampaignDialog) {
     mUi->setupUi(this);
+    auto titleFont = mUi->mCampaignName->font();
+    titleFont.setBold(true);
+    mUi->mCampaignName->setFont(titleFont);
+    mUi->campaignSplitter->setStretchFactor(0, 1);
+    mUi->campaignSplitter->setStretchFactor(1, 2);
+    mUi->campaignSplitter->setSizes({210, 260});
 
     mUi->mMissionTable->setModel(&mCampaignModel);
-   // mUi->mMissionTable->setColumnWidth(0, 400);
-
     mUi->mPhaseTable->setModel(&mMissionModel);
-    //mUi->mPhaseTable->setColumnWidth(0, 300);
-    
     mUi->mSpritesTable->setModel(&mPhaseSpriteModel);
-    mUi->mSpritesTable->setColumnWidth(0, 200);
+    connect(&mCampaignModel, &QAbstractItemModel::dataChanged, this, &cCampaignDialog::namesChanged);
+    connect(&mMissionModel, &QAbstractItemModel::dataChanged, this, &cCampaignDialog::namesChanged);
+    for (auto* view : {mUi->mMissionTable, mUi->mPhaseTable, mUi->mSpritesTable})
+        view->verticalHeader()->setDefaultSectionSize(view->fontMetrics().height() + 8);
+    for (auto* view : {mUi->mMissionTable, mUi->mPhaseTable}) {
+        view->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+        view->setContextMenuPolicy(Qt::ActionsContextMenu);
+        auto* rename = new QAction(tr("Rename"), view);
+        view->addAction(rename);
+        connect(rename, &QAction::triggered, view, [view]() {
+            if (view->currentIndex().isValid()) view->edit(view->currentIndex());
+        });
+    }
+    auto* spritesHeader = mUi->mSpritesTable->horizontalHeader();
+    spritesHeader->setSectionResizeMode(0, QHeaderView::Stretch);
+    spritesHeader->setSectionResizeMode(1, QHeaderView::ResizeToContents);
+    spritesHeader->setSectionResizeMode(2, QHeaderView::ResizeToContents);
 
-    connect(mUi->mAuthorsName, &QLineEdit::textChanged, this, &cCampaignDialog::AuthorsNameChange);
+    connect(mUi->mAuthorsName, &QLineEdit::textEdited, this, [](const QString& name) {
+        g_Fodder->mGame_Data.mCampaign.setAuthor(name.toStdString());
+    });
+    connect(mUi->mMissionTable->selectionModel(), &QItemSelectionModel::currentRowChanged,
+            this, &cCampaignDialog::SelectMission);
+    connect(mUi->mPhaseTable->selectionModel(), &QItemSelectionModel::currentRowChanged,
+            this, &cCampaignDialog::UpdatePhaseDetails);
+    connect(mUi->mSpritesTable->selectionModel(), &QItemSelectionModel::currentRowChanged,
+            this, &cCampaignDialog::UpdateSpriteActions);
 
-    connect(mUi->mMissionTable, &QTableView::doubleClicked, this, &cCampaignDialog::MissionClicked);
-    connect(mUi->mPhaseTable, &QTableView::doubleClicked, this, &cCampaignDialog::PhaseClicked);
-    connect(mUi->mSpritesTable, &QTableView::doubleClicked, this, &cCampaignDialog::SpriteClicked);
+    connect(mUi->mNewMission, &QPushButton::clicked, this, []() { g_OFED->Mission_AddNew(); });
+    connect(mUi->mNewPhase, &QPushButton::clicked, this, []() { g_OFED->Phase_AddNew(); });
+    connect(mUi->mOpenPhase, &QPushButton::clicked, this, &cCampaignDialog::OpenPhase);
+    connect(mUi->mPhaseTable, &QTableView::doubleClicked, this, &cCampaignDialog::OpenPhase);
+    auto* openKey = new QShortcut(QKeySequence(Qt::Key_Return), mUi->mPhaseTable);
+    openKey->setContext(Qt::WidgetShortcut);
+    connect(openKey, &QShortcut::activated, this, &cCampaignDialog::OpenPhase);
 
-    connect(mUi->aggression_min, &QSlider::valueChanged, this, &cCampaignDialog::AggressMinChange);
-    connect(mUi->aggression_max, &QSlider::valueChanged, this, &cCampaignDialog::AggressMaxChange);
+    const auto locate = [this]() {
+        const auto* sprite = mPhaseSpriteModel.SpriteAtRow(mUi->mSpritesTable->currentIndex().row());
+        if (sprite) std::dynamic_pointer_cast<cWindowQT>(g_Window)->CenterOnMap(QPointF(sprite->mPosX, sprite->mPosY));
+    };
+    const auto remove = [this]() {
+        auto* sprite = mPhaseSpriteModel.SpriteAtRow(mUi->mSpritesTable->currentIndex().row());
+        if (!sprite) return;
+        sprite->Clear();
+        g_OFED->Sprite_AddNew();
+    };
+    connect(mUi->mLocateSprite, &QPushButton::clicked, this, locate);
+    connect(mUi->mSpritesTable, &QTableView::activated, this, locate);
+    connect(mUi->mDeleteSprite, &QPushButton::clicked, this, remove);
+    auto* deleteKey = new QShortcut(QKeySequence::Delete, mUi->mSpritesTable);
+    deleteKey->setContext(Qt::WidgetShortcut);
+    connect(deleteKey, &QShortcut::activated, this, remove);
 
-    connect(mUi->checkBox_KillAllEnemy, &QCheckBox::stateChanged, this, &cCampaignDialog::Goal_KillAllEnemy);
-    connect(mUi->checkBox_DestroyEnemyBuildings, &QCheckBox::stateChanged, this, &cCampaignDialog::Goal_DestroyEnemyBuildings);
-    connect(mUi->checkBox_RescueHostages, &QCheckBox::stateChanged, this, &cCampaignDialog::Goal_RescueHostages);
-    connect(mUi->checkBox_ProtectCivilians, &QCheckBox::stateChanged, this, &cCampaignDialog::Goal_ProtectCivilians);
+    mGoals = {{
+        {mUi->checkBox_KillAllEnemy, eObjective_Kill_All_Enemy},
+        {mUi->checkBox_DestroyEnemyBuildings, eObjective_Destroy_Enemy_Buildings},
+        {mUi->checkBox_RescueHostages, eObjective_Rescue_Hostages},
+        {mUi->checkBox_ProtectCivilians, eObjective_Protect_Civilians},
+        {mUi->checkBox_KidnapLeader, eObjective_Kidnap_Leader},
+        {mUi->checkBox_DestroyFactory, eObjective_Destroy_Factory},
+        {mUi->checkBox_DestroyComputer, eObjective_Destroy_Computer},
+        {mUi->checkBox_GetCivilianHome, eObjective_Get_Civilian_Home},
+        {mUi->checkBox_ActivateAllSwitches, eObjective_Activate_All_Switches},
+        {mUi->checkBox_RescueHostage, eObjective_Rescue_Hostage}
+    }};
+    for (const auto& [checkbox, goal] : mGoals) {
+        connect(checkbox, &QCheckBox::toggled, this, [this, goal](bool checked) {
+            if (!mUpdatingDetails)
+                if (auto phase = SelectedPhase()) phase->SetGoal(goal, checked);
+        });
+    }
 
-    connect(mUi->checkBox_KidnapLeader, &QCheckBox::stateChanged, this, &cCampaignDialog::Goal_Kidnap_Leader);
-    connect(mUi->checkBox_DestroyFactory, &QCheckBox::stateChanged, this, &cCampaignDialog::Goal_Destroy_Factory);
-    connect(mUi->checkBox_DestroyComputer, &QCheckBox::stateChanged, this, &cCampaignDialog::Goal_Destroy_Computer);
-    connect(mUi->checkBox_GetCivilianHome, &QCheckBox::stateChanged, this, &cCampaignDialog::Goal_Get_Civilian_Home);
-    connect(mUi->checkBox_ActivateAllSwitches, &QCheckBox::stateChanged, this, &cCampaignDialog::Goal_Activate_All_Switches);
-    connect(mUi->checkBox_RescueHostage, &QCheckBox::stateChanged, this, &cCampaignDialog::Goal_Rescue_Hostage);
-
-
-    QShortcut* shortcut = new QShortcut(QKeySequence(QKeySequence::Delete), mUi->mSpritesTable);
-    connect(shortcut, &QShortcut::activated, this, &cCampaignDialog::SpriteDelete);
+    connect(mUi->aggression_min, &QSpinBox::valueChanged, this, [this](int value) {
+        if (!mUpdatingDetails)
+            if (auto phase = SelectedPhase()) phase->mAggression.mMin = value;
+    });
+    connect(mUi->aggression_max, &QSpinBox::valueChanged, this, [this](int value) {
+        if (!mUpdatingDetails)
+            if (auto phase = SelectedPhase()) phase->mAggression.mMax = value;
+    });
 
     LoadMissions();
 }
 
-void cCampaignDialog::SpriteDelete() {
-    const int row = mUi->mSpritesTable->currentIndex().row();
-    if (row < 0) return;
-    int active = 0;
-    for (auto& sprite : g_Fodder->mSprites) {
-        if (sprite.mPosX == -32768 || sprite.mPosX == -1) continue;
-        if (active++ == row) {
-            sprite.Clear();
-            g_OFED->Sprite_AddNew();
-            return;
-        }
-    }
-}
-
 cCampaignDialog::~cCampaignDialog() {
-    g_OFED->CloseDialog_ToolboxCampaigns();
-}
-
-void cCampaignDialog::accept() {
-
-    QDialog::accept();
-}
-
-void cCampaignDialog::reject() {
-
-    QDialog::reject();
-}
-
-void cCampaignDialog::closeEvent(QCloseEvent *) {
-
-    g_OFED->CloseDialog_ToolboxCampaigns();
+    delete mUi;
 }
 
 void cCampaignDialog::LoadMissions() {
-    mUi->mCampaignName->setText(QString::fromStdString(g_Fodder->mGame_Data.mCampaign.getName()));
-    mUi->mAuthorsName->setText( QString::fromStdString(g_Fodder->mGame_Data.mCampaign.getAuthor()) );
+    auto& data = g_Fodder->mGame_Data;
+    mUi->mCampaignName->setText(QString::fromStdString(data.mCampaign.getName()));
+    mUi->mAuthorsName->setText(QString::fromStdString(data.mCampaign.getAuthor()));
 
-    mCampaignModel.SetCampaign(&g_Fodder->mGame_Data.mCampaign);
-    mMissionModel.SetMission(g_Fodder->mGame_Data.mCampaign.getMission(0));
-
-    LoadPhase(g_Fodder->mGame_Data.mMission_Phase);
+    const QSignalBlocker block(mUi->mMissionTable->selectionModel());
+    mCampaignModel.SetCampaign(&data.mCampaign);
+    const auto& missions = data.mCampaign.getMissions();
+    const auto active = std::find(missions.begin(), missions.end(), data.mMission_Current);
+    const int row = active == missions.end() ? 0 : int(active - missions.begin());
+    const auto index = mCampaignModel.index(row, 0);
+    mUi->mMissionTable->setCurrentIndex(index);
+    SelectMission(index);
+    RefreshSprites();
 }
 
-void cCampaignDialog::LoadCampaign(cCampaign* pCampaign) {
-    
-    mCampaignModel.SetCampaign(pCampaign);
-    mMissionModel.SetMission(pCampaign->getMission(0));
+void cCampaignDialog::SelectNewMission() {
+    LoadMissions();
+    const auto index = mCampaignModel.index(mCampaignModel.rowCount({}) - 1, 0);
+    mUi->mMissionTable->setCurrentIndex(index);
+    mUi->mMissionTable->setFocus();
+    mUi->mMissionTable->edit(index);
 }
 
-void cCampaignDialog::Refresh() {
-    mCampaignModel.DataUpdated();
-
-    if (!mMissionModel.GetMission())
-        mMissionModel.SetMission(g_Fodder->mGame_Data.mMission_Current);
-
-    mMissionModel.DataUpdated();
-    mPhaseSpriteModel.DataUpdated();
-}
-void cCampaignDialog::AuthorsNameChange(const QString &pNewName) {
-
-    g_Fodder->mGame_Data.mCampaign.setAuthor(pNewName.toStdString());
+int cCampaignDialog::SelectedMissionNumber() const {
+    return mUi->mMissionTable->currentIndex().row() + 1;
 }
 
-void cCampaignDialog::MissionClicked(QModelIndex pIndex) {
-
-    g_Fodder->mGame_Data.mMission_Number = pIndex.row() + 1;
-    g_Fodder->mGame_Data.mMission_Current = g_Fodder->mGame_Data.mCampaign.getMission(pIndex.row() + 1);
-    g_Fodder->mGame_Data.mPhase_Current = mMissionModel.GetMission()->PhaseGet(pIndex.row() + 1);
-
-    mMissionModel.SetMission(g_Fodder->mGame_Data.mCampaign.getMission(pIndex.row() + 1));
-
-    LoadPhase(1);
+void cCampaignDialog::SelectMission(const QModelIndex& index) {
+    const QSignalBlocker block(mUi->mPhaseTable->selectionModel());
+    auto& data = g_Fodder->mGame_Data;
+    const auto mission = index.isValid() ? data.mCampaign.getMission(index.row() + 1) : nullptr;
+    mMissionModel.SetMission(mission);
+    mUi->mNewPhase->setEnabled(bool(mission));
+    int row = 0;
+    if (mission) {
+        const auto active = std::find(mission->mPhases.begin(), mission->mPhases.end(), data.mPhase_Current);
+        if (active != mission->mPhases.end()) row = int(active - mission->mPhases.begin());
+    }
+    mUi->mPhaseTable->setCurrentIndex(mMissionModel.index(row, 0));
+    UpdatePhaseDetails();
 }
 
-void cCampaignDialog::PhaseClicked(QModelIndex pIndex) {
-    
-    g_Fodder->mGame_Data.mMission_Phase = pIndex.row() + 1;
-
-    LoadPhase(pIndex.row() + 1);
+std::shared_ptr<cPhase> cCampaignDialog::SelectedPhase() const {
+    const auto index = mUi->mPhaseTable->currentIndex();
+    const auto mission = mMissionModel.GetMission();
+    return index.isValid() && mission ? mission->PhaseGet(index.row() + 1) : nullptr;
 }
 
-void cCampaignDialog::SpriteClicked(QModelIndex pIndex) {
-    int Count = 0;
-
-    for (auto& Sprite : g_Fodder->mSprites) {
-        if (Sprite.mPosX == -32768 || Sprite.mPosX == -1)
-            continue;
-
-        if (Count != pIndex.row()) {
-            ++Count;
-            continue;
-        }
-
-        auto Window = std::dynamic_pointer_cast<cWindowQT>(g_Window);
-        Window->CenterOnMap(QPointF(Sprite.mPosX, Sprite.mPosY));
+void cCampaignDialog::OpenPhase() {
+    const auto phase = SelectedPhase();
+    auto& data = g_Fodder->mGame_Data;
+    if (!phase || phase == data.mPhase_Current) return;
+    const auto map = data.mCampaign.getMap(phase);
+    if (!map || map->empty()) {
+        QMessageBox::warning(this, tr("Open phase"),
+                             tr("Could not load %1.").arg(QString::fromStdString(phase->mMapFilename + ".map")));
         return;
     }
+
+    data.mMission_Number = SelectedMissionNumber();
+    data.mMission_Current = mMissionModel.GetMission();
+    data.mMission_Phase = mUi->mPhaseTable->currentIndex().row() + 1;
+    data.mMission_Phases_Remaining = data.mMission_Current->mPhases.size() - data.mMission_Phase + 1;
+    data.mPhase_Current = phase;
+    g_OFED->LoadMap();
+    UpdatePhaseDetails();
 }
 
-void cCampaignDialog::LoadPhase(const size_t pNumber) {
+void cCampaignDialog::UpdatePhaseDetails() {
+    const QScopedValueRollback<bool> update(mUpdatingDetails, true);
+    const auto phase = SelectedPhase();
+    const bool active = phase && phase == g_Fodder->mGame_Data.mPhase_Current;
+    mUi->mOpenPhase->setEnabled(phase && !active);
+    mUi->mPhaseDetails->setEnabled(bool(phase));
+    mUi->mPhaseDetails->setTabEnabled(mUi->mPhaseDetails->indexOf(mUi->spritesTab), active);
+    for (const auto& [checkbox, goal] : mGoals)
+        checkbox->setChecked(phase && std::find(phase->mGoals.begin(), phase->mGoals.end(), goal) != phase->mGoals.end());
+    mUi->aggression_min->setValue(phase ? phase->mAggression.mMin : 0);
+    mUi->aggression_max->setValue(phase ? phase->mAggression.mMax : 0);
+}
 
-    if (!mMissionModel.GetMission())
-        return;
-
-    g_Fodder->mGame_Data.mPhase_Current = mMissionModel.GetMission()->PhaseGet(pNumber);
-    if (!g_Fodder->mGame_Data.mPhase_Current)
-        return;
-
-    mLoadingMission = true;
-
-    if(g_OFED)
-        g_OFED->LoadMap();
-
-    Goal_ResetCheckboxes();
-
-    for (auto& Goal : g_Fodder->mGame_Data.mPhase_Current->mGoals) {
-
-        switch (Goal) {
-        case eObjective_None:
-            break;
-        case eObjective_Kill_All_Enemy:
-            mUi->checkBox_KillAllEnemy->setChecked(true);
-            break;
-        case eObjective_Destroy_Enemy_Buildings:
-            mUi->checkBox_DestroyEnemyBuildings->setChecked(true);
-            break;
-        case eObjective_Rescue_Hostages:
-            mUi->checkBox_RescueHostages->setChecked(true);
-            break;
-        case eObjective_Protect_Civilians:
-            mUi->checkBox_ProtectCivilians->setChecked(true);
-            break;
-        case eObjective_Kidnap_Leader:
-            mUi->checkBox_KidnapLeader->setChecked(true);
-            break;
-        case eObjective_Destroy_Factory:
-            mUi->checkBox_DestroyFactory->setChecked(true);
-            break;
-        case eObjective_Destroy_Computer:
-            mUi->checkBox_DestroyComputer->setChecked(true);
-            break;
-        case eObjective_Get_Civilian_Home:
-            mUi->checkBox_GetCivilianHome->setChecked(true);
-            break;
-        case eObjective_Activate_All_Switches:
-            mUi->checkBox_ActivateAllSwitches->setChecked(true);
-            break;
-        case eObjective_Rescue_Hostage:
-            mUi->checkBox_RescueHostage->setChecked(true);
-            break;
-        }
-    }
-
+void cCampaignDialog::RefreshSprites() {
     mPhaseSpriteModel.DataUpdated();
-    mUi->aggression_min->setSliderPosition(g_Fodder->mGame_Data.mPhase_Current->mAggression.mMin);
-    mUi->aggression_max->setSliderPosition(g_Fodder->mGame_Data.mPhase_Current->mAggression.mMax);
-    mLoadingMission = false;
+    UpdateSpriteActions();
 }
 
-void cCampaignDialog::AggressMinChange(int pValue) {
-    g_Fodder->mGame_Data.mPhase_Current->mAggression.mMin = pValue;
-}
-
-void cCampaignDialog::AggressMaxChange(int pValue) {
-    g_Fodder->mGame_Data.mPhase_Current->mAggression.mMax = pValue;
-}
-
-void cCampaignDialog::Goal_ResetCheckboxes() {
-    mUi->checkBox_KillAllEnemy->setChecked(false);
-    mUi->checkBox_DestroyEnemyBuildings->setChecked(false);
-    mUi->checkBox_RescueHostages->setChecked(false);
-    mUi->checkBox_ProtectCivilians->setChecked(false);
-    mUi->checkBox_KidnapLeader->setChecked(false);
-    mUi->checkBox_DestroyFactory->setChecked(false);
-    mUi->checkBox_DestroyComputer->setChecked(false);
-    mUi->checkBox_GetCivilianHome->setChecked(false);
-    mUi->checkBox_ActivateAllSwitches->setChecked(false);
-    mUi->checkBox_RescueHostage->setChecked(false);
-}
-
-void cCampaignDialog::Goal_KillAllEnemy(int pValue) {
-    if (mLoadingMission)
-        return;
-    g_Fodder->mGame_Data.mPhase_Current->SetGoal(eObjective_Kill_All_Enemy, pValue);
-}
-
-void cCampaignDialog::Goal_DestroyEnemyBuildings(int pValue) {
-    if (mLoadingMission)
-        return;
-    g_Fodder->mGame_Data.mPhase_Current->SetGoal(eObjective_Destroy_Enemy_Buildings, pValue);
-}
-
-void cCampaignDialog::Goal_RescueHostages(int pValue) {
-    if (mLoadingMission)
-        return;
-    g_Fodder->mGame_Data.mPhase_Current->SetGoal(eObjective_Rescue_Hostages, pValue);
-}
-
-void cCampaignDialog::Goal_ProtectCivilians(int pValue) {
-    if (mLoadingMission)
-        return;
-    g_Fodder->mGame_Data.mPhase_Current->SetGoal(eObjective_Protect_Civilians, pValue);
-}
-
-void cCampaignDialog::Goal_Kidnap_Leader(int pValue) {
-    if (mLoadingMission)
-        return;
-    g_Fodder->mGame_Data.mPhase_Current->SetGoal(eObjective_Kidnap_Leader, pValue);
-}
-
-void cCampaignDialog::Goal_Destroy_Factory(int pValue) {
-    if (mLoadingMission)
-        return;
-    g_Fodder->mGame_Data.mPhase_Current->SetGoal(eObjective_Destroy_Factory, pValue);
-}
-
-void cCampaignDialog::Goal_Destroy_Computer(int pValue) {
-    if (mLoadingMission)
-        return;
-    g_Fodder->mGame_Data.mPhase_Current->SetGoal(eObjective_Destroy_Computer, pValue);
-}
-
-void cCampaignDialog::Goal_Get_Civilian_Home(int pValue) {
-    if (mLoadingMission)
-        return;
-    g_Fodder->mGame_Data.mPhase_Current->SetGoal(eObjective_Get_Civilian_Home, pValue);
-}
-
-void cCampaignDialog::Goal_Activate_All_Switches(int pValue) {
-    if (mLoadingMission)
-        return;
-    g_Fodder->mGame_Data.mPhase_Current->SetGoal(eObjective_Activate_All_Switches, pValue);
-}
-
-void cCampaignDialog::Goal_Rescue_Hostage(int pValue) {
-    if (mLoadingMission)
-        return;
-    g_Fodder->mGame_Data.mPhase_Current->SetGoal(eObjective_Rescue_Hostage, pValue);
+void cCampaignDialog::UpdateSpriteActions() {
+    const bool selected = mUi->mSpritesTable->currentIndex().isValid();
+    mUi->mLocateSprite->setEnabled(selected);
+    mUi->mDeleteSprite->setEnabled(selected);
 }

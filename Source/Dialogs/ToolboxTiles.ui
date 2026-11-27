@@ -23,25 +23,16 @@
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="controls">
+    <layout class="QHBoxLayout" name="tileStatusLayout">
      <item>
-      <widget class="QLabel" name="mZoomLabel">
-       <property name="text">
-        <string>Tile zoom</string>
-       </property>
-       <property name="buddy">
-        <cstring>mZoom</cstring>
-       </property>
+      <widget class="QPushButton" name="mClearTiles">
+       <property name="text"><string>Clear selection</string></property>
+       <property name="toolTip"><string>Clear the current brush (Esc)</string></property>
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="mZoom"/>
-     </item>
-     <item>
       <widget class="QLabel" name="mCurrentTile">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignVCenter</set>
-       </property>
+       <property name="alignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property>
       </widget>
      </item>
     </layout>

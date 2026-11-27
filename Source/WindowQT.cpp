@@ -140,6 +140,51 @@ const cWindowQT::sSpritePreview& cWindowQT::SpritePreview(int type, int sheetInd
     }
     return mSpritePreviews.emplace(key, std::move(preview)).first->second;
 }
+
+QImage cWindowQT::SpritePaletteImage(int type) {
+    return mapReady() ? SpritePreview(type).image : QImage();
+}
+
+namespace {
+QPoint BrushSpritePosition(const QPoint& tile, const sRangeSprite& sprite) {
+    const auto* sheet = g_Fodder->Sprite_Get_Sheet(g_SpriteAnim[sprite.mSpriteID], 0);
+    return QPoint(tile.x() * 16 + sprite.mX - sheet->mModX,
+                  (tile.y() + 1) * 16 + sprite.mY + sheet->mModY);
+}
+}
+
+void cWindowQT::DrawBrush(QPainter& painter, const QPoint& tile, const sTiles& brush) {
+    for (const auto& piece : brush.mTiles) {
+        if (piece.mTileID < 480)
+            painter.drawImage(QRect((tile.x() + piece.mX) * 16, (tile.y() + piece.mY) * 16, 16, 16), mTileAtlas,
+                              QRect(piece.mTileID % 20 * 16, piece.mTileID / 20 * 16, 16, 16));
+    }
+    for (const auto& sprite : brush.mSprites) {
+        const auto& preview = SpritePreview(sprite.mSpriteID);
+        if (!preview.image.isNull())
+            painter.drawImage(BrushSpritePosition(tile, sprite) + preview.offset, preview.image);
+    }
+}
+
+QImage cWindowQT::StructureThumbnail(const sTiles& brush) {
+    QRect bounds;
+    for (const auto& piece : brush.mTiles)
+        bounds = bounds.united(QRect(piece.mX * 16, piece.mY * 16, 16, 16));
+    for (const auto& sprite : brush.mSprites) {
+        const auto& preview = SpritePreview(sprite.mSpriteID);
+        if (!preview.image.isNull())
+            bounds = bounds.united(QRect(BrushSpritePosition({}, sprite) + preview.offset, preview.image.size()));
+    }
+    if (bounds.isEmpty()) return {};
+    QImage image(bounds.size(), QImage::Format_ARGB32_Premultiplied);
+    image.fill(Qt::transparent);
+    QPainter painter(&image);
+    painter.translate(-bounds.topLeft());
+    DrawBrush(painter, {}, brush);
+    painter.end();
+    return image.scaled(QSize(64, 64), Qt::KeepAspectRatio);
+}
+
 void cWindowQT::DrawTerrain(QPainter& painter, const QRectF& visible) {
     if (!mTerrain.isNull()) { painter.drawImage(QPoint(0, 0), mTerrain); return; }
     int left = std::max(0, int(std::floor(visible.left() / 16)));
@@ -179,10 +224,7 @@ void cWindowQT::paintEvent(QPaintEvent*) {
             painter.save();
             painter.setClipRect(QRect(0, 0, g_Fodder->mMapLoaded->getWidthPixels(),
                                       g_Fodder->mMapLoaded->getHeightPixels()), Qt::IntersectClip);
-            for (const auto& tile : g_OFED->GetCursorRangeTiles().mTiles) {
-                if (tile.mTileID < 480) painter.drawImage(QRect((x + tile.mX) * 16, (y + tile.mY) * 16, 16, 16), mTileAtlas,
-                    QRect(tile.mTileID % 20 * 16, tile.mTileID / 20 * 16, 16, 16));
-            }
+            DrawBrush(painter, QPoint(x, y), g_OFED->GetCursorRangeTiles());
             painter.restore();
             if (g_OFED->GetCursorSpriteID() >= 0) painter.drawImage(world, SpritePreview(g_OFED->GetCursorSpriteID()).image);
             painter.setOpacity(1);
@@ -191,8 +233,14 @@ void cWindowQT::paintEvent(QPaintEvent*) {
         }
     }
 }
+double cWindowQT::FitZoom() const {
+    const auto& map = g_Fodder->mMapLoaded;
+    return std::min(double(width()) / map->getWidthPixels(), double(height()) / map->getHeightPixels());
+}
+
 void cWindowQT::ClampView() {
     if (!mapReady()) return;
+    if (mFitMap) mZoom = std::min(8.0, FitZoom());
     const double w = g_Fodder->mMapLoaded->getWidthPixels(), h = g_Fodder->mMapLoaded->getHeightPixels();
     const double vw = width() / mZoom, vh = height() / mZoom;
     mViewOrigin.setX(vw >= w ? (w - vw) / 2 : std::max(0.0, std::min(mViewOrigin.x(), w - vw)));
@@ -202,10 +250,8 @@ void cWindowQT::ClampView() {
 void cWindowQT::SetViewZoom(double zoom, const QPointF& anchor) {
     if (!mapReady()) return;
     const QPointF world = MapAt(anchor);
-    const double fit = std::min(double(width()) / g_Fodder->mMapLoaded->getWidthPixels(),
-                                double(height()) / g_Fodder->mMapLoaded->getHeightPixels());
-    mZoom = std::max(std::min(0.125, fit), std::min(8.0, zoom));
-    mScaleWidth = mScaleHeight = mZoom;
+    mFitMap = false;
+    mZoom = std::clamp(zoom, std::min(0.125, FitZoom()), 8.0);
     mViewOrigin = world - anchor / mZoom;
     ClampView();
     emit viewChanged();
@@ -219,9 +265,10 @@ void cWindowQT::CenterOnMap(const QPointF& point) {
 }
 void cWindowQT::FitMap() {
     if (!mapReady()) return;
-    SetViewZoom(std::min(double(width()) / g_Fodder->mMapLoaded->getWidthPixels(),
-                         double(height()) / g_Fodder->mMapLoaded->getHeightPixels()), rect().center());
-    CenterOnMap(QPointF(g_Fodder->mMapLoaded->getWidthPixels() / 2.0, g_Fodder->mMapLoaded->getHeightPixels() / 2.0));
+    mFitMap = true;
+    ClampView();
+    emit viewChanged();
+    update();
 }
 void cWindowQT::CameraSetTiles() { CameraTilesUpdate(); }
 void cWindowQT::CameraTilesUpdate() {
@@ -235,7 +282,7 @@ void cWindowQT::resizeEvent(QResizeEvent*) { ClampView(); emit viewChanged(); }
 void cWindowQT::wheelEvent(QWheelEvent* event) {
     double steps = event->angleDelta().y() / 120.0;
     if (steps == 0) steps = event->pixelDelta().y() / 120.0;
-    SetViewZoom(mZoom * std::pow(1.25, steps), event->position());
+    if (steps) SetViewZoom(mZoom * std::pow(1.25, steps), event->position());
     event->accept();
 }
 void cWindowQT::enterEvent(QEnterEvent*) { mHasMouse = true; }
@@ -252,14 +299,14 @@ void cWindowQT::PaintAt(const QPointF& position, bool first) {
     if (!brush.mTiles.empty() && (first || !brush.mOnce)) {
         for (const auto& cell : brush.mTiles) SetTileAt(tile.x() + cell.mX, tile.y() + cell.mY, cell.mTileID);
         for (const auto& sprite : brush.mSprites) {
-            auto sheet = g_Fodder->Sprite_Get_Sheet(g_SpriteAnim[sprite.mSpriteID], 0);
-            g_Fodder->Sprite_Add(sprite.mSpriteID, tile.x() * 16 + sprite.mX - sheet->mModX,
-                                (tile.y() + 1) * 16 + sprite.mY + sheet->mModY);
+            const auto position = BrushSpritePosition(tile, sprite);
+            g_Fodder->Sprite_Add(sprite.mSpriteID, position.x(), position.y());
         }
         edited = true;
         if (brush.mOnce) g_OFED->CursorReset();
     } else if (first && g_OFED->GetCursorSpriteID() >= 0) {
         int type = g_OFED->GetCursorSpriteID();
+        if (!IsPlaceableSprite(type)) return;
         const auto& preview = SpritePreview(type);
         g_Fodder->Sprite_Add(type, int(world.x()) - preview.offset.x(), int(world.y()) - preview.offset.y());
         edited = true;

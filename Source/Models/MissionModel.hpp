@@ -23,9 +23,8 @@ public:
     virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
 
-    void DataUpdated();
     void SetMission(std::shared_ptr<cMission> pMission);
-    std::shared_ptr<cMission> GetMission();
+    std::shared_ptr<cMission> GetMission() const;
 
 private:
     std::shared_ptr<cMission> mMission;

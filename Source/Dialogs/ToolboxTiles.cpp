@@ -5,15 +5,25 @@
 
 #include <QMouseEvent>
 #include <QPainter>
+#include <QScrollArea>
+#include <QScrollBar>
 #include <QSet>
+#include <QWheelEvent>
+#include <QtMath>
 #include <algorithm>
+#include <cmath>
 
 namespace {
 constexpr int TileColumns = 20;
 constexpr int TileRows = 24;
 constexpr int TileSize = 16;
-constexpr int CellSize = TileSize + 2;
+constexpr int TileGap = 1;
+constexpr qreal MaxCellSize = TileSize * 8;
 const QRect TileGrid(0, 0, TileColumns, TileRows);
+
+qreal FitCellSize(const QSize& size) {
+    return std::min(qreal(size.width()) / TileColumns, qreal(size.height()) / TileRows);
+}
 
 int TileID(const QPoint& cell) {
     return cell.y() * TileColumns + cell.x();
@@ -26,6 +36,7 @@ QRect SelectionRect(const QPoint& first, const QPoint& last) {
 }
 
 class cTilePalette : public QWidget {
+    QScrollArea* mScrollArea;
     QLabel* mStatus;
     QImage mImage;
     QSet<int> mSelected;
@@ -33,7 +44,7 @@ class cTilePalette : public QWidget {
     QPoint mPressedCell;
     QPoint mHoveredCell;
     QRect mMarquee;
-    int mZoomPercent = 0;
+    qreal mZoomCellSize = 0;
     bool mSelecting = false;
 
     QRectF GridRect() const;
@@ -47,32 +58,29 @@ protected:
     void mouseMoveEvent(QMouseEvent*) override;
     void mouseReleaseEvent(QMouseEvent*) override;
     void leaveEvent(QEvent*) override;
+    void wheelEvent(QWheelEvent*) override;
 
 public:
-    explicit cTilePalette(QLabel* status);
+    cTilePalette(QScrollArea* scrollArea, QLabel* status);
     void SetImage(const QImage& image);
-    void SetZoom(int percent);
     void ClearSelection();
 };
 
 cToolboxTiles::cToolboxTiles(QWidget* parent) : QWidget(parent) {
     Ui_ToolboxTiles ui;
     ui.setupUi(this);
-    mPalette = new cTilePalette(ui.mCurrentTile);
+    mPalette = new cTilePalette(ui.mScrollArea, ui.mCurrentTile);
     ui.mScrollArea->setWidget(mPalette);
-    ui.mZoom->addItem(tr("Fit"), 0);
-    for (int percent : {100, 150, 200, 300, 400})
-        ui.mZoom->addItem(tr("%1%").arg(percent), percent);
-    connect(ui.mZoom, &QComboBox::currentIndexChanged, this, [this, zoom = ui.mZoom](int index) {
-        mPalette->SetZoom(zoom->itemData(index).toInt());
-    });
+    ui.mScrollArea->setFrameShape(QFrame::NoFrame);
+    ui.mCurrentTile->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Preferred);
+    connect(ui.mClearTiles, &QPushButton::clicked, this, []() { g_OFED->CursorReset(); });
 }
 
 void cToolboxTiles::RenderTiles() {
-    cSurface surface(TileColumns * CellSize, TileRows * CellSize);
+    cSurface surface(TileColumns * TileSize, TileRows * TileSize);
     surface.clearBuffer();
     for (int tile = 0; tile < TileColumns * TileRows; ++tile)
-        g_Fodder->mGraphics->Map_Tile_Draw(&surface, tile, tile % TileColumns, tile / TileColumns, 2);
+        g_Fodder->mGraphics->Map_Tile_Draw(&surface, tile, tile % TileColumns, tile / TileColumns, 0);
 
     g_Fodder->mGraphics->PaletteSet(&surface);
     surface.surfaceSetToPaletteNew();
@@ -84,23 +92,19 @@ void cToolboxTiles::ClearSelection() {
     mPalette->ClearSelection();
 }
 
-cTilePalette::cTilePalette(QLabel* status) : mStatus(status), mHoveredCell(-1, -1) {
+int cToolboxTiles::WidthForFittedTiles() const {
+    return qCeil(qreal(mPalette->height()) * TileColumns / TileRows) + width() - mPalette->width();
+}
+
+cTilePalette::cTilePalette(QScrollArea* scrollArea, QLabel* status)
+    : mScrollArea(scrollArea), mStatus(status), mHoveredCell(-1, -1) {
     setMouseTracking(true);
-    setToolTip(tr("Click to select a tile\nShift-drag to select a rectangle\nShift-click to add or remove a tile"));
+    setToolTip(tr("Scroll to zoom\nClick to select or deselect a tile\nShift-drag to select a rectangle\nShift-click to add or remove a tile"));
     UpdateStatus();
 }
 
 void cTilePalette::SetImage(const QImage& image) {
     mImage = image;
-    update();
-}
-
-void cTilePalette::SetZoom(int percent) {
-    mZoomPercent = percent;
-    const int cell = (TileSize * percent / 100) + 2;
-    setMinimumSize(percent ? QSize(cell * TileColumns, cell * TileRows) : QSize(0, 0));
-    mHoveredCell = QPoint(-1, -1);
-    UpdateStatus();
     update();
 }
 
@@ -113,11 +117,8 @@ void cTilePalette::ClearSelection() {
 }
 
 QRectF cTilePalette::GridRect() const {
-    const qreal cell = mZoomPercent
-        ? (TileSize * mZoomPercent / 100) + 2
-        : std::min(qreal(width()) / TileColumns, qreal(height()) / TileRows);
-    const QSizeF size(cell * TileColumns, cell * TileRows);
-    return QRectF(QPointF((width() - size.width()) / 2, (height() - size.height()) / 2), size);
+    const qreal cell = mZoomCellSize > 0 ? mZoomCellSize : FitCellSize(size());
+    return QRectF(0, 0, cell * TileColumns, cell * TileRows);
 }
 
 QPoint cTilePalette::CellAt(const QPointF& position) const {
@@ -153,19 +154,27 @@ void cTilePalette::CommitSelection() {
 
 void cTilePalette::paintEvent(QPaintEvent*) {
     QPainter painter(this);
-    painter.fillRect(rect(), palette().color(QPalette::Dark));
-    if (mImage.isNull()) return;
-
     const QRectF grid = GridRect();
+    painter.fillRect(rect(), QColor(30, 34, 38));
+    if (mImage.isNull() || grid.isEmpty()) return;
+
     const qreal cell = grid.width() / TileColumns;
-    painter.drawImage(grid, mImage);
-    const QColor outline(255, 220, 90);
+    for (int y = 0; y < TileRows; ++y) {
+        const int top = qRound(y * cell);
+        const int height = qRound((y + 1) * cell) - top - TileGap;
+        for (int x = 0; x < TileColumns; ++x) {
+            const int left = qRound(x * cell);
+            const int width = qRound((x + 1) * cell) - left - TileGap;
+            painter.drawImage(QRect(left, top, width, height), mImage,
+                              QRect(x * TileSize, y * TileSize, TileSize, TileSize));
+        }
+    }
+
     const auto cellRect = [&](const QRect& cells) {
-        return QRectF(grid.x() + cells.x() * cell, grid.y() + cells.y() * cell,
-                      cells.width() * cell, cells.height() * cell);
+        return QRectF(cells.x() * cell, cells.y() * cell, cells.width() * cell, cells.height() * cell);
     };
 
-    painter.setPen(outline);
+    painter.setPen(QColor(255, 220, 90));
     const QColor fill(255, 220, 90, 70);
     if (mMarquee.isValid()) {
         const QRectF box = cellRect(mMarquee);
@@ -191,8 +200,12 @@ void cTilePalette::mousePressEvent(QMouseEvent* event) {
         mSelecting = true;
         UpdateStatus();
     } else {
-        mSelected = {TileID(cell)};
-        mBrushOrigin = cell;
+        if (mSelected.size() == 1 && mSelected.contains(TileID(cell))) {
+            mSelected.clear();
+        } else {
+            mSelected = {TileID(cell)};
+            mBrushOrigin = cell;
+        }
         CommitSelection();
     }
 }
@@ -231,4 +244,38 @@ void cTilePalette::mouseReleaseEvent(QMouseEvent* event) {
 void cTilePalette::leaveEvent(QEvent*) {
     mHoveredCell = QPoint(-1, -1);
     UpdateStatus();
+}
+
+void cTilePalette::wheelEvent(QWheelEvent* event) {
+    const qreal steps = event->angleDelta().y() ? event->angleDelta().y() / 120.0
+                                               : event->pixelDelta().y() / 40.0;
+    const auto grid = GridRect();
+    if (mImage.isNull() || grid.isEmpty() || !steps) {
+        event->ignore();
+        return;
+    }
+    event->accept();
+
+    const qreal oldCell = grid.width() / TileColumns;
+    const qreal fit = FitCellSize(mScrollArea->maximumViewportSize());
+    const qreal newCell = std::clamp(oldCell * std::pow(1.25, steps), fit, std::max(fit, MaxCellSize));
+    if (qFuzzyCompare(newCell, oldCell)) return;
+
+    auto* viewport = mScrollArea->viewport();
+    const QPointF pointer = mapTo(viewport, event->position());
+    const QPointF tileAnchor(std::clamp(event->position().x() / oldCell, qreal(0), qreal(TileColumns)),
+                             std::clamp(event->position().y() / oldCell, qreal(0), qreal(TileRows)));
+    mZoomCellSize = qFuzzyCompare(newCell, fit) ? 0 : newCell;
+    const QSize minimum = mZoomCellSize > 0
+        ? QSize(qCeil(newCell * TileColumns), qCeil(newCell * TileRows))
+        : QSize(0, 0);
+    setMinimumSize(minimum);
+    resize(viewport->size().expandedTo(minimum));
+    const QPointF scroll = tileAnchor * newCell - pointer;
+    mScrollArea->horizontalScrollBar()->setValue(qRound(scroll.x()));
+    mScrollArea->verticalScrollBar()->setValue(qRound(scroll.y()));
+
+    mHoveredCell = CellAt(mapFrom(viewport, pointer));
+    UpdateStatus();
+    update();
 }

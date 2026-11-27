@@ -1,102 +1,34 @@
-
 #include "stdafx_ofed.hpp"
 
-#include <QStandardItem>
-#include <QAbstractTableModel>
+cCampaignModel::cCampaignModel(cCampaign* value) : mCampaign(value) {}
+cCampaignModel::~cCampaignModel() = default;
 
-#include "CampaignModel.hpp"
-
-cCampaignModel::cCampaignModel(cCampaign* pCampaign) : QAbstractTableModel(0) {
-
-    connect(this, &cCampaignModel::dataChanged, this, &cCampaignModel::dataChanged);
-
-    mCampaign = 0;
-
-    SetCampaign(pCampaign);
+QVariant cCampaignModel::data(const QModelIndex& index, int role) const {
+    if (!index.isValid() || index.row() >= rowCount({}) || (role != Qt::DisplayRole && role != Qt::EditRole))
+        return {};
+    return QString::fromStdString(mCampaign->getMission(index.row() + 1)->mName);
 }
 
-cCampaignModel::~cCampaignModel() {
-
-}
-
-QVariant cCampaignModel::data(const QModelIndex& index, int role) const
-{
-    if (!index.isValid() || (role != Qt::DisplayRole && role != Qt::EditRole))
-        return QVariant();
-
-    size_t Row = (size_t)index.row();
-    int Column = index.column();
-
-    if (Row >= mCampaign->getMissions().size())
-        return "";
-
-    auto Mission = mCampaign->getMissions().at(Row);
-
-    switch (Column) {
-    case 0:		// Mission Name
-        return QString::fromStdString(Mission->mName);
-    }
-
-    return "";
-}
-
-bool cCampaignModel::setData(const QModelIndex &index, const QVariant &value, int role) {
-
-    if (!index.isValid() || role != Qt::EditRole)
+bool cCampaignModel::setData(const QModelIndex& index, const QVariant& value, int role) {
+    if (!index.isValid() || index.row() >= rowCount({}) || role != Qt::EditRole)
         return false;
-
-    size_t Row = (size_t) index.row();
-    int Column = index.column();
-
-    if (Row >= mCampaign->getMissions().size())
-        return "";
-
-    auto Mission = mCampaign->getMissions().at(Row);
-
-    switch (Column) {
-    case 0:		// Mission Name
-        Mission->mName = value.toString().toStdString();
-        return true;
-
-    }
-
-    return false;
-}
-void cCampaignModel::DataUpdated() {
-    if (!mCampaign->getMissions().size())
-        return;
-
-    beginResetModel();
-    endResetModel();
+    mCampaign->getMission(index.row() + 1)->mName = value.toString().toStdString();
+    emit dataChanged(index, index, {Qt::DisplayRole, Qt::EditRole});
+    return true;
 }
 
 QVariant cCampaignModel::headerData(int section, Qt::Orientation orientation, int role) const {
-
-    if (role == Qt::DisplayRole) {
-        if (orientation == Qt::Horizontal) {
-
-            switch (section) {
-            case 0:
-                return QString("Name");
-            }
-        }
-    }
-    return QVariant();
+    if (orientation == Qt::Horizontal && section == 0 && role == Qt::DisplayRole)
+        return QObject::tr("Name");
+    return {};
 }
 
-void cCampaignModel::SetCampaign(cCampaign* pCampaign) {
-
-    if (!pCampaign)
-        return;
-
-    mCampaign = pCampaign;
-
-    DataUpdated();
+void cCampaignModel::SetCampaign(cCampaign* value) {
+    beginResetModel();
+    mCampaign = value;
+    endResetModel();
 }
 
-Qt::ItemFlags cCampaignModel::flags(const QModelIndex &index) const {
-    if (!index.isValid())
-        return Qt::NoItemFlags;
-
-    return Qt::ItemIsEditable | QAbstractItemModel::flags(index);
+Qt::ItemFlags cCampaignModel::flags(const QModelIndex& index) const {
+    return index.isValid() ? Qt::ItemIsEditable | QAbstractItemModel::flags(index) : Qt::NoItemFlags;
 }
