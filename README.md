@@ -40,7 +40,7 @@ Notes:
 #### Map navigation
 
 * Scroll the mouse wheel to zoom in or out around the pointer.
-* Drag with the middle mouse button to pan.
+* Hold the right or middle mouse button and drag to pan a zoomed-in map.
 * Use the controls above the map to zoom, fit the map (Ctrl+0), or return to **100%**.
   The editor starts in **Fit map** mode and stays there when the map pane resizes,
   until you zoom manually.

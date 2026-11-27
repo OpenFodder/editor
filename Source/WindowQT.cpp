@@ -31,6 +31,8 @@
 #include <QLineF>
 
 namespace {
+constexpr auto PanButtons = Qt::RightButton | Qt::MiddleButton;
+
 bool mapReady() {
     return g_Fodder && g_Fodder->mMapLoaded && g_Fodder->mGraphics && g_Fodder->mMap;
 }
@@ -46,7 +48,7 @@ cWindowQT::cWindowQT(QWidget* parent) : QWidget(parent), cWindow() {
     setFocusPolicy(Qt::StrongFocus);
     setMinimumSize(240, 180);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    setToolTip(tr("Mouse wheel: zoom at cursor\nMiddle drag: pan\nLeft click/drag: place selected tiles or sprites\nRight click: advance simulation"));
+    setToolTip(tr("Mouse wheel: zoom at cursor\nRight or middle drag: pan\nLeft click/drag: place selected tiles or sprites"));
     connect(&mRedrawTimer, &QTimer::timeout, this, [this]() {
         if (!mapReady()) return;
         g_Fodder->Mission_Sprites_Handle();
@@ -340,10 +342,14 @@ void cWindowQT::PaintAt(const QPointF& position, bool first) {
 void cWindowQT::mousePressEvent(QMouseEvent* event) {
     setFocus();
     mLastMouse = event->position();
-    if (event->button() == Qt::MiddleButton) { mPanning = true; setCursor(Qt::ClosedHandCursor); }
-    else if (event->button() == Qt::LeftButton) { mPainting = true; PaintAt(event->position(), true); }
-    else if (event->button() == Qt::RightButton && mapReady()) {
-        g_Fodder->Sprite_Handle_Loop(); RefreshMap(false);
+    if (PanButtons.testFlag(event->button())) {
+        mPanning = true;
+        mPainting = false;
+        setCursor(Qt::ClosedHandCursor);
+        update();
+    } else if (event->button() == Qt::LeftButton && !mPanning) {
+        mPainting = true;
+        PaintAt(event->position(), true);
     }
 }
 void cWindowQT::mouseMoveEvent(QMouseEvent* event) {
@@ -358,12 +364,16 @@ void cWindowQT::mouseMoveEvent(QMouseEvent* event) {
     mLastMouse = position;
     if (mapReady() && g_OFED) {
         auto world = MapAt(position);
-        g_OFED->statusBar()->showMessage(tr("Tile %1, %2  |  Wheel to zoom · Middle drag to pan").arg(int(std::floor(world.x() / 16))).arg(int(std::floor(world.y() / 16))));
+        g_OFED->statusBar()->showMessage(tr("Tile %1, %2  |  Wheel to zoom · Right or middle drag to pan").arg(int(std::floor(world.x() / 16))).arg(int(std::floor(world.y() / 16))));
     }
     update();
 }
 void cWindowQT::mouseReleaseEvent(QMouseEvent* event) {
-    if (event->button() == Qt::MiddleButton) { mPanning = false; unsetCursor(); }
+    if (mPanning && !(event->buttons() & PanButtons)) {
+        mPanning = false;
+        if (g_OFED) g_OFED->CursorUpdate();
+        else unsetCursor();
+    }
     if (event->button() == Qt::LeftButton) { mPainting = false; mLastPaintTile = QPoint(-1, -1); }
     update();
 }
